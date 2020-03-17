@@ -1,21 +1,20 @@
 class Ffmpeg < Formula
   desc "Play, record, convert, and stream audio and video"
   homepage "https://ffmpeg.org/"
-  url "https://ffmpeg.org/releases/ffmpeg-4.1.3.tar.xz"
-  sha256 "0c3020452880581a8face91595b239198078645e7d7184273b8bcc7758beb63d"
-  revision 1
+  url "https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.xz"
+  sha256 "cb754255ab0ee2ea5f66f8850e1bd6ad5cac1cd855d0a2f4990fb8c668b0d29c"
+  revision 2
   head "https://github.com/FFmpeg/FFmpeg.git"
 
   bottle do
-    sha256 "ddfb58dd5432eed657d9ecda3b4c2f06eb523815e9e7f339b1f05d1048f89d40" => :mojave
-    sha256 "41dd2796b2c3136faf6d5b20e1f7774db2c21a916c1b9d752e1ea4c92ff32f22" => :high_sierra
-    sha256 "3904c3b313c0a53349b2bd3a0e27b503b5448f81b319c313ee48ef80492bf5dd" => :sierra
+    sha256 "34e8b4424611acc2f90e27b4e1318fc3972b036231a171faa4e017a9b98b9d1b" => :catalina
+    sha256 "80582f6eac8470182df842a072e074de3624ec3f5c091aa9151c178745a06011" => :mojave
+    sha256 "afb1c2a2c38fa4d39dbd178cf5258bc3b81e805196196d24ab3676f134914cab" => :high_sierra
   end
 
   depends_on "nasm" => :build
   depends_on "pkg-config" => :build
   depends_on "texi2html" => :build
-
   depends_on "aom"
   depends_on "fontconfig"
   depends_on "freetype"
@@ -25,6 +24,7 @@ class Ffmpeg < Formula
   depends_on "libass"
   depends_on "libbluray"
   depends_on "libsoxr"
+  depends_on "libvidstab"
   depends_on "libvorbis"
   depends_on "libvpx"
   depends_on "opencore-amr"
@@ -37,10 +37,14 @@ class Ffmpeg < Formula
   depends_on "speex"
   depends_on "tesseract"
   depends_on "theora"
+  depends_on "webp"
   depends_on "x264"
   depends_on "x265"
   depends_on "xvid"
   depends_on "xz"
+
+  uses_from_macos "bzip2"
+  uses_from_macos "zlib"
 
   def install
     args = %W[
@@ -48,7 +52,6 @@ class Ffmpeg < Formula
       --enable-shared
       --enable-pthreads
       --enable-version3
-      --enable-hardcoded-tables
       --enable-avresample
       --cc=#{ENV.cc}
       --host-cflags=#{ENV.cflags}
@@ -64,8 +67,10 @@ class Ffmpeg < Formula
       --enable-libsnappy
       --enable-libtesseract
       --enable-libtheora
+      --enable-libvidstab
       --enable-libvorbis
       --enable-libvpx
+      --enable-libwebp
       --enable-libx264
       --enable-libx265
       --enable-libxvid
@@ -79,11 +84,10 @@ class Ffmpeg < Formula
       --enable-libopenjpeg
       --enable-librtmp
       --enable-libspeex
+      --enable-libsoxr
       --enable-videotoolbox
       --disable-libjack
       --disable-indev=jack
-      --enable-libaom
-      --enable-libsoxr
     ]
 
     system "./configure", *args
@@ -92,6 +96,9 @@ class Ffmpeg < Formula
     # Build and install additional FFmpeg tools
     system "make", "alltools"
     bin.install Dir["tools/*"].select { |f| File.executable? f }
+
+    # Fix for Non-executables that were installed to bin/
+    mv bin/"python", pkgshare/"python", :force => true
   end
 
   test do

@@ -1,15 +1,15 @@
 class Octave < Formula
   desc "High-level interpreted language for numerical computing"
   homepage "https://www.gnu.org/software/octave/index.html"
-  url "https://ftp.gnu.org/gnu/octave/octave-5.1.0.tar.xz"
-  mirror "https://ftpmirror.gnu.org/octave/octave-5.1.0.tar.xz"
-  sha256 "87b4df6dfa28b1f8028f69659f7a1cabd50adfb81e1e02212ff22c863a29454e"
+  url "https://ftp.gnu.org/gnu/octave/octave-5.2.0.tar.xz"
+  mirror "https://ftpmirror.gnu.org/octave/octave-5.2.0.tar.xz"
+  sha256 "2757b5cc1854c9326d6c99d2900c7cec2909ac7ed500212d170d0df592bfd26b"
   revision 4
 
   bottle do
-    sha256 "3fcee7fe9661488e0231595e7d240b1ac9bf4e63d2f2171a88f674be244888f0" => :mojave
-    sha256 "9cc6d5df7a076982df051e9548a69dc22cb8ccc8282d5c2d869682102a8e1fb3" => :high_sierra
-    sha256 "948cdd677af802a9788830c49b3810ba42cfc79ab5770d83f1f3a7140ab69e9f" => :sierra
+    sha256 "4b3b18acdb6acc3ef9584bf4c58a8cf3c70b50a674f295f9811085a9204c0747" => :catalina
+    sha256 "c92e4dd7a90017781b28a87d98cf1dd341b0f19b65cd3d3010c8c820c1c874f7" => :mojave
+    sha256 "de6afbcb205a9b3c038c006b4156861859d878de1fe7399c9f701093bb36d6ac" => :high_sierra
   end
 
   head do
@@ -24,7 +24,7 @@ class Octave < Formula
 
   # Complete list of dependencies at https://wiki.octave.org/Building
   depends_on "gnu-sed" => :build # https://lists.gnu.org/archive/html/octave-maintainers/2016-09/msg00193.html
-  depends_on :java => ["1.7+", :build]
+  depends_on "openjdk" => :build
   depends_on "pkg-config" => :build
   depends_on "arpack"
   depends_on "epstool"
@@ -54,6 +54,8 @@ class Octave < Formula
   depends_on "sundials"
   depends_on "texinfo"
 
+  uses_from_macos "curl"
+
   # Dependencies use Fortran, leading to spurious messages about GCC
   cxxstdlib_check :skip
 
@@ -61,7 +63,7 @@ class Octave < Formula
   # https://github.com/Homebrew/homebrew-core/issues/39848
   # Patch submitted upstream at: https://savannah.gnu.org/patch/index.php?9806
   patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/master/octave/5.1.0-java-version.patch"
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/a8124b73c5216cc81d63627a4b41203ab1d91a4d/octave/5.1.0-java-version.patch"
     sha256 "7ea1e9b410a759fa136d153fb8482ecfc3425a39bfe71c1e71b3ff0f7d9a0b54"
   end
 
@@ -92,6 +94,7 @@ class Octave < Formula
                           "--disable-static",
                           "--with-hdf5-includedir=#{Formula["hdf5"].opt_include}",
                           "--with-hdf5-libdir=#{Formula["hdf5"].opt_lib}",
+                          "--with-java-homedir=#{Formula["openjdk"].opt_prefix}",
                           "--with-x=no",
                           "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas",
                           "--with-portaudio",

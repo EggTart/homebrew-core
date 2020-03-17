@@ -3,22 +3,30 @@ class PreCommit < Formula
 
   desc "Framework for managing multi-language pre-commit hooks"
   homepage "https://pre-commit.com/"
-  url "https://github.com/pre-commit/pre-commit/archive/v1.16.1.tar.gz"
-  sha256 "5857391e07aac3d858f3e281b021e6c56136a43222d011d6f13ed0e1b863dc18"
+  url "https://github.com/pre-commit/pre-commit/archive/v2.2.0.tar.gz"
+  sha256 "53a5d39e8b2063a004ecdabd4b459ae826cfe47eca449720e4fdde06a7d43cc0"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "5bbe25616893a12fb67dd0ffc3a8d76b20124e909ec9ba266ff710194a512282" => :mojave
-    sha256 "95b02ef54bf94e19b1558071eb512a4d9449b201cbe7713acbaeb3ac2c3b755a" => :high_sierra
-    sha256 "01f27357abc9287d30ae036082f48e95d06ce4dbcc502cdf9566252692066ecc" => :sierra
+    sha256 "1a7f0335e863020359410ccffc9c4272751b041b99017c3b870ee24c57b05fae" => :catalina
+    sha256 "7c00f08c4571d9b956f192b974c5a64ce458636a80c6723b0f6af354c6db9f8c" => :mojave
+    sha256 "ed68993f6703cccc5766c87a346a40131f429a55a4f1587c3acee1c7a6c07ab1" => :high_sierra
   end
 
+  # To avoid breaking existing git hooks when we update Python,
+  # we should never depend on a versioned Python formula and
+  # always use the "default".
   depends_on "python"
 
   def install
+    # Make sure we are actually using Homebrew's Python
+    inreplace "pre_commit/commands/install_uninstall.py",
+              "f'#!/usr/bin/env {py}'",
+              "'#!#{Formula["python"].opt_bin}/python3'"
+
     venv = virtualenv_create(libexec, "python3")
     system libexec/"bin/pip", "install", "-v", "--no-binary", ":all:",
-                              "--ignore-installed", "PyYAML==3.13b1", buildpath
+                              "--ignore-installed", buildpath
     system libexec/"bin/pip", "uninstall", "-y", "pre-commit"
     venv.pip_install_and_link buildpath
   end
@@ -33,8 +41,6 @@ class PreCommit < Formula
       rm f
       ln_s realpath, f
     end
-    inreplace lib_python_path/"orig-prefix.txt",
-              Formula["python3"].opt_prefix, Formula["python3"].prefix.realpath
   end
 
   test do

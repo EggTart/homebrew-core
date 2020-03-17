@@ -1,14 +1,14 @@
 class Mrboom < Formula
   desc "Eight player Bomberman clone"
   homepage "http://mrboom.mumblecore.org/"
-  url "https://github.com/Javanaise/mrboom-libretro/archive/4.7.tar.gz"
-  sha256 "5ebf8bbec292a5e9b4cb337695e0d3baa3b777f99d1aaf011c937c62ef958e3a"
+  url "https://github.com/Javanaise/mrboom-libretro/archive/4.9.tar.gz"
+  sha256 "062cf1f91364d2d6ea717e92304ca163cfba5d14b30bb440ee118d1b8e10328d"
 
   bottle do
     cellar :any
-    sha256 "06483d8f9be743f76eddcf26c222831fc082996539e2e5e6a6add33fc55af11b" => :mojave
-    sha256 "b68760e7638ce0b3d0fc342a9f6a85d07935ab000bd3c11a7dde71067f3c8c68" => :high_sierra
-    sha256 "214a0f035befd1973788023b52ea8a21d7df076b2c50bf7c5445ac418e930d8e" => :sierra
+    sha256 "d85ec4ab953ce62ec26b3f632943f4155c7b4b06a6c7bfeec4af334bd3453c5d" => :catalina
+    sha256 "8a4663dd80ed90899b51c5a568b1a8330b06441eba93cfa70e773514dbba4b2d" => :mojave
+    sha256 "a3c07658f4050be94c37c341f262b7c82a808dd696f349841aa0e83b07eaf8e7" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -17,6 +17,12 @@ class Mrboom < Formula
   depends_on "sdl2"
   depends_on "sdl2_mixer"
 
+  # fix Makefile issue, remove in next release
+  patch do
+    url "https://github.com/Javanaise/mrboom-libretro/commit/c777f1059c9a4b3fcefe6e2a19cfe9f81a13740b.diff?full_index=1"
+    sha256 "19f469ccde5f1a9bc45fa440fd4cbfd294947f17b191f299822db17de66a5a23"
+  end
+
   def install
     system "make", "mrboom", "LIBSDL2=1"
     system "make", "install", "PREFIX=#{prefix}"
@@ -24,13 +30,19 @@ class Mrboom < Formula
 
   test do
     require "pty"
-    PTY.spawn(bin/"mrboom", "-m") do |r, _w, pid|
+    require "expect"
+    require "timeout"
+    PTY.spawn(bin/"mrboom", "-m", "-f 0", "-z") do |r, _w, pid|
+      sleep 1
+      Process.kill "SIGINT", pid
+      assert_match "monster", r.expect(/monster/, 10)[0]
+    ensure
       begin
-        sleep 1
-        Process.kill "SIGINT", pid
-        assert_match "monster", r.read
-      ensure
-        Process.wait pid
+        Timeout.timeout(10) do
+          Process.wait pid
+        end
+      rescue Timeout::Error
+        Process.kill "KILL", pid
       end
     end
   end

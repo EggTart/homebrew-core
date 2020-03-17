@@ -1,24 +1,24 @@
 class Overmind < Formula
   desc "Process manager for Procfile-based applications and tmux"
   homepage "https://github.com/DarthSim/overmind"
-  url "https://github.com/DarthSim/overmind/archive/v2.0.2.tar.gz"
-  sha256 "110a271298223251005266b915432196b340f8540de1b4c1489973537d9b3bb1"
+  url "https://github.com/DarthSim/overmind/archive/v2.1.0.tar.gz"
+  sha256 "dfd5e562fe9d94cdcb3048be99280dab897ad57d54178b74dab023b49308a534"
   head "https://github.com/DarthSim/overmind.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "32f83002dbc98f67163558a156ed7a8b651062e4890a46e2bd9de465db85d4a6" => :mojave
-    sha256 "e6ca63d7881f92f2ca58924badb97ba8abf6dfb07a1c191afb860eb9729bd808" => :high_sierra
-    sha256 "cd5f23460d45df867b2067ee650d55ce8f4bb16e7d248b980e26cdcdde0fe9b4" => :sierra
+    rebuild 1
+    sha256 "df98635534afa5d8f50dae0d94c22c322eb9207504286e2de3d893f48dd231be" => :catalina
+    sha256 "71e26cd0de3036d27a040b163754b9d6e7d00756e15158ec24e9709b10b512c3" => :mojave
+    sha256 "749729e78f9702a2a2523a6f31c2a157a4266aeabc8e3a54b69cacad5edfc897" => :high_sierra
   end
 
   depends_on "go" => :build
   depends_on "tmux"
 
   def install
-    ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/DarthSim/overmind").install buildpath.children
-    system "go", "build", "-o", "#{bin}/overmind", "-v", "github.com/DarthSim/overmind"
+    system "go", "build", "-ldflags", "-s -w", "-trimpath", "-o", bin/"overmind"
+    prefix.install_metafiles
   end
 
   test do

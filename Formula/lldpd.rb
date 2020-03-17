@@ -1,18 +1,20 @@
 class Lldpd < Formula
   desc "Implementation of IEEE 802.1ab (LLDP)"
   homepage "https://vincentbernat.github.io/lldpd/"
-  url "https://media.luffy.cx/files/lldpd/lldpd-1.0.3.tar.gz"
-  sha256 "39fced395168015416bfe78b95414facf066f841f349024433aa20ab54e4c360"
+  url "https://media.luffy.cx/files/lldpd/lldpd-1.0.5.tar.gz"
+  sha256 "2dd3b212f4dbabfcbb2794c0010b245f9f8e74b387984e757be6243a74c6cb99"
 
   bottle do
-    sha256 "1e72e4618d45de3304c07a9675cfd0ef39668bdff4a327fd40a0f88fba6d42f9" => :mojave
-    sha256 "6835530d05dfc54cb55c50336421d033b270f167e8439b5e15b706e4ba4044af" => :high_sierra
-    sha256 "c193e5f0e92b1bbfc02e64c762bf2e111e587b50acb6def5bd71480c14ffd5a2" => :sierra
+    sha256 "f37abc384f5435813515146bfa157d53d07611bce4b1b177ddc3d3410416b0b5" => :catalina
+    sha256 "578f07789b6d8f8d0ab98d64707ec14a1879005a06bfe88f9d0447d474e7f2cf" => :mojave
+    sha256 "4f04dc494f01c2ce011ea48c1e85efb3c985e98fe5b31ce768019d3746acd5ea" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "libevent"
   depends_on "readline"
+
+  uses_from_macos "libxml2"
 
   def install
     readline = Formula["readline"]

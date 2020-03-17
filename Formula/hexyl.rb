@@ -1,20 +1,20 @@
 class Hexyl < Formula
   desc "Command-line hex viewer"
   homepage "https://github.com/sharkdp/hexyl"
-  url "https://github.com/sharkdp/hexyl/archive/v0.5.0.tar.gz"
-  sha256 "6241a4cf3e3ec2f32164539ef158c84ad29c53511cd1e3c0148776b8ce5234d4"
+  url "https://github.com/sharkdp/hexyl/archive/v0.7.0.tar.gz"
+  sha256 "92aa86fc2b482d2d7abf07565ea3587767a9beb9135a307aadeba61cc84f4b34"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "4662a02fa6c3e47e9d1376a177c74c7127dc16a7ee6939538d01ef425b2cbf3f" => :mojave
-    sha256 "652e4e4a0a661d3dd97aaab96a4d33ffc8096a58773621e612e80f22a9df32f7" => :high_sierra
-    sha256 "2b52aef13a792296811d7ec74719b56f0aec3e3302b19d48f82731ab952aeda4" => :sierra
+    sha256 "d1531718a22765e1af8df565b4a4dcde06f1bae3d9d0759249b2c964a4ec69a1" => :catalina
+    sha256 "61a359905a259373422f68df900384320f072fd71d3b9d6c727f1d4aa2c7ab3f" => :mojave
+    sha256 "670cef86e8c84b280c95a3219337349ee12456d284601149260532f7022af4b2" => :high_sierra
   end
 
   depends_on "rust" => :build
 
   def install
-    system "cargo", "install", "--root", prefix, "--path", "."
+    system "cargo", "install", "--locked", "--root", prefix, "--path", "."
   end
 
   test do

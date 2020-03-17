@@ -1,14 +1,14 @@
 class Webdis < Formula
   desc "Redis HTTP interface with JSON output"
   homepage "https://webd.is/"
-  url "https://github.com/nicolasff/webdis/archive/0.1.5.tar.gz"
-  sha256 "057e8a50f0e86c118ea5cfa52cdc78061c6919945d16f381dcb9be0c3537b373"
+  url "https://github.com/nicolasff/webdis/archive/0.1.9.tar.gz"
+  sha256 "49bbb41d8c6bdbcaf0d849ad463a53f2eb7d99832251df2d78e7f1489b5d0277"
 
   bottle do
     cellar :any
-    sha256 "020842ccb0b317dc21db55f817adb70f15b89626b797652da2ebe9b0b1df67f6" => :mojave
-    sha256 "028cebcaa8b89112db22d1495e51c7fc7cbed593961f3f010dba126162d4a5cd" => :high_sierra
-    sha256 "f1be754483b0357ab70ad90ffe9d95d70ddbdbd80e818e3519389bbd9990db1b" => :sierra
+    sha256 "0ed607d2f26d3aa40821e3ef20ae493c58cb12b9df4edd4a0720ff3208f8fce1" => :catalina
+    sha256 "b00e9c19e7cd7846dae7bab59b8a71b18716195222c7b52a2ad2a8fb79f519f8" => :mojave
+    sha256 "906e5885c49a034a676cee68163c749bf1d55df7e26fae1f550bb911ce361bca" => :high_sierra
   end
 
   depends_on "libevent"
@@ -31,43 +31,42 @@ class Webdis < Formula
 
   plist_options :manual => "webdis #{HOMEBREW_PREFIX}/etc/webdis.json"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-            <string>#{opt_bin}/webdis</string>
-            <string>#{etc}/webdis.prod.json</string>
-        </array>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>KeepAlive</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
         <dict>
-            <key>SuccessfulExit</key>
-            <false/>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>ProgramArguments</key>
+          <array>
+              <string>#{opt_bin}/webdis</string>
+              <string>#{etc}/webdis.prod.json</string>
+          </array>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>KeepAlive</key>
+          <dict>
+              <key>SuccessfulExit</key>
+              <false/>
+          </dict>
+          <key>WorkingDirectory</key>
+          <string>#{var}</string>
         </dict>
-        <key>WorkingDirectory</key>
-        <string>#{var}</string>
-      </dict>
-    </plist>
-  EOS
+      </plist>
+    EOS
   end
 
   test do
-    begin
-      server = fork do
-        exec "#{bin}/webdis", "#{etc}/webdis.json"
-      end
-      sleep 0.5
-      # Test that the response is from webdis
-      assert_match(/Server: Webdis/, shell_output("curl --silent -XGET -I http://localhost:7379/PING"))
-    ensure
-      Process.kill "TERM", server
-      Process.wait server
+    server = fork do
+      exec "#{bin}/webdis", "#{etc}/webdis.json"
     end
+    sleep 0.5
+    # Test that the response is from webdis
+    assert_match(/Server: Webdis/, shell_output("curl --silent -XGET -I http://localhost:7379/PING"))
+  ensure
+    Process.kill "TERM", server
+    Process.wait server
   end
 end

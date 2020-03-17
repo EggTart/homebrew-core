@@ -1,17 +1,15 @@
 class Ode < Formula
   desc "Simulating articulated rigid body dynamics"
   homepage "https://www.ode.org/"
-  url "https://bitbucket.org/odedevs/ode/downloads/ode-0.15.2.tar.gz"
-  sha256 "2eaebb9f8b7642815e46227956ca223806f666acd11e31708bd030028cf72bac"
-  revision 1
+  url "https://bitbucket.org/odedevs/ode/downloads/ode-0.16.1.tar.gz"
+  sha256 "b228acad81f33781d53eaf313437cc5d6f66aec5a4e56c515fc1b2d51e6e8eba"
   head "https://bitbucket.org/odedevs/ode/", :using => :hg
 
   bottle do
-    cellar :any_skip_relocation
-    rebuild 2
-    sha256 "bd5d10cb589e3c503282ea5a2b23a6becca27e1f80c8b62a1c67e237b204cd82" => :mojave
-    sha256 "e03793b4cc735b3da02ee8301b006761f057bf67daa4fcfdc21bd3f0004dbbb9" => :high_sierra
-    sha256 "db9f21ec8ac905541de59c2559736ef41674a3d238248c537e92cfd6f9f77ad2" => :sierra
+    cellar :any
+    sha256 "52166ed37f90857e9709d01acf6f3584583ea744572fc3e75edce902515e2575" => :catalina
+    sha256 "709bab4820a1c67a426e89e3fdc2839c04f57350260c783c6ceb05f2af6c23ea" => :mojave
+    sha256 "b5d9873c81f9c5ad4ebae396568dfb4476d688a94df04b7cb53b80646ed07357" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -24,7 +22,11 @@ class Ode < Formula
     inreplace "bootstrap", "libtoolize", "glibtoolize"
     system "./bootstrap"
 
-    system "./configure", "--prefix=#{prefix}", "--enable-libccd"
+    system "./configure", "--prefix=#{prefix}",
+                          "--enable-libccd",
+                          "--enable-shared",
+                          "--disable-static",
+                          "--enable-double-precision"
     system "make"
     system "make", "install"
   end

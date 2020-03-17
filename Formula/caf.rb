@@ -2,24 +2,26 @@ class Caf < Formula
   # Renamed from libccpa
   desc "Implementation of the Actor Model for C++"
   homepage "https://actor-framework.org/"
-  url "https://github.com/actor-framework/actor-framework/archive/0.16.3.tar.gz"
-  sha256 "8596923b42dba6363d06bd053f179416ac96cdf3864e98a2ea78723a0a95a46f"
+  url "https://github.com/actor-framework/actor-framework/archive/0.17.4.tar.gz"
+  sha256 "b5a1d80b16561edd3fa13dcda91ad00ae0a2c57b9d839a975c441f7ce63b4d1e"
   head "https://github.com/actor-framework/actor-framework.git"
 
   bottle do
     cellar :any
-    sha256 "436387129e226973bd885fb53195e51fd3c22235af24efe75765d895389ac255" => :mojave
-    sha256 "f1322c0374e8e6ccb2922c42602a67bf435ef77f0cebd3133f34af3b58f7f6b9" => :high_sierra
-    sha256 "16951a14af79ba3aa234b6a536e8e132e2a5739bba7759170a656bfa2eb88ff4" => :sierra
+    sha256 "7381c914063cfdf1bf8bae87db703cd08852d4c4404a1bda1aed0ff61f6e73bf" => :catalina
+    sha256 "62bd03d54ab09b73df5ded4472ef155a010cddce1127cc6e36ba26a766016617" => :mojave
+    sha256 "a7bf159890ed0df47fb59a94ee5d196187cc5ee18a2488516afe0ccb9fc2b948" => :high_sierra
   end
 
   depends_on "cmake" => :build
+  depends_on "openssl@1.1"
 
   def install
-    system "./configure", "--prefix=#{prefix}", "--no-examples",
-                          "--build-static", "--no-opencl"
-    system "make", "--directory=build"
-    system "make", "--directory=build", "test"
+    system "./configure", "--prefix=#{prefix}",
+                          "--build-static",
+                          "--no-examples",
+                          "--no-unit-tests",
+                          "--no-opencl"
     system "make", "--directory=build", "install"
   end
 
@@ -33,12 +35,11 @@ class Caf < Formula
         self->spawn([] {
           std::cout << "test" << std::endl;
         });
-        self->await_all_other_actors_done();
       }
       CAF_MAIN()
     EOS
     ENV.cxx11
-    system *(ENV.cxx.split + %W[test.cpp -L#{lib} -lcaf_core -o test])
+    system ENV.cxx, "test.cpp", "-L#{lib}", "-lcaf_core", "-o", "test"
     system "./test"
   end
 end

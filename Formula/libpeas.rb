@@ -1,20 +1,19 @@
 class Libpeas < Formula
   desc "GObject plugin library"
   homepage "https://developer.gnome.org/libpeas/stable/"
-  url "https://download.gnome.org/sources/libpeas/1.22/libpeas-1.22.0.tar.xz"
-  sha256 "5b2fc0f53962b25bca131a5ec0139e6fef8e254481b6e777975f7a1d2702a962"
-  revision 2
+  url "https://download.gnome.org/sources/libpeas/1.26/libpeas-1.26.0.tar.xz"
+  sha256 "a976d77e20496479a8e955e6a38fb0e5c5de89cf64d9f44e75c2213ee14f7376"
 
   bottle do
-    rebuild 1
-    sha256 "eb2c9c93ae2f61d692ed967754a535c2f98d8c7b96a5cb4762acbb4d222a165d" => :mojave
-    sha256 "0b4c9d85b0bf36dc9898947b3440d170a7176f5d0cced1ab3ef1e791c7ca58ea" => :high_sierra
-    sha256 "4d3e2f1ca6ecd6ffcfa5e496a4bc98e965293de85631c2e6d5a4f2636adbfe9f" => :sierra
+    sha256 "ca5e8f34c01f0978fb82601876a7e673fde22286cff4ab74dda6ab90774fe38a" => :catalina
+    sha256 "c71f368ce3be0f671cf37f461fba6a7ace93afb62e33b9a43efe8543d2f1e486" => :mojave
+    sha256 "c9fcb8d322d5479a50fb13b943c367518b99d5f66d1719df527295988f160af0" => :high_sierra
   end
 
-  depends_on "gettext" => :build
-  depends_on "intltool" => :build
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
+  depends_on "vala" => :build
   depends_on "glib"
   depends_on "gobject-introspection"
   depends_on "gtk+3"
@@ -23,20 +22,19 @@ class Libpeas < Formula
 
   def install
     args = %W[
-      --disable-dependency-tracking
-      --disable-silent-rules
       --prefix=#{prefix}
-      --enable-gtk
-      --enable-python3
-      --disable-python2
+      -Dpython3=true
+      -Dintrospection=true
+      -Dvapi=true
+      -Dwidgetry=true
+      -Ddemos=false
     ]
 
-    xy = Language::Python.major_minor_version "python3"
-    py3_lib = Formula["python"].opt_frameworks/"Python.framework/Versions/#{xy}/lib"
-    ENV.append "LDFLAGS", "-L#{py3_lib}"
-
-    system "./configure", *args
-    system "make", "install"
+    mkdir "build" do
+      system "meson", *args, ".."
+      system "ninja", "-v"
+      system "ninja", "install", "-v"
+    end
   end
 
   test do

@@ -1,20 +1,22 @@
 class Libwebsockets < Formula
   desc "C websockets server library"
   homepage "https://libwebsockets.org"
-  url "https://github.com/warmcat/libwebsockets/archive/v3.1.0.tar.gz"
-  sha256 "db948be74c78fc13f1f1a55e76707d7baae3a1c8f62b625f639e8f2736298324"
+  url "https://github.com/warmcat/libwebsockets/archive/v4.0.1.tar.gz"
+  sha256 "5b10ee0841a14303045617141370d5794b859b399084325c932dc0c03bf04c4b"
   head "https://github.com/warmcat/libwebsockets.git"
 
   bottle do
-    sha256 "c3dee13c27c98c87853ec9d1cbd3db27473c3fee1b0870260dc6c47294dd95e4" => :mojave
-    sha256 "fce83552c866222ad1386145cdd9745b82efc0c0a97b89b9069b98928241e893" => :high_sierra
-    sha256 "a57218f16bde1f484648fd7893d99d3dafc5c0ade4902c7ce442019b9782dc66" => :sierra
+    sha256 "a5f2a171607549355e6958d260c9441d3c7d4093344e6abe95e6df22aa38d980" => :catalina
+    sha256 "24396273908d2c7f720a583f20391f79b2b376440d68c3ff68eb7cedea371553" => :mojave
+    sha256 "643b7e3125423327c5313785ce36194de865585908f5df03369705e196911d52" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "libevent"
   depends_on "libuv"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
+
+  uses_from_macos "zlib"
 
   def install
     system "cmake", ".", *std_cmake_args,
@@ -44,7 +46,8 @@ class Libwebsockets < Formula
         return 0;
       }
     EOS
-    system ENV.cc, "test.c", "-I#{Formula["openssl"].opt_prefix}/include", "-L#{lib}", "-lwebsockets", "-o", "test"
+    system ENV.cc, "test.c", "-I#{Formula["openssl@1.1"].opt_prefix}/include",
+                   "-L#{lib}", "-lwebsockets", "-o", "test"
     system "./test"
   end
 end

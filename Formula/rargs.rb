@@ -1,19 +1,20 @@
 class Rargs < Formula
   desc "Util like xargs + awk with pattern matching support"
   homepage "https://github.com/lotabout/rargs"
-  url "https://github.com/lotabout/rargs/archive/v0.2.2.tar.gz"
-  sha256 "ac6cf3a31ff5b55f86487fa3d3266edf8f562cc6b548d6e636daf373534388ad"
+  url "https://github.com/lotabout/rargs/archive/v0.2.3.tar.gz"
+  sha256 "b33205cab0d410cd7f25e3bcb4efbfec48de76a8ad9c01ee4c286e407552f982"
 
   bottle do
-    sha256 "a0dbb61d5792ecd452df10508bd5f77deaa3d4f9657323410e93bd8a51b869bd" => :mojave
-    sha256 "bb71f94543dbd9859c33cc5e83cbec86894ca8239dd44339774e2efd0f121268" => :high_sierra
-    sha256 "c935e7e27e93f058e1bfe01f199bce5329670e33a4771e06b0fa059144a07f3b" => :sierra
+    cellar :any_skip_relocation
+    sha256 "89fe0e1d60e88b0ce966d31962adbe352af2bc1b6a45e66a8fc3783f80d90edc" => :catalina
+    sha256 "2fb0c1a1c572c148027cc48bc8d66cc3a02ba0325648eee9c2b1dd20242cb083" => :mojave
+    sha256 "e98e7b13fa8b875de0fe15ca7dbb6a8e2e5e4d0b38b75eab62342b8decc38f16" => :high_sierra
   end
 
   depends_on "rust" => :build
 
   def install
-    system "cargo", "install", "--root", prefix, "--path", "."
+    system "cargo", "install", "--locked", "--root", prefix, "--path", "."
   end
 
   test do

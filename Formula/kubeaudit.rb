@@ -1,24 +1,23 @@
 class Kubeaudit < Formula
   desc "Helps audit your Kubernetes clusters against common security controls"
   homepage "https://github.com/Shopify/kubeaudit"
-  url "https://github.com/Shopify/kubeaudit/archive/v0.6.0.tar.gz"
-  sha256 "fefd2d8255c59ecb94e326b7ea2a70e12005ac1aab4b1bcaca9dd86cc424679d"
+  url "https://github.com/Shopify/kubeaudit/archive/v0.7.0.tar.gz"
+  sha256 "b8f97a42fe617ec9cf07931f4b74f02b31676e8b8e8930c0d5f8db380b27e670"
   head "https://github.com/Shopify/kubeaudit.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "c06225ef9cfe1a90ac1ddc2dbcea35c8320583bc657b718cfb368320d120f800" => :mojave
-    sha256 "939d73123b64b4f7c21f83309c19ba68f36822d648fe859a2174ded19492e06a" => :high_sierra
-    sha256 "e82a8283d1be4e9ded6d726234cf24eb075d1ea457e5235d7849a066d39f1eb7" => :sierra
+    rebuild 1
+    sha256 "759aa4ad288b11224b5d8b4594df793e4c625768bfae76e39b81c36f84983d82" => :catalina
+    sha256 "2339bb6cd8f87632ab29b7938507fb971e15ec30c5a297c2708f186a52ef2af6" => :mojave
+    sha256 "696663bd106d38390d12bbf41731ed7e3cf2b2b31d8e1515eb164ccce9381aab" => :high_sierra
   end
 
   depends_on "go" => :build
 
   def install
-    ENV["GOPATH"] = buildpath/"src"
-
-    system "go", "build", "-o", "kubeaudit"
-    bin.install "kubeaudit"
+    system "go", "build", "-ldflags", "-s -w", "-trimpath", "-o", bin/"kubeaudit"
+    prefix.install_metafiles
   end
 
   test do

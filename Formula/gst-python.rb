@@ -1,14 +1,14 @@
 class GstPython < Formula
   desc "Python overrides for gobject-introspection-based pygst bindings"
   homepage "https://gstreamer.freedesktop.org/modules/gst-python.html"
-  url "https://gstreamer.freedesktop.org/src/gst-python/gst-python-1.16.0.tar.xz"
-  sha256 "55dc7aaed1855565f9b9ef842d93e93bfc5cb2b376faef6af5b463e1774e2d38"
+  url "https://gstreamer.freedesktop.org/src/gst-python/gst-python-1.16.2.tar.xz"
+  sha256 "208df3148d73d9f416d016564737585d8ea763d91201732d44b5fe688c6288a8"
 
   bottle do
     cellar :any
-    sha256 "abdd01bbce6825ff606f081afed46c9336bd8111a823de2ff996facabab08084" => :mojave
-    sha256 "f70c8f3ce2ca28e53b656be45f2b6b44a5571c766be934fc1721023e1c7e262d" => :high_sierra
-    sha256 "17a78814a48272ec9bfe41d8248fb804d4b2aabe82f9f8d3e59d35b50dac14aa" => :sierra
+    sha256 "fd764334bec11aca9e91e0c2d8f59f08f3ea0bf0022c377b7013804fdca20062" => :catalina
+    sha256 "7142cb296ec3244e40362698f2a89d988070b23afe84696111ee0696d6f2859b" => :mojave
+    sha256 "edcacd16e3a9cd57bc0395f10f2be461efe98cb0ae304ed7c4d09b37dfa4595b" => :high_sierra
   end
 
   depends_on "gst-plugins-base"

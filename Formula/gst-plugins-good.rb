@@ -3,14 +3,14 @@ class GstPluginsGood < Formula
   homepage "https://gstreamer.freedesktop.org/"
 
   stable do
-    url "https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.16.0.tar.xz"
-    sha256 "654adef33380d604112f702c2927574cfc285e31307b79e584113858838bb0fd"
+    url "https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.16.2.tar.xz"
+    sha256 "40bb3bafda25c0b739c8fc36e48380fccf61c4d3f83747e97ac3f9b0171b1319"
   end
 
   bottle do
-    sha256 "d1b38ed639a608b9bd95d5065615638edf196904fe4aab2f31be82c9bfadbb46" => :mojave
-    sha256 "064ab6a3f080cc7d44da026c61ada1f1815d1f373ee77a4d97b56ae911d9798d" => :high_sierra
-    sha256 "bc1d043642b09f449f86c611336f45c96f43421b116d341320c6cb3578dfe54e" => :sierra
+    sha256 "4ea6d0ea1dcc6c20afbd0976006a84d57067b83926aa74bd28a0d21b4afa1aa9" => :catalina
+    sha256 "5bab7c207014dad9b950247148d930251fba89458f97527b9fb076a1a5a843ca" => :mojave
+    sha256 "0af59390678c89f8a5c396afcd63e5b1d95d84dad217c61860db6adc3f8c2539" => :high_sierra
   end
 
   head do
@@ -27,7 +27,9 @@ class GstPluginsGood < Formula
   depends_on "flac"
   depends_on "gettext"
   depends_on "gst-plugins-base"
+  depends_on "gtk+3"
   depends_on "jpeg"
+  depends_on "lame"
   depends_on "libpng"
   depends_on "libshout"
   depends_on "libsoup"

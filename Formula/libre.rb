@@ -1,18 +1,19 @@
 class Libre < Formula
   desc "Toolkit library for asynchronous network I/O with protocol stacks"
   homepage "http://www.creytiv.com"
-  url "http://www.creytiv.com/pub/re-0.5.9.tar.gz"
-  sha256 "882ba05cae77e07099add1d24195863d08fcddfef62d1586d8d07f1721b59612"
+  url "http://www.creytiv.com/pub/re-0.6.1.tar.gz"
+  sha256 "cd5bfc79640411803b200c7531e4ba8a230da3806746d3bd2de970da2060fe43"
 
   bottle do
     cellar :any
-    sha256 "9bf43c79274a095e15b6a4f726c9750c2972b48900581b98c79cef773b929a0d" => :mojave
-    sha256 "8194eefcf23d4c37a7d30f9a15b47d576f6a2506078c2cfe99bf690ce78b6bdd" => :high_sierra
-    sha256 "224690c1ce6b7912c997b5d454c308cd9be3d231d5e7b1763f3274b2eeaba719" => :sierra
-    sha256 "ca45de9ec5798c63537e0492daf15c0c52774961aaf2d2bc38fc3e3a0913f059" => :el_capitan
+    sha256 "0ca7e76631b5f30d72b4bc4248e894d00f05cfb785c98856d82cd5cc13e591f9" => :catalina
+    sha256 "5d43d79ef2406e40c858463189ca8a40f0b13ede8a7090b56ba0fd1ef942dabc" => :mojave
+    sha256 "32787ca36540a0c7c330560076e25726bcca0f08a7b77014d3837bd9c7ca1840" => :high_sierra
   end
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
+
+  uses_from_macos "zlib"
 
   def install
     system "make", "SYSROOT=#{MacOS.sdk_path}/usr", "install", "PREFIX=#{prefix}"

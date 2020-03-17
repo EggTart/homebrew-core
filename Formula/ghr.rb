@@ -1,31 +1,26 @@
 class Ghr < Formula
   desc "Upload multiple artifacts to GitHub Release in parallel"
   homepage "https://tcnksm.github.io/ghr"
-  url "https://github.com/tcnksm/ghr/archive/v0.12.1.tar.gz"
-  sha256 "d124f7ad2d4bd5be2d6c51ad4d780d69fffc19e41440f7f14bcf2a24d415e006"
+  url "https://github.com/tcnksm/ghr/archive/v0.13.0.tar.gz"
+  sha256 "53933c6436187f573128903701ce74ac341793e892d3c2f57c822c0ce3c49e11"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "1cb38dd46fc38adda97cee26f0ae38d0defa2aa3eedaf3a4517d3ca304cd9448" => :mojave
-    sha256 "33a8801ddcfb493a72775f62e1500e376afe0eec6087499be80c85001cbebe9a" => :high_sierra
-    sha256 "659559bd0e30b2164ac4440a77a87861bdd8a5f6de9d938a3b43e9a0910fc7af" => :sierra
+    rebuild 1
+    sha256 "7fd9ae651a7adbedd46e266e04260fa221c84cf1595c04e644f3e720f8f76a48" => :catalina
+    sha256 "322df199f2e51c91d348638c3d7baed79c8e542755fe51634cc2c06ea99150a9" => :mojave
+    sha256 "941dce22c70f320d75f5e961c3cfc33f837f6ee113a5a06c445e57cbdcfa34fb" => :high_sierra
   end
 
-  depends_on "dep" => :build
   depends_on "go" => :build
 
   def install
-    ENV["GOPATH"] = buildpath
-    dir = buildpath/"src/github.com/tcnksm/ghr"
-    dir.install Dir["*"]
-    cd dir do
-      # Avoid running `go get`
-      inreplace "Makefile", "go get ${u} -d", ""
+    # Avoid running `go get`
+    inreplace "Makefile", "go get ${u} -d", ""
 
-      system "make", "build"
-      bin.install "bin/ghr" => "ghr"
-      prefix.install_metafiles
-    end
+    system "make", "build"
+    bin.install "bin/ghr" => "ghr"
+    prefix.install_metafiles
   end
 
   test do

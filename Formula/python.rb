@@ -1,14 +1,14 @@
 class Python < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xz"
-  sha256 "da60b54064d4cfcd9c26576f6df2690e62085123826cff2e667e72a91952d318"
+  url "https://www.python.org/ftp/python/3.7.7/Python-3.7.7.tar.xz"
+  sha256 "06a0a9f1bf0d8cd1e4121194d666c4e28ddae4dd54346de6c343206599f02136"
   head "https://github.com/python/cpython.git"
 
   bottle do
-    sha256 "25e0099852136c4ef1efd221247d0f67aa71f7b624211b98898f8b46c612f40d" => :mojave
-    sha256 "b65fecb4bb8350359488d6ca4c0a5a343f658f424d101a45e28d5a72de7f455c" => :high_sierra
-    sha256 "b07ec3a40f58fa317e1bb937992dc0dca7d60812c60de99bde14fbadb6c27cc5" => :sierra
+    sha256 "acd595852aecc2bfa46c57d86db716e64d57bb2753c45ff7f745b46c7655dd65" => :catalina
+    sha256 "cc8177d823b39d099e1f1a6f2e0fccb16e531508b59580f1fd44f659b54eeb84" => :mojave
+    sha256 "079ace2d46b98d9931f14fbb6e02d883fedf0333faabcbaf552b12553325f4b6" => :high_sierra
   end
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -24,27 +24,33 @@ class Python < Formula
 
   depends_on "pkg-config" => :build
   depends_on "gdbm"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "readline"
   depends_on "sqlite"
   depends_on "xz"
 
+  uses_from_macos "bzip2"
+  uses_from_macos "libffi"
+  uses_from_macos "ncurses"
+  uses_from_macos "zlib"
+
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6", "bin/pip-3.7"
-  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6", "bin/easy_install-3.7"
+  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5",
+             "bin/easy_install-3.6", "bin/easy_install-3.7"
 
   resource "setuptools" do
-    url "https://files.pythonhosted.org/packages/c2/f7/c7b501b783e5a74cf1768bc174ee4fb0a8a6ee5af6afa92274ff964703e0/setuptools-40.8.0.zip"
-    sha256 "6e4eec90337e849ade7103723b9a99631c1f0d19990d6e8412dc42f5ae8b304d"
+    url "https://files.pythonhosted.org/packages/df/ed/bea598a87a8f7e21ac5bbf464102077c7102557c07db9ff4e207bd9f7806/setuptools-46.0.0.zip"
+    sha256 "2f00f25b780fbfd0787e46891dcccd805b08d007621f24629025f48afef444b5"
   end
 
   resource "pip" do
-    url "https://files.pythonhosted.org/packages/36/fa/51ca4d57392e2f69397cd6e5af23da2a8d37884a605f9e3f2d3bfdc48397/pip-19.0.3.tar.gz"
-    sha256 "6e6f197a1abfb45118dbb878b5c859a0edbdd33fd250100bc015b67fded4b9f2"
+    url "https://files.pythonhosted.org/packages/8e/76/66066b7bc71817238924c7e4b448abdb17eb0c92d645769c223f9ace478f/pip-20.0.2.tar.gz"
+    sha256 "7db0c8ea4c7ea51c8049640e8e6e7fde949de672bfa4949920675563a5a6967f"
   end
 
   resource "wheel" do
-    url "https://files.pythonhosted.org/packages/b7/cf/1ea0f5b3ce55cacde1e84cdde6cee1ebaff51bd9a3e6c7ba4082199af6f6/wheel-0.33.1.tar.gz"
-    sha256 "66a8fd76f28977bb664b098372daef2b27f60dc4d1688cfab7b37a09448f0e9d"
+    url "https://files.pythonhosted.org/packages/75/28/521c6dc7fef23a68368efefdcd682f5b3d1d58c2b90b06dc1d0b805b51ae/wheel-0.34.2.tar.gz"
+    sha256 "8788e9155fe14f54164c1b9eb0a319d98ef02c160725587ad60f14ddc57b6f96"
   end
 
   def install
@@ -65,7 +71,7 @@ class Python < Formula
       --enable-loadable-sqlite-extensions
       --without-ensurepip
       --with-dtrace
-      --with-openssl=#{Formula["openssl"].opt_prefix}
+      --with-openssl=#{Formula["openssl@1.1"].opt_prefix}
     ]
 
     args << "--without-gcc" if ENV.compiler == :clang
@@ -139,12 +145,6 @@ class Python < Formula
               %r{('LINKFORSHARED': .*?)'(Python.framework/Versions/3.\d+/Python)'}m,
               "\\1'#{opt_prefix}/Frameworks/\\2'"
 
-    # A fix, because python and python3 both want to install Python.framework
-    # and therefore we can't link both into HOMEBREW_PREFIX/Frameworks
-    # https://github.com/Homebrew/homebrew/issues/15943
-    ["Headers", "Python", "Resources"].each { |f| rm(prefix/"Frameworks/Python.framework/#{f}") }
-    rm prefix/"Frameworks/Python.framework/Versions/Current"
-
     # Symlink the pkgconfig files into HOMEBREW_PREFIX so they're accessible.
     (lib/"pkgconfig").install_symlink Dir["#{frameworks}/Python.framework/Versions/#{xy}/lib/pkgconfig/*"]
 
@@ -154,6 +154,11 @@ class Python < Formula
     %w[setuptools pip wheel].each do |r|
       (libexec/r).install resource(r)
     end
+
+    # Remove wheel test data.
+    # It's for people editing wheel and contains binaries which fail `brew linkage`.
+    rm libexec/"wheel/tox.ini"
+    rm_r libexec/"wheel/tests"
 
     # Install unversioned symlinks in libexec/bin.
     {
@@ -223,9 +228,9 @@ class Python < Formula
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [HOMEBREW_PREFIX/"include", Formula["openssl"].opt_include,
+    include_dirs = [HOMEBREW_PREFIX/"include", Formula["openssl@1.1"].opt_include,
                     Formula["sqlite"].opt_include]
-    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["openssl"].opt_lib,
+    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["openssl@1.1"].opt_lib,
                     Formula["sqlite"].opt_lib]
 
     cfg = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/distutils/distutils.cfg"
@@ -283,10 +288,10 @@ class Python < Formula
   end
 
   def caveats
-    if prefix.exist?
-      xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
+    xy = if prefix.exist?
+      (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
     else
-      xy = version.to_s.slice(/(3\.\d)/) || "3.7"
+      version.to_s.slice(/(3\.\d)/) || "3.7"
     end
     <<~EOS
       Python has been installed as
@@ -295,9 +300,6 @@ class Python < Formula
       Unversioned symlinks `python`, `python-config`, `pip` etc. pointing to
       `python3`, `python3-config`, `pip3` etc., respectively, have been installed into
         #{opt_libexec}/bin
-
-      If you need Homebrew's Python 2.7 run
-        brew install python@2
 
       You can install Python packages with
         pip3 install <package>

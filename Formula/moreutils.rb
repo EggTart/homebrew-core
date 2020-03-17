@@ -8,12 +8,16 @@ class Moreutils < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "0277b44f53cc7e581c338a28fa330e4d436cd05757d99cfc9baa1f5ca095af4c" => :catalina
     sha256 "a3d5a342bf079998b52d172f0f5e8b066b256145e2eb3ded393a0e6e2680b573" => :mojave
     sha256 "3731c1304a72a7a0486891bf592cd82b7422d0c37cadeb00b6f633e62f20aa35" => :high_sierra
     sha256 "fac2ba67a62889ff07edb8257e0d13aa96143a7421521ffdf3e0cf685a1cdc1e" => :sierra
   end
 
   depends_on "docbook-xsl" => :build
+
+  uses_from_macos "libxml2" => :build
+  uses_from_macos "libxslt" => :build
 
   conflicts_with "parallel", :because => "Both install a `parallel` executable."
   conflicts_with "pwntools", :because => "Both install an `errno` executable."

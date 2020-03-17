@@ -4,13 +4,15 @@ class Cataclysm < Formula
   url "https://github.com/CleverRaven/Cataclysm-DDA/archive/0.D.tar.gz"
   version "0.D"
   sha256 "6cc97b3e1e466b8585e8433a6d6010931e9a073f6ec060113161b38052d82882"
+  revision 1
   head "https://github.com/CleverRaven/Cataclysm-DDA.git"
 
   bottle do
     cellar :any
-    sha256 "9eddd3fb35b4090e7e3db1d9d0d11226b65a16b00ab0a803ecc038bf5597ca0f" => :mojave
-    sha256 "2dd7702becd712c2f3f6c1e2683a3dc8e08644204f039c6a4339c1930fed4f2c" => :high_sierra
-    sha256 "978296d8abe4f25b88afc7df8e3914335e417e7fb44cc2625900101ef91a8b74" => :sierra
+    rebuild 1
+    sha256 "e4709c4d9b01f108913de4c3cf8c3dafe0cdd490dbfa54f623755f98d6464bb3" => :catalina
+    sha256 "192f052d4474364cf61fdb920329dbd5ac1ca2a81f8f8d10be2dad22bd41d96b" => :mojave
+    sha256 "68a5e83bc0ff554b9b74d5062b93ad9a313c2e9e448ef1a02c1c2799eb8a9134" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
@@ -56,19 +58,18 @@ class Cataclysm < Formula
     user_config_dir = testpath/"Library/Application Support/Cataclysm/"
     user_config_dir.mkpath
 
-    # run cataclysm for 5 seconds
-    game = fork do
-      system bin/"cataclysm"
+    # run cataclysm for 7 seconds
+    pid = fork do
+      exec bin/"cataclysm"
     end
-
-    sleep 5
-    Process.kill("HUP", game)
-
+    sleep 7
     assert_predicate user_config_dir/"config",
                      :exist?, "User config directory should exist"
     assert_predicate user_config_dir/"templates",
                      :exist?, "User template directory should exist"
     assert_predicate user_config_dir/"save",
                      :exist?, "User save directory should exist"
+  ensure
+    Process.kill("TERM", pid)
   end
 end

@@ -1,13 +1,13 @@
 class CurlOpenssl < Formula
   desc "Get a file from an HTTP, HTTPS or FTP server"
   homepage "https://curl.haxx.se/"
-  url "https://curl.haxx.se/download/curl-7.65.0.tar.bz2"
-  sha256 "ea47c08f630e88e413c85793476e7e5665647330b6db35f5c19d72b3e339df5c"
+  url "https://curl.haxx.se/download/curl-7.69.1.tar.bz2"
+  sha256 "2ff5e5bd507adf6aa88ff4bbafd4c7af464867ffb688be93b9930717a56c4de8"
 
   bottle do
-    sha256 "db4002002996bf46d5b38a1904f0cd0855eda523dbd79ce67763034ed9eb1179" => :mojave
-    sha256 "87e35725f492434de291638a86dfd63d40c455d180c9d265bcc9641876bb96f6" => :high_sierra
-    sha256 "1e53175875edca714a8e6ac8931ac62488efc31595827c0890eda911fac1c292" => :sierra
+    sha256 "c64c399d3fa8c7963c3d1881bd20467382fe91020b976e0e04e44e37cf8b992b" => :catalina
+    sha256 "7ffe9b70aff89a02e532d584c5dbf95720899f7df2e033ae294c46b52fb9984a" => :mojave
+    sha256 "da8add26e84654daeb797404c335563e7e932d5e64af6d4d85090b68bf628e3f" => :high_sierra
   end
 
   head do
@@ -28,7 +28,7 @@ class CurlOpenssl < Formula
   depends_on "libssh2"
   depends_on "nghttp2"
   depends_on "openldap"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "rtmpdump"
 
   def install
@@ -40,14 +40,15 @@ class CurlOpenssl < Formula
       --disable-silent-rules
       --prefix=#{prefix}
       --enable-ares=#{Formula["c-ares"].opt_prefix}
-      --with-ca-bundle=#{etc}/openssl/cert.pem
-      --with-ca-path=#{etc}/openssl/certs
+      --with-ca-bundle=#{etc}/openssl@1.1/cert.pem
+      --with-ca-path=#{etc}/openssl@1.1/certs
       --with-gssapi
       --with-libidn2
       --with-libmetalink
       --with-librtmp
       --with-libssh2
-      --with-ssl=#{Formula["openssl"].opt_prefix}
+      --with-ssl=#{Formula["openssl@1.1"].opt_prefix}
+      --without-libpsl
     ]
 
     system "./configure", *args

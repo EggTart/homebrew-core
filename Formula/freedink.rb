@@ -3,11 +3,13 @@ class Freedink < Formula
   homepage "https://www.gnu.org/software/freedink/"
   url "https://ftp.gnu.org/gnu/freedink/freedink-109.6.tar.gz"
   sha256 "5e0b35ac8f46d7bb87e656efd5f9c7c2ac1a6c519a908fc5b581e52657981002"
+  revision 1
 
   bottle do
-    sha256 "bd306ccb62b03ef425a8fc8e57f9a7b3fe848be849898ce52f2323fb3cc0ceb6" => :mojave
-    sha256 "41d9d33884a5be4191d5b04b2688a28ed1c5800d481c6fec739f759ca7bc1378" => :high_sierra
-    sha256 "785187db7fff66ffd8951938fb08752d01b747a3f782d8e551ad271ecd28796a" => :sierra
+    rebuild 1
+    sha256 "b971d9badc94cb0075963c341ed11c1872e3157b279def6d91fd088743b5e5e4" => :catalina
+    sha256 "d44bcab516f79beec47a1ebdc8ec68b66071a34e17abb8556407a3656946d454" => :mojave
+    sha256 "d022642338ba2979982088f1b65d6230ab71478fdaadfe4966372aa15b909182" => :high_sierra
   end
 
   depends_on "glm" => :build
@@ -27,6 +29,12 @@ class Freedink < Formula
   resource "freedink-data" do
     url "https://ftp.gnu.org/gnu/freedink/freedink-data-1.08.20190120.tar.gz"
     sha256 "715f44773b05b73a9ec9b62b0e152f3f281be1a1512fbaaa386176da94cffb9d"
+  end
+
+  # Patch for recent SDL
+  patch :p0 do
+    url "https://raw.githubusercontent.com/openbsd/ports/fc8b95c6/games/freedink/game/patches/patch-src_input_cpp"
+    sha256 "fa06a8a87bd4f3977440cdde0fb6145b6e5b0005b266b19c059d3fd7c2ff836a"
   end
 
   def install

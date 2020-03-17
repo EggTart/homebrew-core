@@ -6,6 +6,7 @@ class Libgsm < Formula
 
   bottle do
     cellar :any
+    sha256 "40477d520f2e5af9f9557276c9ae4724c39cc79166f38d47347754839e679e1e" => :catalina
     sha256 "b06d7e8a936f19fe705d0b5cfe9a0da91d78acbcec4521fe1b61fcb37a97a77d" => :mojave
     sha256 "430c06d59d788bae3b9081924d68bb8c800cf0792fb533219e0e6c94887a0e22" => :high_sierra
     sha256 "1efa5fae6b9cf7bc802a42845836522bdb89fa0acf5bae88ca36dd75b823a5de" => :sierra
@@ -40,5 +41,23 @@ class Libgsm < Formula
            "INSTALL_ROOT=#{prefix}",
            "GSM_INSTALL_INC=#{include}"
     lib.install Dir["lib/*dylib"]
+  end
+
+  test do
+    (testpath/"test.c").write <<~EOS
+      #include <gsm.h>
+
+      int main()
+      {
+        gsm g = gsm_create();
+        if (g == 0)
+        {
+          return 1;
+        }
+        return 0;
+      }
+    EOS
+    system ENV.cc, "-L#{lib}", "-lgsm", "test.c", "-o", "test"
+    system "./test"
   end
 end

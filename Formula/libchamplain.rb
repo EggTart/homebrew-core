@@ -1,19 +1,20 @@
 class Libchamplain < Formula
   desc "ClutterActor for displaying maps"
   homepage "https://wiki.gnome.org/Projects/libchamplain"
-  url "https://download.gnome.org/sources/libchamplain/0.12/libchamplain-0.12.19.tar.xz"
-  sha256 "36842e326cdbe3cdbdab818472797eedb661dec842fe0579596a3a8d438b2aa4"
+  url "https://download.gnome.org/sources/libchamplain/0.12/libchamplain-0.12.20.tar.xz"
+  sha256 "0232b4bfcd130a1c5bda7b6aec266bf2d06e701e8093df1886f1e26bc1ba3066"
 
   bottle do
-    sha256 "bf640f087cd8d61667cd840afabb8f4499860a0340d2ce6c824a3422fc3eb4e8" => :mojave
-    sha256 "05b2de17cfacd7c312d0e04dbc8f73c51669dcec0687e72b66766a02705c0b95" => :high_sierra
-    sha256 "0757e968d16a99634a202217d2f153303da56fadd15308b7f4232b7c735cdc8e" => :sierra
+    cellar :any
+    sha256 "b6be73601f13ea2e273909b9946071e1904ef379d1b001366f347d78b5a8643c" => :catalina
+    sha256 "9722cf78615bca8249d01e0df046ac75cfa056afe66fdf88eadbb4cc442a9665" => :mojave
+    sha256 "0ab75bc1d716f572c0eeef649f8bbdd390e87debb519faa6e350d02646139b09" => :high_sierra
   end
 
-  depends_on "autoconf" => :build
-  depends_on "automake" => :build
   depends_on "gnome-common" => :build
   depends_on "gobject-introspection" => :build
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "clutter"
   depends_on "clutter-gtk"
@@ -21,12 +22,11 @@ class Libchamplain < Formula
   depends_on "libsoup"
 
   def install
-    system "./autogen.sh"
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}"
-    system "make", "install"
+    mkdir "build" do
+      system "meson", "--prefix=#{prefix}", "-Ddocs=false", ".."
+      system "ninja"
+      system "ninja", "install"
+    end
   end
 
   test do
@@ -70,7 +70,7 @@ class Libchamplain < Formula
       -I#{glib.opt_lib}/glib-2.0/include
       -I#{gtkx3.opt_include}/gtk-3.0
       -I#{harfbuzz.opt_include}/harfbuzz
-      -I#{include}/libchamplain-0.12
+      -I#{include}/champlain-0.12
       -I#{json_glib.opt_include}/json-glib-1.0
       -I#{libepoxy.opt_include}
       -I#{libpng.opt_include}/libpng16

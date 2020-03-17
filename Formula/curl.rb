@@ -1,14 +1,14 @@
 class Curl < Formula
   desc "Get a file from an HTTP, HTTPS or FTP server"
   homepage "https://curl.haxx.se/"
-  url "https://curl.haxx.se/download/curl-7.65.0.tar.bz2"
-  sha256 "ea47c08f630e88e413c85793476e7e5665647330b6db35f5c19d72b3e339df5c"
+  url "https://curl.haxx.se/download/curl-7.69.1.tar.bz2"
+  sha256 "2ff5e5bd507adf6aa88ff4bbafd4c7af464867ffb688be93b9930717a56c4de8"
 
   bottle do
     cellar :any
-    sha256 "888bdd66d151af7985f776cb43f020790f83a8f3af6d285f2c71b101b77291c2" => :mojave
-    sha256 "c16042397aa5b3d0cf9dcc23ff3a7509cfdf5e0ab7aa716c40945e9a55e9b71e" => :high_sierra
-    sha256 "047ccb1e8708408bbcb34be3790868e8f66ce29f41045269bce91d00896e2207" => :sierra
+    sha256 "400500fede02f9335bd38c16786b2bbf5e601e358dfac8c21e363d2a8fdd8fac" => :catalina
+    sha256 "f082c275f9af1e8e93be12b63a1aff659ba6efa48c8528a97e26c9858a6f95b6" => :mojave
+    sha256 "ad023093c252799a4c60646a149bfe14ffa6984817cf463a6f0e98f6551057fe" => :high_sierra
   end
 
   head do
@@ -23,6 +23,9 @@ class Curl < Formula
 
   depends_on "pkg-config" => :build
 
+  uses_from_macos "openssl"
+  uses_from_macos "zlib"
+
   def install
     system "./buildconf" if build.head?
 
@@ -31,7 +34,7 @@ class Curl < Formula
       --disable-dependency-tracking
       --disable-silent-rules
       --prefix=#{prefix}
-      --with-darwinssl
+      --with-secure-transport
       --without-ca-bundle
       --without-ca-path
     ]

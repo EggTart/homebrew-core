@@ -1,13 +1,13 @@
 class LibvirtGlib < Formula
   desc "Libvirt API for glib-based programs"
   homepage "https://libvirt.org/"
-  url "https://libvirt.org/sources/glib/libvirt-glib-2.0.0.tar.gz"
-  sha256 "94e8c410c67501303d3b32ca8ce2c36edf898511ec4de9b7f29cd35d274b3d6a"
+  url "https://libvirt.org/sources/glib/libvirt-glib-3.0.0.tar.gz"
+  sha256 "7fff8ca9a2b723dbfd04223b1c7624251c8bf79eb57ec27362a7301b2dd9ebfe"
 
   bottle do
-    sha256 "712a3bdbb396b15d73fd842cb7042db78aeb3c2c3f60bf38101f4082f8e70d00" => :mojave
-    sha256 "fbb9aa27837e6207508c346f6be03bfa80cae82317f41fda8061535207ab9f21" => :high_sierra
-    sha256 "79e0178f530a2df9140749b34079497c856327c9126eaf0628043375c1172ac0" => :sierra
+    sha256 "0e4ef4273857818f627595c15dbda1e69ef71a71ec4aaed88c33a6af96e65a80" => :catalina
+    sha256 "bfd1b4197f3069d72dd8da66002ee3f138f165eb9956e217ee7a36bd8cea1e15" => :mojave
+    sha256 "dde218b4644a43fd7fe9b47bd62e0d2ec0b7f52a4e6d68ca5413c3fd04da5800" => :high_sierra
   end
 
   depends_on "gobject-introspection" => :build

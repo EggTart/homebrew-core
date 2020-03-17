@@ -1,11 +1,12 @@
 class Uwsgi < Formula
   desc "Full stack for building hosting services"
   homepage "https://uwsgi-docs.readthedocs.org/en/latest/"
+  revision 2
   head "https://github.com/unbit/uwsgi.git"
 
   stable do
-    url "https://projects.unbit.it/downloads/uwsgi-2.0.17.1.tar.gz"
-    sha256 "d2318235c74665a60021a4fc7770e9c2756f9fc07de7b8c22805efe85b5ab277"
+    url "https://projects.unbit.it/downloads/uwsgi-2.0.18.tar.gz"
+    sha256 "4972ac538800fb2d421027f49b4a1869b66048839507ccf0aa2fda792d99f583"
 
     # Fix "library not found for -lgcc_s.10.5" with 10.14 SDK
     # Remove in next release
@@ -16,34 +17,29 @@ class Uwsgi < Formula
   end
 
   bottle do
-    rebuild 2
-    sha256 "aa95c6aa7628d8b24c4b39fe57a7eef5e8d8ee87e213d8cfc14847bacc344995" => :mojave
-    sha256 "90a83b0aaf8f43ca1ca0374fc6df91ca1263e48261fa0dc5df80783006d70734" => :high_sierra
-    sha256 "cede48b191857733597fee22d494426cffe2127cadca87b07595c8d40d163aef" => :sierra
+    sha256 "a918ea316ed8408dae9257ee12ad3df6db84996be08a2e657efab291a688d702" => :catalina
+    sha256 "d7d6455c84e3a0f02ba2843f2a0c05a8433ce12042b54024048fb30457f24035" => :mojave
+    sha256 "5064635530307154b9d08a912ed246b1c0049f9a8bcf1e7e9b9994160be09069" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
-  depends_on "python@2"
+  depends_on "python"
   depends_on "yajl"
 
-  # "no such file or directory: '... libpython2.7.a'"
-  # Reported 23 Jun 2016: https://github.com/unbit/uwsgi/issues/1299
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/726bff4/uwsgi/libpython-tbd-xcode-sdk.diff"
-    sha256 "d71c879774b32424b5a9051ff47d3ae6e005412e9214675d806857ec906f9336"
-  end
+  uses_from_macos "curl"
+  uses_from_macos "libxml2"
+  uses_from_macos "openldap"
+  uses_from_macos "perl"
 
   def install
     # Fix file not found errors for /usr/lib/system/libsystem_symptoms.dylib and
     # /usr/lib/system/libsystem_darwin.dylib on 10.11 and 10.12, respectively
-    if MacOS.version == :sierra || MacOS.version == :el_capitan
-      ENV["SDKROOT"] = MacOS.sdk_path
-    end
+    ENV["SDKROOT"] = MacOS.sdk_path if MacOS.version == :sierra || MacOS.version == :el_capitan
 
     ENV.append %w[CFLAGS LDFLAGS], "-arch #{MacOS.preferred_arch}"
-    openssl = Formula["openssl"]
+    openssl = Formula["openssl@1.1"]
     ENV.prepend "CFLAGS", "-I#{openssl.opt_include}"
     ENV.prepend "LDFLAGS", "-L#{openssl.opt_lib}"
 
@@ -58,7 +54,7 @@ class Uwsgi < Formula
       embedded_plugins = null
     EOS
 
-    system "python", "uwsgiconfig.py", "--verbose", "--build", "brew"
+    system "python3", "uwsgiconfig.py", "--verbose", "--build", "brew"
 
     plugins = %w[airbrake alarm_curl alarm_speech asyncio cache
                  carbon cgi cheaper_backlog2 cheaper_busyness
@@ -79,53 +75,48 @@ class Uwsgi < Formula
 
     (libexec/"uwsgi").mkpath
     plugins.each do |plugin|
-      system "python", "uwsgiconfig.py", "--verbose", "--plugin", "plugins/#{plugin}", "brew"
+      system "python3", "uwsgiconfig.py", "--verbose", "--plugin", "plugins/#{plugin}", "brew"
     end
 
-    python_versions = {
-      "python"  => "python2.7",
-      "python2" => "python2.7",
-    }
-    python_versions.each do |k, v|
-      system v, "uwsgiconfig.py", "--verbose", "--plugin", "plugins/python", "brew", k
-    end
+    system "python3", "uwsgiconfig.py", "--verbose", "--plugin", "plugins/python", "brew", "python3"
 
     bin.install "uwsgi"
   end
 
   plist_options :manual => "uwsgi"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>KeepAlive</key>
-        <true/>
-        <key>ProgramArguments</key>
-        <array>
-            <string>#{opt_bin}/uwsgi</string>
-            <string>--uid</string>
-            <string>_www</string>
-            <string>--gid</string>
-            <string>_www</string>
-            <string>--master</string>
-            <string>--die-on-term</string>
-            <string>--autoload</string>
-            <string>--logto</string>
-            <string>#{HOMEBREW_PREFIX}/var/log/uwsgi.log</string>
-            <string>--emperor</string>
-            <string>#{HOMEBREW_PREFIX}/etc/uwsgi/apps-enabled</string>
-        </array>
-        <key>WorkingDirectory</key>
-        <string>#{HOMEBREW_PREFIX}</string>
-      </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+        <dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>KeepAlive</key>
+          <true/>
+          <key>ProgramArguments</key>
+          <array>
+              <string>#{opt_bin}/uwsgi</string>
+              <string>--uid</string>
+              <string>_www</string>
+              <string>--gid</string>
+              <string>_www</string>
+              <string>--master</string>
+              <string>--die-on-term</string>
+              <string>--autoload</string>
+              <string>--logto</string>
+              <string>#{HOMEBREW_PREFIX}/var/log/uwsgi.log</string>
+              <string>--emperor</string>
+              <string>#{HOMEBREW_PREFIX}/etc/uwsgi/apps-enabled</string>
+          </array>
+          <key>WorkingDirectory</key>
+          <string>#{HOMEBREW_PREFIX}</string>
+        </dict>
+      </plist>
+    EOS
   end
 
   test do
@@ -136,7 +127,7 @@ class Uwsgi < Formula
     EOS
 
     pid = fork do
-      exec "#{bin}/uwsgi --http-socket 127.0.0.1:8080 --protocol=http --plugin python -w helloworld"
+      exec "#{bin}/uwsgi --http-socket 127.0.0.1:8080 --protocol=http --plugin python3 -w helloworld"
     end
     sleep 2
 

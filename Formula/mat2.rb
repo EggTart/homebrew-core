@@ -1,19 +1,20 @@
 class Mat2 < Formula
   desc "Metadata anonymization toolkit"
   homepage "https://0xacab.org/jvoisin/mat2"
-  url "https://0xacab.org/jvoisin/mat2/-/archive/0.8.0/mat2-0.8.0.tar.gz"
-  sha256 "64b627eaafa1894e7516713c589055eccb1d71b7936b21a80e29877fbd7c2c34"
+  url "https://0xacab.org/jvoisin/mat2/-/archive/0.10.1/mat2-0.10.1.tar.gz"
+  sha256 "5ed3d9c945d1475479a42e87879821440c66c2881db157aa480ccdcefc13d202"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "632dcf019937de534b22d72b9f634a0acdcc95583a8d62f89220ce90b691ad56" => :mojave
-    sha256 "632dcf019937de534b22d72b9f634a0acdcc95583a8d62f89220ce90b691ad56" => :high_sierra
-    sha256 "328051b9d1c085ee8fafa5894d4b13a2a7c2a8cc54bf7e90fb8c8210a1cab9dd" => :sierra
+    sha256 "e42bced3778dbd1a24daf17a0d2fa29f2f9ccd7230375e8a596c44b4b4480df3" => :catalina
+    sha256 "e42bced3778dbd1a24daf17a0d2fa29f2f9ccd7230375e8a596c44b4b4480df3" => :mojave
+    sha256 "e42bced3778dbd1a24daf17a0d2fa29f2f9ccd7230375e8a596c44b4b4480df3" => :high_sierra
   end
 
   depends_on "exiftool"
   depends_on "ffmpeg"
   depends_on "gdk-pixbuf"
+  depends_on "librsvg"
   depends_on "poppler"
   depends_on "py3cairo"
   depends_on "pygobject3"

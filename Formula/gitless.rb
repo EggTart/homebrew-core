@@ -3,19 +3,21 @@ class Gitless < Formula
 
   desc "Simplified version control system on top of git"
   homepage "https://gitless.com/"
-  url "https://github.com/sdg-mit/gitless/archive/v0.8.6.tar.gz"
-  sha256 "e1d009bf9d7c89428d7029394cc85a0d91bd2af73f019508ddc92c98faeed8e5"
-  revision 3
+  url "https://github.com/sdg-mit/gitless/archive/v0.8.8.tar.gz"
+  sha256 "470aab13d51baec2ab54d7ceb6d12b9a2937f72d840516affa0cb34a6360523c"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "c37600221f89482e7167270ec255c882973e5309ab2e9fbdf812e54570429b89" => :mojave
-    sha256 "09ed368b3a211cb3ca26a73cdfa3e48c622332aad591e661e74303dce77ebf8a" => :high_sierra
-    sha256 "7aad838cdb15a8426a2e112821e1d4a3af2c4d9fcf88e37047561cc27b652db1" => :sierra
+    sha256 "bcd17099e61887e4d0374cac43163f7b6e3f4737699cf8fd7742e1218b81c680" => :catalina
+    sha256 "72e835991915de55b762658978ad04d98a4f50368c0e7ccd23a326e3d73e15f1" => :mojave
+    sha256 "4c1ff8fd310933d86ae14dc513001c20de0db7465e351574f7babc6b0ba7ad84" => :high_sierra
   end
 
   depends_on "libgit2"
   depends_on "python"
+
+  uses_from_macos "libffi"
 
   resource "args" do
     url "https://files.pythonhosted.org/packages/e5/1c/b701b3f4bd8d3667df8342f311b3efaeab86078a840fb826bd204118cc6b/args-0.1.0.tar.gz"
@@ -23,8 +25,8 @@ class Gitless < Formula
   end
 
   resource "cffi" do
-    url "https://files.pythonhosted.org/packages/10/f7/3b302ff34045f25065091d40e074479d6893882faef135c96f181a57ed06/cffi-1.11.4.tar.gz"
-    sha256 "df9083a992b17a28cd4251a3f5c879e0198bb26c9e808c4647e0a18739f1d11d"
+    url "https://files.pythonhosted.org/packages/93/1a/ab8c62b5838722f29f3daffcc8d4bd61844aa9b5f437341cc890ceee483b/cffi-1.12.3.tar.gz"
+    sha256 "041c81822e9f84b1d9c401182e174996f0bae9991f33725d059b771744290774"
   end
 
   resource "clint" do
@@ -38,8 +40,8 @@ class Gitless < Formula
   end
 
   resource "pygit2" do
-    url "https://files.pythonhosted.org/packages/ec/56/9f591bee962dcdc3c4268c4bf0a836d5188b1604e58e3618df12a963573b/pygit2-0.28.1.tar.gz"
-    sha256 "2ccdb865ef530c799a6430d0e52952925ffc0d7c856e7608f4cf42f4b821412b"
+    url "https://files.pythonhosted.org/packages/4c/64/88c2a4eb2d22ca1982b364f41ff5da42d61de791d7eb68140e7f8f7eb721/pygit2-0.28.2.tar.gz"
+    sha256 "4d8c3fbbf2e5793a9984681a94e6ac2f1bc91a92cbac762dbdfbea296b917f86"
   end
 
   resource "sh" do
@@ -52,20 +54,14 @@ class Gitless < Formula
     sha256 "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
   end
 
-  # restores compatibility with recent pygit2 releases (0.27.1+)
-  patch do
-    url "https://github.com/sdg-mit/gitless/commit/4eb3a971d1d7d63fa359b60812a5a5df8b8a72db.patch?full_index=1"
-    sha256 "6b75c448f9a93e814610cb20b8dca4a85c89ee9f11181f03604923c040d67aa6"
-  end
-
   def install
     virtualenv_install_with_resources
   end
 
   test do
+    system "git", "config", "--global", "user.email", '"test@example.com"'
+    system "git", "config", "--global", "user.name", '"Test"'
     system bin/"gl", "init"
-    system "git", "config", "user.name", "Gitless Install"
-    system "git", "config", "user.email", "Gitless@Install"
     %w[haunted house].each { |f| touch testpath/f }
     system bin/"gl", "track", "haunted", "house"
     system bin/"gl", "commit", "-m", "Initial Commit"

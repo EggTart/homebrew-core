@@ -1,25 +1,33 @@
 class Libzdb < Formula
   desc "Database connection pool library"
   homepage "https://tildeslash.com/libzdb/"
-  url "https://tildeslash.com/libzdb/dist/libzdb-3.1.tar.gz"
-  sha256 "0f01abb1b01d1a1f4ab9b55ad3ba445d203fc3b4757abdf53e1d85e2b7b42695"
-  revision 6
+  url "https://tildeslash.com/libzdb/dist/libzdb-3.2.1.tar.gz"
+  sha256 "b9a7b59a0a9f53dc87ce1b5a919f21b8cd6448c04a9157bccef1e3c1dffd3ff1"
 
   bottle do
     cellar :any
-    sha256 "dc81f4b36c4392f9bf92d815c44ec389a12b51530d93544e43ec1fd13c659f6d" => :mojave
-    sha256 "0ee242c3eda134c97d3c79d2a03edc4b4a9d21c9b4ecdd81b141af6458b470f0" => :high_sierra
-    sha256 "1a04349cc276e0f5d8fc63a291cc0be6d455fbd9cc9fdaa9711b4fa67c5da22b" => :sierra
-    sha256 "051d58c0f1b5f39bebf8966311553f8be784daf7693e2b6960030aa791586803" => :el_capitan
+    sha256 "ed837893c1752ce339e88ef35f857de8d0557387b45a8efba005cb81d06f731d" => :catalina
+    sha256 "2dd6bb652a33079c537f4401dce17ee531adbde821199bed803c3b0dc96cb7f4" => :mojave
+    sha256 "f84fbc774c4269e5db5ea6336986a10afe235bef48d6ab7ef2b6dc406447431b" => :high_sierra
   end
 
+  depends_on :macos => :high_sierra # C++ 17 is required
   depends_on "mysql-client"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "postgresql"
   depends_on "sqlite"
 
   def install
     system "./configure", "--prefix=#{prefix}", "--disable-dependency-tracking"
     system "make", "install"
+    pkgshare.install "test"
+  end
+
+  test do
+    cp_r pkgshare/"test", testpath
+    cd "test" do
+      system ENV.cc, "select.c", "-L#{lib}", "-lzdb", "-I#{include}/zdb", "-o", "select"
+      system "./select"
+    end
   end
 end

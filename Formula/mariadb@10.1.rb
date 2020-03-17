@@ -1,19 +1,24 @@
 class MariadbAT101 < Formula
   desc "Drop-in replacement for MySQL"
   homepage "https://mariadb.org/"
-  url "https://downloads.mariadb.org/f/mariadb-10.1.40/source/mariadb-10.1.40.tar.gz"
-  sha256 "91757a7e52b88b8ddbf150ac55746e9dd1978b06c03303f114e57980ed2a67a4"
+  url "https://downloads.mariadb.org/f/mariadb-10.1.44/source/mariadb-10.1.44.tar.gz"
+  sha256 "21f203d361ee8c6e0f5050f3d0c06f3c5a2b87ac28f39e9503b851084a335039"
 
   bottle do
-    sha256 "197f3f1e065426d246969c3996deed540a93067800c5a54f829b2556887b3437" => :mojave
-    sha256 "6b3594123c940b361b1c9227b41c16f5d5cae0f07a28ba713bf83823ac6fa859" => :high_sierra
-    sha256 "1d08f74d8ca5bc908184d4210bc987e36380dc23207af3a40a9ef1b17ddd4d3a" => :sierra
+    sha256 "e2e7b689e5c699bf6540ed3d4abaeef8e25c6cc48243994a8c047d869ec68ca3" => :catalina
+    sha256 "2e4b6bd4f6cb49fc7f9446825dd02a4d62188a066a8964e1ac4414167dc3f901" => :mojave
+    sha256 "cfc3d9a17a66fc2bbe05881645c4026c2847744e14d4e669bd0abc6552c504a2" => :high_sierra
   end
 
   keg_only :versioned_formula
 
   depends_on "cmake" => :build
-  depends_on "openssl"
+  depends_on "pkg-config" => :build
+  depends_on "groonga"
+  depends_on "openssl@1.1"
+
+  uses_from_macos "bzip2"
+  uses_from_macos "ncurses"
 
   def install
     # Set basedir and ldata so that mysql_install_db can find the server
@@ -23,6 +28,9 @@ class MariadbAT101 < Formula
       s.change_make_var! "basedir", "\"#{prefix}\""
       s.change_make_var! "ldata", "\"#{var}/mysql\""
     end
+
+    # Use brew groonga
+    rm_r "storage/mroonga/vendor/groonga"
 
     # -DINSTALL_* are relative to prefix
     args = %W[
@@ -104,40 +112,42 @@ class MariadbAT101 < Formula
     end
   end
 
-  def caveats; <<~EOS
-    A "/etc/my.cnf" from another install may interfere with a Homebrew-built
-    server starting up correctly.
+  def caveats
+    <<~EOS
+      A "/etc/my.cnf" from another install may interfere with a Homebrew-built
+      server starting up correctly.
 
-    MySQL is configured to only allow connections from localhost by default
+      MySQL is configured to only allow connections from localhost by default
 
-    To connect:
-        mysql -uroot
-  EOS
+      To connect:
+          mysql -uroot
+    EOS
   end
 
   plist_options :manual => "#{HOMEBREW_PREFIX}/opt/mariadb@10.1/bin/mysql.server start"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>KeepAlive</key>
-      <true/>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_bin}/mysqld_safe</string>
-        <string>--datadir=#{var}/mysql</string>
-      </array>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>WorkingDirectory</key>
-      <string>#{var}</string>
-    </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_bin}/mysqld_safe</string>
+          <string>--datadir=#{var}/mysql</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>WorkingDirectory</key>
+        <string>#{var}</string>
+      </dict>
+      </plist>
+    EOS
   end
 
   test do

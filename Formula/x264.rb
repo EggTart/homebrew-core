@@ -1,20 +1,22 @@
 class X264 < Formula
   desc "H.264/AVC encoder"
   homepage "https://www.videolan.org/developers/x264.html"
-  head "https://git.videolan.org/git/x264.git"
+  revision 1
+  head "https://code.videolan.org/videolan/x264.git"
 
   stable do
     # the latest commit on the stable branch
-    url "https://git.videolan.org/git/x264.git",
+    url "https://code.videolan.org/videolan/x264.git",
         :revision => "0a84d986e7020f8344f00752e3600b9769cc1e85"
     version "r2917"
   end
 
   bottle do
     cellar :any
-    sha256 "474593a6930921e1668ff97daaa211d6b0da6c48a08f928496d76b45542afafe" => :mojave
-    sha256 "0aad96ccfbf09fbb4cbbaa708c9ff6b46829bd92873f482b05582ee0f7389624" => :high_sierra
-    sha256 "845455c25e8966fd2a1dc9c08b78df6c9a28d73848c187b411ef5d34de6094d0" => :sierra
+    rebuild 1
+    sha256 "9e49fa8cc8e0bd02bdb85f8b2def682a8c6aab5d3f7bfe6bb51e2e78da1b2eb9" => :catalina
+    sha256 "07d6a4de866c38296a3cb788c3370857bd745e88cd7e1723fc0261c4e44a1081" => :mojave
+    sha256 "80b6d49faed147546c8639bdc09143968587d7fed7c45dcd9c4e0f56cdb932ff" => :high_sierra
   end
 
   depends_on "nasm" => :build
@@ -23,6 +25,8 @@ class X264 < Formula
     args = %W[
       --prefix=#{prefix}
       --disable-lsmash
+      --disable-swscale
+      --disable-ffms
       --enable-shared
       --enable-static
       --enable-strip

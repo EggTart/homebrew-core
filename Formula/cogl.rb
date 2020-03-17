@@ -1,13 +1,13 @@
 class Cogl < Formula
   desc "Low level OpenGL abstraction library developed for Clutter"
   homepage "https://developer.gnome.org/cogl/"
-  url "https://download.gnome.org/sources/cogl/1.22/cogl-1.22.4.tar.xz"
-  sha256 "5217bf94cbca3df63268a3b79d017725382b9e592b891d1e7dc6212590ce0de0"
+  url "https://download.gnome.org/sources/cogl/1.22/cogl-1.22.6.tar.xz"
+  sha256 "6d134bd3e48c067507167c001200b275997fb9c68b08b48ff038211c8c251b75"
 
   bottle do
-    sha256 "d91786cb81bb327e01b990d95e9b0608033ae7c58f2f93bd605a16859b07a0eb" => :mojave
-    sha256 "8120175d546dd84a50305760e73bd4ff6daae1615f446f8affcff2f503c16f85" => :high_sierra
-    sha256 "0533885af6f17545cd5ed29b067052561a5e5b0be269d22a976f598a2013713e" => :sierra
+    sha256 "380a30aa14058b080ecde8b31c6ed9d2f6635655898d4d084cae08858a3e9c44" => :catalina
+    sha256 "2554edab8c0f870b34541e0fc2340e60b2a00b51c645669d1bb7dfb872137fc5" => :mojave
+    sha256 "fe8dcd5fc1ee71065255fe642e929db8248ca9c937dd04b3a2729c71d48a6650" => :high_sierra
   end
 
   head do

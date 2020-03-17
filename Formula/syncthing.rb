@@ -2,21 +2,20 @@ class Syncthing < Formula
   desc "Open source continuous file synchronization application"
   homepage "https://syncthing.net/"
   url "https://github.com/syncthing/syncthing.git",
-      :tag      => "v1.1.3",
-      :revision => "a04fcfe7494a6e3ede091534597539b77dc05a52"
+      :tag      => "v1.3.4",
+      :revision => "a79de840bdf1ab2ed37809417fe85cb9edd28961"
   head "https://github.com/syncthing/syncthing.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "acd22bd0d4e06746e160caf08c4f81aa8a3af3df51a0b794f8ebb8a841d4cf44" => :mojave
-    sha256 "d7c4d1e762634eaf2fe1dd6d7550812bc7077fe09dbda305809144ddb443068c" => :high_sierra
-    sha256 "2dfe762c366a512885fe54ff214bf139eeca643a3bbf968deba86a1f12746936" => :sierra
+    sha256 "0373e5a803a2ceb67d1ef3e8d6cb8640379ce4afe8d51825ba9364b714c87c4f" => :catalina
+    sha256 "c824eb5531c524fab39bfe945a9c01dde41ab873b1245fc3c88deecfd538b664" => :mojave
+    sha256 "65623098ebb48045989e63a2f1dac58510c6c105c31213d212aec9f350269e8b" => :high_sierra
   end
 
   depends_on "go" => :build
 
   def install
-    ENV["GO111MODULE"] = "on"
     ENV["GOPATH"] = buildpath
 
     src = buildpath/"src/github.com/syncthing/syncthing"
@@ -33,35 +32,36 @@ class Syncthing < Formula
 
   plist_options :manual => "syncthing"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_bin}/syncthing</string>
-          <string>-no-browser</string>
-          <string>-no-restart</string>
-        </array>
-        <key>KeepAlive</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
         <dict>
-          <key>Crashed</key>
-          <true/>
-          <key>SuccessfulExit</key>
-          <false/>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>#{opt_bin}/syncthing</string>
+            <string>-no-browser</string>
+            <string>-no-restart</string>
+          </array>
+          <key>KeepAlive</key>
+          <dict>
+            <key>Crashed</key>
+            <true/>
+            <key>SuccessfulExit</key>
+            <false/>
+          </dict>
+          <key>ProcessType</key>
+          <string>Background</string>
+          <key>StandardErrorPath</key>
+          <string>#{var}/log/syncthing.log</string>
+          <key>StandardOutPath</key>
+          <string>#{var}/log/syncthing.log</string>
         </dict>
-        <key>ProcessType</key>
-        <string>Background</string>
-        <key>StandardErrorPath</key>
-        <string>#{var}/log/syncthing.log</string>
-        <key>StandardOutPath</key>
-        <string>#{var}/log/syncthing.log</string>
-      </dict>
-    </plist>
-  EOS
+      </plist>
+    EOS
   end
 
   test do

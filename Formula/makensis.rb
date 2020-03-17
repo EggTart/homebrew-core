@@ -1,22 +1,22 @@
 class Makensis < Formula
   desc "System to create Windows installers"
   homepage "https://nsis.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/nsis/NSIS%203/3.04/nsis-3.04-src.tar.bz2"
-  sha256 "609536046c50f35cfd909dd7df2ab38f2e835d0da3c1048aa0d48c59c5a4f4f5"
+  url "https://downloads.sourceforge.net/project/nsis/NSIS%203/3.05/nsis-3.05-src.tar.bz2"
+  sha256 "b6e1b309ab907086c6797618ab2879cb95387ec144dab36656b0b5fb77e97ce9"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "cdfcc5744bbb90c33f679f119ecd2d5addd507e52c785d3be61d9bf60d6f6f4c" => :mojave
-    sha256 "e05324ab124f4bc0b64167b4e4f8f0fe83345a4f2eba5d473b4174fafaa3c987" => :high_sierra
-    sha256 "3e87e127f96c88d107943966681d71230232ba522d4d64d7398850383a0ab61f" => :sierra
+    sha256 "348b4b8c905eebcb4b981348beace630806e7d22bec5f52c345946c41579a85e" => :catalina
+    sha256 "5a5d075b298e34c2ac5c0324675f8163cdff0f906d1cb38848640394ff1f66fc" => :mojave
+    sha256 "d6614f82109ed400dca5a0215d256c522c47480e63fe36196570fec8ad0dcbe8" => :high_sierra
   end
 
   depends_on "mingw-w64" => :build
   depends_on "scons" => :build
 
   resource "nsis" do
-    url "https://downloads.sourceforge.net/project/nsis/NSIS%203/3.04/nsis-3.04.zip"
-    sha256 "22f3349fea453a45551745635c13e5efb7849ecbdce709daa2b2fa8e2ac55fc4"
+    url "https://downloads.sourceforge.net/project/nsis/NSIS%203/3.05/nsis-3.05.zip"
+    sha256 "3280c579b767a27b9bf53c17696cba550aed439d32fac972fe4469c97b198873"
   end
 
   def install

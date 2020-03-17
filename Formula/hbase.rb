@@ -1,14 +1,15 @@
 class Hbase < Formula
   desc "Hadoop database: a distributed, scalable, big data store"
   homepage "https://hbase.apache.org"
-  url "https://www.apache.org/dyn/closer.cgi?path=hbase/hbase-1.3.4/hbase-1.3.4-bin.tar.gz"
-  mirror "https://archive.apache.org/dist/hbase/1.3.4/hbase-1.3.4-bin.tar.gz"
-  sha256 "cb4a90101d77b369e79f5c816b2c04be2e25d77c954560139608ae3cbf0c629f"
+  url "https://www.apache.org/dyn/closer.lua?path=hbase/1.3.5/hbase-1.3.5-bin.tar.gz"
+  mirror "https://archive.apache.org/dist/hbase/1.3.5/hbase-1.3.5-bin.tar.gz"
+  sha256 "71837369f67c98afd978256ae4012b774fed27dcfbefc30293311e534a376c93"
 
   bottle do
-    sha256 "e1327223be7395aeb678ebc1d6984bbe5a5e4dfaefdab2522089458cb8e13204" => :mojave
-    sha256 "fa047bafe2cb95a57703eea0b15287cf0aefe384a4c07d2f579d75de73769e12" => :high_sierra
-    sha256 "450dcab9bd5639f0fc516e7ab293d049e4c3c0295986f25a18e9fe5ff7d25ab8" => :sierra
+    sha256 "a177355b8ce34287e500aeabb66b78ade4ada4b529166e686dc354a4edee6830" => :catalina
+    sha256 "29ee8f76f61fe2f63fdedf9ea134102f0ee81ac845def37b4d2a981dd8bdcbbc" => :mojave
+    sha256 "2a742f55e213f602128e8b706636ea5020b4771bd0cb3b49bd0370aba09ff840" => :high_sierra
+    sha256 "a3b8e770d3410633bc19be0f41d0c2e4e9702e922d7688069663595769c80702" => :sierra
   end
 
   depends_on "ant" => :build
@@ -107,49 +108,50 @@ class Hbase < Formula
 
   plist_options :manual => "#{HOMEBREW_PREFIX}/opt/hbase/bin/start-hbase.sh"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>KeepAlive</key>
-      <true/>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>EnvironmentVariables</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
       <dict>
-       <key>HBASE_MASTER_OPTS</key><string> -XX:PermSize=128m -XX:MaxPermSize=128m</string>
-       <key>HBASE_LOG_DIR</key><string>#{var}/hbase</string>
-       <key>HBASE_HOME</key><string>#{opt_libexec}</string>
-       <key>HBASE_SECURITY_LOGGER</key><string>INFO,RFAS</string>
-       <key>HBASE_PID_DIR</key><string>#{var}/run/hbase</string>
-       <key>HBASE_NICENESS</key><string>0</string>
-       <key>HBASE_IDENT_STRING</key><string>root</string>
-       <key>HBASE_REGIONSERVER_OPTS</key><string> -XX:PermSize=128m -XX:MaxPermSize=128m</string>
-       <key>HBASE_OPTS</key><string>-XX:+UseConcMarkSweepGC</string>
-       <key>HBASE_ROOT_LOGGER</key><string>INFO,RFA</string>
-       <key>HBASE_LOG_PREFIX</key><string>hbase-root-master</string>
-       <key>HBASE_LOGFILE</key><string>hbase-root-master.log</string>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>EnvironmentVariables</key>
+        <dict>
+         <key>HBASE_MASTER_OPTS</key><string> -XX:PermSize=128m -XX:MaxPermSize=128m</string>
+         <key>HBASE_LOG_DIR</key><string>#{var}/hbase</string>
+         <key>HBASE_HOME</key><string>#{opt_libexec}</string>
+         <key>HBASE_SECURITY_LOGGER</key><string>INFO,RFAS</string>
+         <key>HBASE_PID_DIR</key><string>#{var}/run/hbase</string>
+         <key>HBASE_NICENESS</key><string>0</string>
+         <key>HBASE_IDENT_STRING</key><string>root</string>
+         <key>HBASE_REGIONSERVER_OPTS</key><string> -XX:PermSize=128m -XX:MaxPermSize=128m</string>
+         <key>HBASE_OPTS</key><string>-XX:+UseConcMarkSweepGC</string>
+         <key>HBASE_ROOT_LOGGER</key><string>INFO,RFA</string>
+         <key>HBASE_LOG_PREFIX</key><string>hbase-root-master</string>
+         <key>HBASE_LOGFILE</key><string>hbase-root-master.log</string>
+        </dict>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_bin}/hbase</string>
+          <string>--config</string>
+          <string>#{opt_libexec}/conf</string>
+          <string>master</string>
+          <string>start</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>WorkingDirectory</key>
+        <string>#{HOMEBREW_PREFIX}</string>
+        <key>StandardOutPath</key>
+        <string>#{var}/hbase/hbase.log</string>
+        <key>StandardErrorPath</key>
+        <string>#{var}/hbase/hbase.err</string>
       </dict>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_bin}/hbase</string>
-        <string>--config</string>
-        <string>#{opt_libexec}/conf</string>
-        <string>master</string>
-        <string>start</string>
-      </array>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>WorkingDirectory</key>
-      <string>#{HOMEBREW_PREFIX}</string>
-      <key>StandardOutPath</key>
-      <string>#{var}/hbase/hbase.log</string>
-      <key>StandardErrorPath</key>
-      <string>#{var}/hbase/hbase.err</string>
-    </dict>
-    </plist>
-  EOS
+      </plist>
+    EOS
   end
 
   test do

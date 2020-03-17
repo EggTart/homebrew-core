@@ -1,21 +1,21 @@
 class Libcouchbase < Formula
   desc "C library for Couchbase"
   homepage "https://docs.couchbase.com/c-sdk/2.10/start-using-sdk.html"
-  url "https://packages.couchbase.com/clients/c/libcouchbase-2.10.3.tar.gz"
-  sha256 "1cc6c6a41dd1c92e26830e227b42c705bf6c4005342fb609d60fe2b63a5c5aa6"
+  url "https://packages.couchbase.com/clients/c/libcouchbase-2.10.6.tar.gz"
+  sha256 "341d7af60d637c81a4de623168746b699f49a75358aa33d9b1b99dd0a63a7cf3"
   head "https://github.com/couchbase/libcouchbase.git"
 
   bottle do
-    sha256 "713b002219e8982e08d95afde3aebf9d3c8795d117851121078e6aff031e6370" => :mojave
-    sha256 "06b4d45bf1788071f5ee30358dbbfd1a7217e2a23bc84810714e8cb87c1270f2" => :high_sierra
-    sha256 "6b1c1f546afc5d4d65dc8d1685de6410655414f3810280af3c85b9f31e0a9470" => :sierra
+    sha256 "5c6c76de5524a1c134742d55139d3b33b64e010bd075ad3ff712cde4ac1a1427" => :catalina
+    sha256 "df795c015e0df35ccb86a87140495fc22d20c3195ee5cc572e4e25190c312905" => :mojave
+    sha256 "7e8649078c32b18513cd08d47358c44e0719d0545024267c42582885f7d225b2" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "libev"
   depends_on "libevent"
   depends_on "libuv"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     mkdir "build" do

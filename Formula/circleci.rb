@@ -3,21 +3,20 @@ class Circleci < Formula
   homepage "https://circleci.com/docs/2.0/local-cli/"
   # Updates should be pushed no more frequently than once per week.
   url "https://github.com/CircleCI-Public/circleci-cli.git",
-      :tag      => "v0.1.5607",
-      :revision => "f705856744095aa1a4c0118ade8f931e3570f58e"
+      :tag      => "v0.1.6772",
+      :revision => "67c7d52bace63846f87a1ed79f67f257c94a55b4"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "95870897b1766e8e38b350be8be949949aadd301dbdf709d982de6a01404b309" => :mojave
-    sha256 "c1f7df0179689a855d4cdf37a9bf0093f0305727bb497b356362152fbf8f9028" => :high_sierra
-    sha256 "2074eb2944aad92ceaa09448be24cfae7eaf2dfe25375db277234bcd02e2543d" => :sierra
+    sha256 "758f97fbd5eaa92809eb8c6700399a23a13a5fb5306963e25eab38dc36746d1e" => :catalina
+    sha256 "482beaf7f5ea8e89d116c00e71b8b5b2cdddddfc89238eb4b1a845e24c7331f1" => :mojave
+    sha256 "2349159a55daa037031a33453be0eab3363608b84fc717bc8098b0f13c4a777e" => :high_sierra
   end
 
   depends_on "go" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    ENV["GO111MODULE"] = "on"
 
     dir = buildpath/"src/github.com/CircleCI-Public/circleci-cli"
     dir.install buildpath.children
@@ -46,6 +45,7 @@ class Circleci < Formula
     assert_match "Local builds do not support that version at this time", output
     # assert update is not included in output of help meaning it was not included in the build
     assert_match "update      This command is unavailable on your platform", shell_output("#{bin}/circleci help")
-    assert_match "`update` is not available because this tool was installed using `homebrew`.", shell_output("#{bin}/circleci update")
+    assert_match "`update` is not available because this tool was installed using `homebrew`.",
+      shell_output("#{bin}/circleci update")
   end
 end

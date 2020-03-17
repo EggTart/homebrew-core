@@ -3,13 +3,13 @@ class Mosh < Formula
   homepage "https://mosh.org"
   url "https://mosh.org/mosh-1.3.2.tar.gz"
   sha256 "da600573dfa827d88ce114e0fed30210689381bbdcff543c931e4d6a2e851216"
-  revision 5
+  revision 10
 
   bottle do
     cellar :any
-    sha256 "70ca7ccdb7df9a452d9968cbf5b6da4f9fb3be7cb5c175ab5117b1e4cff7b985" => :mojave
-    sha256 "9ea48721b704ca8a2d14c285c406a6d74e549f1b0e3ef46c39483ff4ac50f530" => :high_sierra
-    sha256 "742f74281cf18e9f7d435a805d1d554e2e8882849ddef32e1e54d794144c9ba3" => :sierra
+    sha256 "1f77a276cbba48a41505658a146853a01fd49e68f5ed39592e95f4b982860fa6" => :catalina
+    sha256 "5489299d991ac0ede82de439b94e6148fc6620b60ab795d8da21c976f09ed6eb" => :mojave
+    sha256 "9994025f67ff132e87310f596539af84f57ba53ce05b71fd9d0bd6069c681e84" => :high_sierra
   end
 
   head do
@@ -22,6 +22,16 @@ class Mosh < Formula
   depends_on "pkg-config" => :build
   depends_on "tmux" => :build
   depends_on "protobuf"
+
+  uses_from_macos "ncurses"
+
+  # Fix mojave build.
+  unless build.head?
+    patch do
+      url "https://github.com/mobile-shell/mosh/commit/e5f8a826ef9ff5da4cfce3bb8151f9526ec19db0.patch?full_index=1"
+      sha256 "022bf82de1179b2ceb7dc6ae7b922961dfacd52fbccc30472c527cb7c87c96f0"
+    end
+  end
 
   def install
     ENV.cxx11

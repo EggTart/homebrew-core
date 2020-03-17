@@ -1,8 +1,8 @@
 class Asdf < Formula
   desc "Extendable version manager with support for Ruby, Node.js, Erlang & more"
   homepage "https://github.com/asdf-vm"
-  url "https://github.com/asdf-vm/asdf/archive/v0.7.2.tar.gz"
-  sha256 "1c53c1dfabfdbdee3c9b34e396655d963aeb362a8173e956233ac2689d696a34"
+  url "https://github.com/asdf-vm/asdf/archive/v0.7.7.tar.gz"
+  sha256 "9d8dccb333aad86d626fe559a1e481fc74b740839be3a3bb99e83d0b0b2b552d"
   head "https://github.com/asdf-vm/asdf.git"
 
   bottle :unneeded
@@ -12,7 +12,7 @@ class Asdf < Formula
   depends_on "coreutils"
   depends_on "libtool"
   depends_on "libyaml"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "readline"
   depends_on "unixodbc"
 
@@ -22,6 +22,7 @@ class Asdf < Formula
   def install
     bash_completion.install "completions/asdf.bash"
     fish_completion.install "completions/asdf.fish"
+    zsh_completion.install "completions/_asdf"
     libexec.install "bin/private"
     prefix.install Dir["*"]
   end

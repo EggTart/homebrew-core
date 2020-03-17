@@ -1,16 +1,17 @@
 class Perl < Formula
   desc "Highly capable, feature-rich programming language"
   homepage "https://www.perl.org/"
-  url "https://www.cpan.org/src/5.0/perl-5.28.1.tar.gz"
-  sha256 "3ebf85fe65df2ee165b22596540b7d5d42f84d4b72d84834f74e2e0b8956c347"
-  head "https://perl5.git.perl.org/perl.git", :branch => "blead"
+  url "https://www.cpan.org/src/5.0/perl-5.30.1.tar.gz"
+  sha256 "bf3d25571ff1ee94186177c2cdef87867fd6a14aa5a84f0b1fb7bf798f42f964"
+  head "https://github.com/perl/perl5.git", :branch => "blead"
 
   bottle do
-    rebuild 2
-    sha256 "6f9c6519a6c95eb3212abde423688fa01d3d56be0c424f9e6e8bed7b59dfe014" => :mojave
-    sha256 "b04e2b8a5158c6405558e8408d901c7c1899eda8950202f1dfddd6efd7cfa043" => :high_sierra
-    sha256 "8099f37b2521864a095eb06dc5cde02805421a78ddda95fafe3fc538a3ef3553" => :sierra
+    sha256 "c67104091d5328aadb95532ceb7aa4b25544c2505acd11522b5615b67953d38f" => :catalina
+    sha256 "38e242ca4adaad6c0ef271e8e7d77030998f5809daf1b90c208d81b8b75fb5c9" => :mojave
+    sha256 "73e7650fd86f600e3342cd14491e632c0bae0c541476ab5c30b4409deedf7664" => :high_sierra
   end
+
+  uses_from_macos "expat"
 
   # Prevent site_perl directories from being removed
   skip_clean "lib/perl5/site_perl"
@@ -35,31 +36,21 @@ class Perl < Formula
 
     system "./Configure", *args
 
-    # macOS's SIP feature prevents DYLD_LIBRARY_PATH from being passed to child
-    # processes, which causes the `make test` step to fail.
-    # https://rt.perl.org/Ticket/Display.html?id=126706
-    # https://github.com/Homebrew/legacy-homebrew/issues/41716
-    # As of perl 5.28.0 `make` fails, too, so work around it with a symlink.
-    # Reported 25 Jun 2018 https://rt.perl.org/Ticket/Display.html?id=133306
-    (lib/"perl5/#{version}/darwin-thread-multi-2level/CORE").install_symlink buildpath/"libperl.dylib"
-
     system "make"
     system "make", "test"
-
-    # Remove the symlink so the library actually gets installed.
-    rm lib/"perl5/#{version}/darwin-thread-multi-2level/CORE/libperl.dylib"
 
     system "make", "install"
   end
 
-  def caveats; <<~EOS
-    By default non-brewed cpan modules are installed to the Cellar. If you wish
-    for your modules to persist across updates we recommend using `local::lib`.
+  def caveats
+    <<~EOS
+      By default non-brewed cpan modules are installed to the Cellar. If you wish
+      for your modules to persist across updates we recommend using `local::lib`.
 
-    You can set that up like this:
-      PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib
-      echo 'eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"' >> #{shell_profile}
-  EOS
+      You can set that up like this:
+        PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib
+        echo 'eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"' >> #{shell_profile}
+    EOS
   end
 
   test do

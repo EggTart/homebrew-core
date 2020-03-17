@@ -1,13 +1,13 @@
 class Evince < Formula
   desc "GNOME document viewer"
   homepage "https://wiki.gnome.org/Apps/Evince"
-  url "https://download.gnome.org/sources/evince/3.32/evince-3.32.0.tar.xz"
-  sha256 "f0d977216466ed2f5a6de64476ef7113dc7c7c9832336f1ff07f3c03c5324c40"
+  url "https://download.gnome.org/sources/evince/3.36/evince-3.36.0.tar.xz"
+  sha256 "851d9b5234d479ab4c8f7c5cbaceb0e91ad79ccba1a7b733cde72dacc928fba8"
 
   bottle do
-    sha256 "8d1fb23658da65d47d29adb98a07332168d5b5ec8be5d29069c43f88e1e55c64" => :mojave
-    sha256 "152c9214046e061a7d38ad88abe6dfde92b9e297993a459eed5ae5851be47381" => :high_sierra
-    sha256 "d46efcdeb3c0988bd477e83bcd67466c7f3000cb538e4d9fc9661bd8e3c0626d" => :sierra
+    sha256 "c372ef0d0575ac0300002e12f0861a01c7c5336b0211df820d49dc6b250d594d" => :catalina
+    sha256 "620822d240845f9c74bbf9763bfa62f9815d49d71f088833eb67827967ff7dda" => :mojave
+    sha256 "9f46f2023c40ecf6d5c09c90e50ad1703fcbf8404f0476b40460db6d1eabb5ba" => :high_sierra
   end
 
   depends_on "appstream-glib" => :build
@@ -27,9 +27,6 @@ class Evince < Formula
   depends_on "poppler"
   depends_on "python"
 
-  # patch submitted upstream at https://gitlab.gnome.org/GNOME/evince/merge_requests/154
-  patch :DATA
-
   def install
     ENV["GETTEXTDATADIR"] = "#{Formula["appstream-glib"].opt_share}/gettext"
 
@@ -40,7 +37,8 @@ class Evince < Formula
     # Add MacOS mime-types to the list of supported comic book archive mime-types
     # Submitted upstream at https://gitlab.gnome.org/GNOME/evince/merge_requests/157
     inreplace "configure", "COMICS_MIME_TYPES=\"",
-      "COMICS_MIME_TYPES=\"application/x-rar;application/zip;application/x-cb7;application/x-7z-comperssed;application/x-tar;"
+      "COMICS_MIME_TYPES=\"application/x-rar;application/zip;application/x-cb7;" \
+                          "application/x-7z-comperssed;application/x-tar;"
 
     # forces use of gtk3-update-icon-cache instead of gtk-update-icon-cache. No bugreport should
     # be filed for this since it only occurs because Homebrew renames gtk+3's gtk-update-icon-cache
@@ -71,22 +69,3 @@ class Evince < Formula
     assert_match version.to_s, shell_output("#{bin}/evince --version")
   end
 end
-
-__END__
-diff --git a/libdocument/ev-document-factory.c b/libdocument/ev-document-factory.c
-index ca1aeeb..4f7f40b 100644
---- a/libdocument/ev-document-factory.c
-+++ b/libdocument/ev-document-factory.c
-@@ -58,8 +58,12 @@ get_backend_info_for_mime_type (const gchar *mime_type)
-                 guint i;
-
-                 for (i = 0; mime_types[i] != NULL; ++i) {
--                        if (g_content_type_is_mime_type (mime_type, mime_types[i]))
-+                        gchar *content_type = g_content_type_from_mime_type(mime_type);
-+                        if (g_content_type_is_mime_type (content_type, mime_types[i])) {
-+                                g_free(content_type);
-                                 return info;
-+                        }
-+                        g_free(content_type);
-                 }
-         }

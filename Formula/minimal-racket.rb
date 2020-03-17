@@ -1,57 +1,53 @@
 class MinimalRacket < Formula
   desc "Modern programming language in the Lisp/Scheme family"
   homepage "https://racket-lang.org/"
-  url "https://mirror.racket-lang.org/installers/7.2/racket-minimal-7.2-src-builtpkgs.tgz"
-  sha256 "dd75401824b877964b70d8b475b05f424721f72015f41d5ae6c508b60dab3ad5"
+  url "https://mirror.racket-lang.org/installers/7.6/racket-minimal-7.6-src-builtpkgs.tgz"
+  sha256 "2e2e8e5664f1c8fe51b193d620399e6e97d14547945e331af42a5ed35847b63c"
 
   bottle do
     cellar :any
-    sha256 "ab2fab8e8e2363ed71b7720d82642993a1aaac3ba2dc50155da932b2f990224f" => :mojave
-    sha256 "fbd8113cd50ee9bb0621ff1a0b23f8f9863c5ecebb548a7b09a9ad338d5f25c3" => :high_sierra
-    sha256 "4820d0e8e2b784d65aa1f512e96e8f64746a25f07e04c0a2a5970cbb241213b6" => :sierra
+    sha256 "21fb442885da3ab4e2fe82c7983f2295447a076c92c95332f2e68afded5455df" => :catalina
+    sha256 "d31c1e3ef4d3195f99ac71525a9cbeca2c2fff6b60274325179b0f48886bdd71" => :mojave
+    sha256 "ec76cf3d17d3c3ec45a93d1930ae3ebe54210aa65d4b43f355accd56828bec31" => :high_sierra
   end
+
+  uses_from_macos "libffi"
 
   # these two files are amended when (un)installing packages
   skip_clean "lib/racket/launchers.rktd", "lib/racket/mans.rktd"
 
   def install
+    # configure racket's package tool (raco) to do the Right Thing
+    # see: https://docs.racket-lang.org/raco/config-file.html
+    inreplace "etc/config.rktd", /\)\)\n$/, ") (default-scope . \"installation\"))\n"
+
     cd "src" do
       args = %W[
         --disable-debug
         --disable-dependency-tracking
+        --enable-origtree=no
         --enable-macprefix
         --prefix=#{prefix}
-        --man=#{man}
+        --mandir=#{man}
         --sysconfdir=#{etc}
+        --enable-useprefix
       ]
 
       system "./configure", *args
       system "make"
       system "make", "install"
     end
-
-    # configure racket's package tool (raco) to do the Right Thing
-    # see: https://docs.racket-lang.org/raco/config-file.html
-    inreplace etc/"racket/config.rktd" do |s|
-      s.gsub!(
-        /\(bin-dir\s+\.\s+"#{Regexp.quote(bin)}"\)/,
-        "(bin-dir . \"#{HOMEBREW_PREFIX}/bin\")",
-      )
-      s.gsub!(
-        /\n\)$/,
-        "\n      (default-scope . \"installation\")\n)",
-      )
-    end
   end
 
-  def caveats; <<~EOS
-    This is a minimal Racket distribution.
-    If you want to build the DrRacket IDE, you may run
-      raco pkg install --auto drracket
+  def caveats
+    <<~EOS
+      This is a minimal Racket distribution.
+      If you want to build the DrRacket IDE, you may run:
+        raco pkg install --auto drracket
 
-    The full Racket distribution is available as a cask:
-      brew cask install racket
-  EOS
+      The full Racket distribution is available as a cask:
+        brew cask install racket
+    EOS
   end
 
   test do

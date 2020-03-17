@@ -3,12 +3,13 @@ class Chafa < Formula
   homepage "https://hpjansson.org/chafa/"
   url "https://hpjansson.org/chafa/releases/chafa-1.0.1.tar.xz"
   sha256 "49d491a566a22daf56c51c043259f1373a1b1125d5c1c1fe321f7c25ca178e01"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "21473001e0cad95603414f9cd242d408f37c3fd805f8283ba004becf2e5745be" => :mojave
-    sha256 "12c49e4749823ad7e1acc8fbf4c7b8c30d59a7beceb10af83b909ed3848712db" => :high_sierra
-    sha256 "1eafdaf63d64ef0e1a86f4c86f101efcc078cd270b3a10b47934617ac1bd625f" => :sierra
+    sha256 "3efd84a082f8a44a4a0e74c822e61df424b86904f63528cc0a5c193c9f0234ab" => :catalina
+    sha256 "b0fd4cddd26d2d5ef3c5f6cdecabfa089beb528d5a084a57d89b757c7a753bd3" => :mojave
+    sha256 "0bdb25c68953067f4eb814cadc6417c5af2ab83dc4c755d70380c215fa3a96ba" => :high_sierra
   end
 
   depends_on "pkg-config" => :build

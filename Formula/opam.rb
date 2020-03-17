@@ -1,18 +1,20 @@
 class Opam < Formula
   desc "The OCaml package manager"
   homepage "https://opam.ocaml.org"
-  url "https://github.com/ocaml/opam/releases/download/2.0.4/opam-full-2.0.4.tar.gz"
-  sha256 "debfb828b400fb511ca290f1bfc928db91cad74ec1ccbddcfdbfeff26f7099e5"
+  url "https://github.com/ocaml/opam/releases/download/2.0.6/opam-full-2.0.6.tar.gz"
+  sha256 "7c4bff5e5f3628ad00c53ee1b044ced8128ffdcfbb7582f8773fb433e12e07f4"
   head "https://github.com/ocaml/opam.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2cc668fd6a919b7bfa3b0e296d0593c94a309154c2533172a8fe745d4f93b168" => :mojave
-    sha256 "36febb1c4215e029892bda1fee4ea0414f6694328d286b19faf4283e32905015" => :high_sierra
-    sha256 "85f550a964e5dbd248bf3e7d74e5385a763bd9e3f8545c76b90c5d4c1f03ef78" => :sierra
+    sha256 "54e18e947ab5a8d2af76cefeb3707be24ad54d4d475851b372aac766d5350d14" => :catalina
+    sha256 "6c2a6796eead34e1116bd37e0ade8a1ad34ceeef98e396cfc36f26d591a21de6" => :mojave
+    sha256 "941366068ed9c5743d09635128defeecfcf52b3663a1fbff04d2003ded76ae89" => :high_sierra
   end
 
   depends_on "ocaml" => [:build, :test]
+
+  uses_from_macos "unzip"
 
   def install
     ENV.deparallelize
@@ -20,19 +22,19 @@ class Opam < Formula
     system "./configure", "--prefix=#{prefix}", "--mandir=#{man}"
     system "make", "lib-ext"
     system "make"
-    system "make", "man"
     system "make", "install"
 
     bash_completion.install "src/state/shellscripts/complete.sh"
     zsh_completion.install "src/state/shellscripts/complete.zsh" => "_opam"
   end
 
-  def caveats; <<~EOS
-    OPAM uses ~/.opam by default for its package database, so you need to
-    initialize it first by running:
+  def caveats
+    <<~EOS
+      OPAM uses ~/.opam by default for its package database, so you need to
+      initialize it first by running:
 
-    $ opam init
-  EOS
+      $ opam init
+    EOS
   end
 
   test do

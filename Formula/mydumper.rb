@@ -1,16 +1,14 @@
 class Mydumper < Formula
   desc "How MySQL DBA & support engineer would imagine 'mysqldump' ;-)"
   homepage "https://launchpad.net/mydumper"
-  url "https://launchpad.net/mydumper/0.9/0.9.1/+download/mydumper-0.9.1.tar.gz"
-  sha256 "aefab5dc4192acb043d685b6bb952c87557fbea5e083b8547c68ccfec878171f"
-  revision 1
+  url "https://github.com/maxbube/mydumper/archive/v0.9.5.tar.gz"
+  sha256 "544d434b13ec192976d596d9a7977f46b330f5ae3370f066dbe680c1a4697eb6"
 
   bottle do
     cellar :any
-    sha256 "08798a5d4fa3af367907a32963a55c166b5aaa654cd5708edb61ba907ee883e2" => :mojave
-    sha256 "1b05e59ddf8d604e827cb19132162d4d8ebf98459f58ca57af9c5b9a089694f0" => :high_sierra
-    sha256 "a4ed9559c67a607cef27874d667d6d4c5ee80d9663a45d6cc623cf457ea2284e" => :sierra
-    sha256 "f470b334ba765d77a9df8193f2333f43fa617d0a1a95b38d1325ddb4b5c5f47c" => :el_capitan
+    sha256 "157bb28e44f0033093c6dc1e46ad6f72e72fb0ae39c9d480e4cff4d90b0a4384" => :catalina
+    sha256 "d4a3a359cd266b24313e64204a8c99d8c1bfe0ec71fece2a31b8551bbb904eaa" => :mojave
+    sha256 "2f3f2f488038ee040fe619c6f3c35efc414c97a18bfb04885a245528645f8ade" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -18,7 +16,7 @@ class Mydumper < Formula
   depends_on "sphinx-doc" => :build
   depends_on "glib"
   depends_on "mysql-client"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
 
   # This patch allows cmake to find .dylib shared libs in macOS. A bug report has
@@ -44,8 +42,8 @@ __END__
  )
 
  set(TMP_MYSQL_LIBRARIES "")
--set(CMAKE_FIND_LIBRARY_SUFFIXES .so .a .lib)
-+set(CMAKE_FIND_LIBRARY_SUFFIXES .so .lib .dylib)
+-set(CMAKE_FIND_LIBRARY_SUFFIXES .so .a .lib .so.1)
++set(CMAKE_FIND_LIBRARY_SUFFIXES .so .lib .dylib .so.1)
  foreach(MY_LIB ${MYSQL_ADD_LIBRARIES})
      find_library("MYSQL_LIBRARIES_${MY_LIB}" NAMES ${MY_LIB}
          HINTS

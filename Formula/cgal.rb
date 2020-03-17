@@ -1,14 +1,14 @@
 class Cgal < Formula
-  desc "Computational Geometry Algorithm Library"
+  desc "Computational Geometry Algorithms Library"
   homepage "https://www.cgal.org/"
-  url "https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14/CGAL-4.14.tar.xz"
-  sha256 "59464b1eaee892f2223ba570a7642892c999e29524ab102a6efd7c29c94a29f7"
+  url "https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-5.0.2/CGAL-5.0.2.tar.xz"
+  sha256 "bb3594ba390735404f0972ece301f369b1ff12646ad25e48056b4d49c976e1fa"
 
   bottle do
-    cellar :any
-    sha256 "8987fe56d173560be950ee0bbe77c5a7a5015b743c1111cb5136946b86af92e1" => :mojave
-    sha256 "9ebc1fcc1954264abed37bb40cff0d64f6290b03effa0d95e4b579c9710a4f59" => :high_sierra
-    sha256 "13eb7618b3f053926d6f88e4d701a12bc4792b1aabad0f822b1af9c1a51ea242" => :sierra
+    cellar :any_skip_relocation
+    sha256 "642c67e59a4bcfc9e22a15f2f7149045ce037c639eb9a8cf2deb3d3195e69ad0" => :catalina
+    sha256 "642c67e59a4bcfc9e22a15f2f7149045ce037c639eb9a8cf2deb3d3195e69ad0" => :mojave
+    sha256 "642c67e59a4bcfc9e22a15f2f7149045ce037c639eb9a8cf2deb3d3195e69ad0" => :high_sierra
   end
 
   depends_on "cmake" => [:build, :test]
@@ -19,13 +19,13 @@ class Cgal < Formula
 
   def install
     args = std_cmake_args + %W[
-      -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
-      -DCMAKE_INSTALL_NAME_DIR=#{HOMEBREW_PREFIX}/lib
+      -DCMAKE_CXX_FLAGS='-std=c++14'
       -DWITH_Eigen3=ON
       -DWITH_LAPACK=ON
       -DWITH_CGAL_Qt5=OFF
       -DWITH_CGAL_ImageIO=OFF
     ]
+
     system "cmake", ".", *args
     system "make", "install"
   end

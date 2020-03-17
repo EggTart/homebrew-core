@@ -1,18 +1,28 @@
 class Bind < Formula
   desc "Implementation of the DNS protocols"
   homepage "https://www.isc.org/downloads/bind/"
-  url "https://ftp.isc.org/isc/bind/9.15.0/bind-9.15.0.tar.gz"
-  sha256 "ee9a18d8be7bcbb3928c9c96a71ea08ed045bfe57d3ef74f06f6177bbbb2560f"
+
+  # BIND releases with even minor version numbers (9.14.x, 9.16.x, etc) are
+  # stable. Odd-numbered minor versions are for testing, and can be unstable
+  # or buggy. They are not suitable for general deployment. We have to use
+  # "version_scheme" because someone upgraded to 9.15.0, and required a
+  # downgrade.
+
+  url "https://downloads.isc.org/isc/bind9/9.16.0/bind-9.16.0.tar.xz"
+  sha256 "af4bd9bdaeb1aa7399429972f3a8aa01dd6886b7ae046d703ab8da45330f2e28"
+  version_scheme 1
   head "https://gitlab.isc.org/isc-projects/bind9.git"
 
   bottle do
-    sha256 "c6f25b895b4cbb3e72aeaed007a0126bcc38c47ec1fe02e06a0398ed6434aa68" => :mojave
-    sha256 "968c80c17a19aae82e6af3702d0a5ce27a6a17ff88eb5524d473af0bb9c6234c" => :high_sierra
-    sha256 "e31157311ad649d973e9863fc0baf185a2cbe1f7392146fe36bb8e1098f4498f" => :sierra
+    sha256 "4ef58e4fff406c549fc7a07fd058c95d15405b01feb4e7a3ae1f65facc08dc4e" => :catalina
+    sha256 "a21c33e4d31d00d9988297bc1b3d9fd0e4312f85d77899ae2fe808e38c984be4" => :mojave
+    sha256 "18a28e31bc7a122b43c7b64a5b68c9ee06d350dc209dc2dd9e2f5fcca42dcad5" => :high_sierra
   end
 
+  depends_on "pkg-config" => :build
   depends_on "json-c"
-  depends_on "openssl"
+  depends_on "libuv"
+  depends_on "openssl@1.1"
   depends_on "python"
 
   resource "ply" do
@@ -31,15 +41,14 @@ class Bind < Formula
     end
 
     # Fix "configure: error: xml2-config returns badness"
-    if MacOS.version == :sierra || MacOS.version == :el_capitan
-      ENV["SDKROOT"] = MacOS.sdk_path
-    end
+    ENV["SDKROOT"] = MacOS.sdk_path if MacOS.version == :sierra || MacOS.version == :el_capitan
 
     system "./configure", "--prefix=#{prefix}",
-                          "--with-openssl=#{Formula["openssl"].opt_prefix}",
-                          "--with-libjson=#{Formula["json-c"].opt_prefix}",
+                          "--with-json-c",
+                          "--with-openssl=#{Formula["openssl@1.1"].opt_prefix}",
+                          "--with-python-install-dir=#{vendor_site_packages}",
                           "--with-python=#{Formula["python"].opt_bin}/python3",
-                          "--with-python-install-dir=#{vendor_site_packages}"
+                          "--without-lmdb"
 
     system "make"
     system "make", "install"
@@ -61,120 +70,124 @@ class Bind < Formula
     end
   end
 
-  def named_conf; <<~EOS
-    //
-    // Include keys file
-    //
-    include "#{etc}/rndc.key";
+  def named_conf
+    <<~EOS
+      //
+      // Include keys file
+      //
+      include "#{etc}/rndc.key";
 
-    // Declares control channels to be used by the rndc utility.
-    //
-    // It is recommended that 127.0.0.1 be the only address used.
-    // This also allows non-privileged users on the local host to manage
-    // your name server.
+      // Declares control channels to be used by the rndc utility.
+      //
+      // It is recommended that 127.0.0.1 be the only address used.
+      // This also allows non-privileged users on the local host to manage
+      // your name server.
 
-    //
-    // Default controls
-    //
-    controls {
-        inet 127.0.0.1 port 54 allow { any; }
-        keys { "rndc-key"; };
-    };
+      //
+      // Default controls
+      //
+      controls {
+          inet 127.0.0.1 port 54 allow { any; }
+          keys { "rndc-key"; };
+      };
 
-    options {
-        directory "#{var}/named";
-        /*
-         * If there is a firewall between you and nameservers you want
-         * to talk to, you might need to uncomment the query-source
-         * directive below.  Previous versions of BIND always asked
-         * questions using port 53, but BIND 8.1 uses an unprivileged
-         * port by default.
-         */
-        // query-source address * port 53;
-    };
-    //
-    // a caching only nameserver config
-    //
-    zone "localhost" IN {
-        type master;
-        file "localhost.zone";
-        allow-update { none; };
-    };
+      options {
+          directory "#{var}/named";
+          /*
+           * If there is a firewall between you and nameservers you want
+           * to talk to, you might need to uncomment the query-source
+           * directive below.  Previous versions of BIND always asked
+           * questions using port 53, but BIND 8.1 uses an unprivileged
+           * port by default.
+           */
+          // query-source address * port 53;
+      };
+      //
+      // a caching only nameserver config
+      //
+      zone "localhost" IN {
+          type master;
+          file "localhost.zone";
+          allow-update { none; };
+      };
 
-    zone "0.0.127.in-addr.arpa" IN {
-        type master;
-        file "named.local";
-        allow-update { none; };
-    };
+      zone "0.0.127.in-addr.arpa" IN {
+          type master;
+          file "named.local";
+          allow-update { none; };
+      };
 
-    logging {
-            category default {
-                    _default_log;
-            };
+      logging {
+              category default {
+                      _default_log;
+              };
 
-            channel _default_log  {
-                    file "#{var}/log/named/named.log";
-                    severity info;
-                    print-time yes;
-            };
-    };
-  EOS
+              channel _default_log  {
+                      file "#{var}/log/named/named.log";
+                      severity info;
+                      print-time yes;
+              };
+      };
+    EOS
   end
 
-  def localhost_zone; <<~EOS
-    $TTL    86400
-    $ORIGIN localhost.
-    @            1D IN SOA    @ root (
-                        42        ; serial (d. adams)
-                        3H        ; refresh
-                        15M        ; retry
-                        1W        ; expiry
-                        1D )        ; minimum
+  def localhost_zone
+    <<~EOS
+      $TTL    86400
+      $ORIGIN localhost.
+      @            1D IN SOA    @ root (
+                          42        ; serial (d. adams)
+                          3H        ; refresh
+                          15M        ; retry
+                          1W        ; expiry
+                          1D )        ; minimum
 
-                1D IN NS    @
-                1D IN A        127.0.0.1
-  EOS
+                  1D IN NS    @
+                  1D IN A        127.0.0.1
+    EOS
   end
 
-  def named_local; <<~EOS
-    $TTL    86400
-    @       IN      SOA     localhost. root.localhost.  (
-                                          1997022700 ; Serial
-                                          28800      ; Refresh
-                                          14400      ; Retry
-                                          3600000    ; Expire
-                                          86400 )    ; Minimum
-                  IN      NS      localhost.
+  def named_local
+    <<~EOS
+      $TTL    86400
+      @       IN      SOA     localhost. root.localhost.  (
+                                            1997022700 ; Serial
+                                            28800      ; Refresh
+                                            14400      ; Retry
+                                            3600000    ; Expire
+                                            86400 )    ; Minimum
+                    IN      NS      localhost.
 
-    1       IN      PTR     localhost.
-  EOS
+      1       IN      PTR     localhost.
+    EOS
   end
 
   plist_options :startup => true
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>EnableTransactions</key>
-      <true/>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_sbin}/named</string>
-        <string>-f</string>
-        <string>-c</string>
-        <string>#{etc}/named.conf</string>
-      </array>
-      <key>ServiceIPC</key>
-      <false/>
-    </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>EnableTransactions</key>
+        <true/>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_sbin}/named</string>
+          <string>-f</string>
+          <string>-c</string>
+          <string>#{etc}/named.conf</string>
+        </array>
+        <key>ServiceIPC</key>
+        <false/>
+      </dict>
+      </plist>
+    EOS
   end
 
   test do

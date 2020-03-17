@@ -1,29 +1,29 @@
 class Osslsigncode < Formula
-  desc "Authenticode signing of PE(EXE/SYS/DLL/etc), CAB and MSI files"
-  homepage "https://sourceforge.net/projects/osslsigncode/"
-  url "https://downloads.sourceforge.net/project/osslsigncode/osslsigncode/osslsigncode-1.7.1.tar.gz"
-  sha256 "f9a8cdb38b9c309326764ebc937cba1523a3a751a7ab05df3ecc99d18ae466c9"
+  desc "OpenSSL based Authenticode signing for PE/MSI/Java CAB files"
+  homepage "https://github.com/mtrojnar/osslsigncode"
+  url "https://github.com/mtrojnar/osslsigncode/archive/2.0.tar.gz"
+  sha256 "5a60e0a4b3e0b4d655317b2f12a810211c50242138322b16e7e01c6fbb89d92f"
+  revision 1
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "83deaed9d81ecacfdf2674b63eb090fd4781a46bdd92d97b911ab88e0eb97ec1" => :mojave
-    sha256 "2106c87e481d094c2151b5da4152aea665114fda9233c1a09f437bed53ac2374" => :high_sierra
-    sha256 "141c40e42eb70da814daa2bb893e31c7158f74f99cdf607dcba62426aa049a5a" => :sierra
-  end
-
-  head do
-    url "https://git.code.sf.net/p/osslsigncode/osslsigncode.git"
-    depends_on "automake" => :build
+    sha256 "9f9d6f343dc0a7e6ecf34a27e97049b62952e5a05319b1f7aa4c235cf793fc5e" => :catalina
+    sha256 "cf48ec533b5cc0db3cf56903091936822c422d484371c28b2397bd02bd3bdbbb" => :mojave
+    sha256 "5999a97a256941d082e171faceb5cbf7fb54720031d71cc1c086d8d08d18ff01" => :high_sierra
   end
 
   depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "libtool" => :build
   depends_on "pkg-config" => :build
-  depends_on "openssl"
+  depends_on "libgsf"
+  depends_on "openssl@1.1"
+
+  uses_from_macos "curl"
 
   def install
-    system "autoreconf", "-ivf" if build.head?
-    system "./configure", "--prefix=#{prefix}"
+    system "./autogen.sh"
+    system "./configure", "--with-gsf", "--prefix=#{prefix}"
     system "make", "install"
   end
 

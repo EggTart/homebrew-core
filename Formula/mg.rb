@@ -1,20 +1,16 @@
 class Mg < Formula
   desc "Small Emacs-like editor"
-  # https://devio.us/~bcallah/mg/ is temporarily offline
   homepage "https://github.com/ibara/mg"
-  # https://devio.us/~bcallah/mg/mg-20180421.tar.gz is temporarily offline
-  url "https://dl.bintray.com/homebrew/mirror/mg-20180421.tar.gz"
-  sha256 "11215613a360cf72ff16c2b241ea4e71b4b80b2be32c62a770c1969599e663b2"
+  url "https://github.com/ibara/mg/releases/download/mg-6.6/mg-6.6.tar.gz"
+  sha256 "2a4590124f9d3cf287b0863e0b24945ae2e46081cef73f72b0ddab6c86a56e72"
+  version_scheme 1
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2815679e76a4eb25d454d8f8399f61fd38def65f6bcd4ac5a6b699e4c8f2344a" => :mojave
-    sha256 "6ddda40fecee0d8866684f50b248bf87172df8ccbe108306226ffc3cc2d8d74b" => :high_sierra
-    sha256 "e8df146cd84a6d153066c1c5398fb0846dace0529d090dbb063624f46556fb00" => :sierra
-    sha256 "f0ea843971bc8cdabbfdfbc663b7ef0d89c8b1d37b5eb303bfcebf83ff6d97a7" => :el_capitan
+    sha256 "5e1101814aad6dfb5191f3b0b8c2fab64b119f830275cf17a5d0ccf3b349cfb5" => :catalina
+    sha256 "d4ba4bdd794bafa810faf9bd24d705bb5eb219f035039b8c01ee4702ad4ffefa" => :mojave
+    sha256 "ce20159b78121c3806337165951d796b8a842cef21e05ef9d928152fd7e5feaf" => :high_sierra
   end
-
-  depends_on :macos => :yosemite # older versions don't support fstatat(2)
 
   def install
     system "./configure", "--prefix=#{prefix}",

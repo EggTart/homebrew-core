@@ -1,34 +1,30 @@
 class Ispc < Formula
   desc "Compiler for SIMD programming on the CPU"
   homepage "https://ispc.github.io"
-  url "https://github.com/ispc/ispc/archive/v1.10.0.tar.gz"
-  sha256 "0aa30e989f8d446b2680c9078d5c5db70634f40b9aa07db387aa35aa08dd0b81"
+  url "https://github.com/ispc/ispc/archive/v1.12.0.tar.gz"
+  sha256 "9ebc29adcdf477659b45155d0f91e61120a12084e42113d0e9f4ce5cfdfbdcab"
   revision 1
 
   bottle do
     cellar :any
-    sha256 "ed627995601dca14625923e95badefbbd12def15a9733cd422255ca75ec5b929" => :mojave
-    sha256 "3f677501e9519bf269b67c795c474cb3aaf1e4f96963d1e0c676424df7a0974e" => :high_sierra
-    sha256 "d00210a8bf3001b4495fa2239fc54dacf8be81f246dda0c58c345635511b69d9" => :sierra
+    sha256 "99109ffe35534e264eea6814b4006a49a1aba2cda154ab2d22d7e0c29da6cfc0" => :catalina
+    sha256 "cc7f31ea15ede43f37e40270643d3fa86722bc4ccf9a1bf4c763ad6985a26ffb" => :mojave
+    sha256 "17439d6f18ba148e5a912f595240ce5c89a9f951059411217c53db59dbab75d2" => :high_sierra
   end
 
   depends_on "bison" => :build
   depends_on "cmake" => :build
   depends_on "flex" => :build
-  depends_on "llvm@4"
+  depends_on "llvm"
+  depends_on "python"
 
   def install
-    # The standard include paths for clang supplied by the llvm@4 formula do not include
-    # C headers such as unistd.h. Add the path to those headers explicitly so that
-    # generation of the ispc builtins and standard library do not silently fail.
-    inreplace "cmake/GenerateBuiltins.cmake", "${CLANG_EXECUTABLE}",
-      "${CLANG_EXECUTABLE} -I#{MacOS.sdk_path}/usr/include"
-
     args = std_cmake_args + %W[
       -DISPC_INCLUDE_EXAMPLES=OFF
       -DISPC_INCLUDE_TESTS=OFF
       -DISPC_INCLUDE_UTILS=OFF
-      -DLLVM_TOOLS_BINARY_DIR='#{Formula["llvm@4"]}'
+      -DLLVM_TOOLS_BINARY_DIR='#{Formula["llvm"].opt_bin}'
+      -DISPC_NO_DUMPS=ON
     ]
 
     mkdir "build" do

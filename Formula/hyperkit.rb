@@ -1,19 +1,20 @@
 class Hyperkit < Formula
   desc "Toolkit for embedding hypervisor capabilities in your application"
   homepage "https://github.com/moby/hyperkit"
-  url "https://github.com/moby/hyperkit/archive/v0.20180403.tar.gz"
-  sha256 "e2739b034f20d9437696de48ace42600f55b7213292ec255032b2ef55f508297"
+  url "https://github.com/moby/hyperkit/archive/v0.20200224.tar.gz"
+  sha256 "c0f9e0eb4cd9efdfa099a8cb5b35483b64688d6d1fc0c7a01e591abd4cf76413"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "575873fb7533d317e1044a2332d30c29eeef4d92653c2c16e780940e3695b32a" => :mojave
-    sha256 "7a720e8737ac10ca41fb6db08e382eb40d87430a088891af694ce333e99d66ce" => :high_sierra
-    sha256 "f4422d832468f23c3b845546205179edd61c4bb9a4c38ae39dd46018684f4a43" => :sierra
+    sha256 "ba8679cca5d4532aa1afd0f5e6558b38f673e66c48b274dbf73228c632478c3c" => :catalina
+    sha256 "6e658f44e70586cd209fee359e1f303e3f4c8ed24f2ae1f53d845557fa420ee2" => :mojave
+    sha256 "e9d9fda51a2c05a37d0d872a80b6dbf26f56b5842c5dc03ad7be13fd1224d5c1" => :high_sierra
   end
 
   depends_on "aspcud" => :build
   depends_on "ocaml" => :build
   depends_on "opam" => :build
+  depends_on :x11 => :build
   depends_on :xcode => ["9.0", :build]
 
   depends_on "libev"
@@ -24,23 +25,21 @@ class Hyperkit < Formula
   end
 
   def install
-    system "opam", "init", "--no-setup"
+    system "opam", "init", "--disable-sandboxing", "--no-setup"
     opam_dir = "#{buildpath}/.brew_home/.opam"
     ENV["CAML_LD_LIBRARY_PATH"] = "#{opam_dir}/system/lib/stublibs:#{Formula["ocaml"].opt_lib}/ocaml/stublibs"
+    ENV["OPAMEXTERNALSOLVER"] = "aspcud"
     ENV["OPAMUTF8MSGS"] = "1"
     ENV["PERL5LIB"] = "#{opam_dir}/system/lib/perl5"
     ENV["OCAML_TOPLEVEL_PATH"] = "#{opam_dir}/system/lib/toplevel"
     ENV.prepend_path "PATH", "#{opam_dir}/system/bin"
 
-    inreplace "#{opam_dir}/compilers/4.05.0/4.05.0/4.05.0.comp",
-      '["./configure"', '["./configure" "-no-graph"' # Avoid X11
-
-    ENV.deparallelize { system "opam", "switch", "4.05.0" }
+    ENV.deparallelize { system "opam", "switch", "create", "ocaml-base-compiler.4.07.1" }
 
     system "opam", "config", "exec", "--",
-           "opam", "install", "-y", "uri", "qcow", "conduit.1.0.0", "lwt.3.1.0",
-           "qcow-tool", "mirage-block-unix.2.9.0", "conf-libev", "logs", "fmt",
-           "mirage-unix", "prometheus-app"
+           "opam", "install", "-y", "uri.1.9.7", "qcow.0.10.4", "conduit.1.0.0", "lwt.3.1.0",
+           "qcow-tool.0.10.5", "mirage-block-unix.2.9.0", "conf-libev.4-11", "logs.0.6.3", "fmt.0.8.6",
+           "mirage-unix.3.2.0", "prometheus-app.0.5", "cstruct-lwt.3.2.1"
 
     args = []
     args << "GIT_VERSION=#{version}"

@@ -1,15 +1,14 @@
 class Abyss < Formula
   desc "Genome sequence assembler for short reads"
-  homepage "http://www.bcgsc.ca/platform/bioinfo/software/abyss"
-  url "https://github.com/bcgsc/abyss/releases/download/2.1.5/abyss-2.1.5.tar.gz"
-  sha256 "65bfc8241e6ff5adf7601ae4ae93a75e3db86d6bff5d593c75aaff7f0ef41757"
-  revision 1
+  homepage "https://www.bcgsc.ca/resources/software/abyss"
+  url "https://github.com/bcgsc/abyss/releases/download/2.2.4/abyss-2.2.4.tar.gz"
+  sha256 "f064a8c5ad152a37963d9001df6c89d744370f7ec5a387307747c4647360a47c"
 
   bottle do
     cellar :any
-    sha256 "b3b0b70dd3911e0a94689f1ff4c0066a77f1698d6644e948a70b6cc073d2bcae" => :mojave
-    sha256 "465013b8098487135b82083d9a73562d27dd856a1a9707d9a7946032e9828e02" => :high_sierra
-    sha256 "7202018eb50f51b0fc6c5ae76339e7dd2ae712f4a2dcc71e8dff9eb812878b54" => :sierra
+    sha256 "800aa54afd53c585943f86d701ca58a95059577181fdb4a47bf9f08b249e230e" => :catalina
+    sha256 "03e6dc19bfb76f35b4b35c5fb65c88ea4fa28b3c3e112727465a7a5e2fd5ee09" => :mojave
+    sha256 "9ce078498ce23f6a894ca79dd21bee8c6c7e24aeb0ae95d3ccd7091fc55091a2" => :high_sierra
   end
 
   head do
@@ -28,11 +27,12 @@ class Abyss < Formula
   fails_with :clang # no OpenMP support
 
   resource("testdata") do
-    url "http://www.bcgsc.ca/platform/bioinfo/software/abyss/releases/1.3.4/test-data.tar.gz"
+    url "https://www.bcgsc.ca/sites/default/files/bioinformatics/software/abyss/releases/1.3.4/test-data.tar.gz"
     sha256 "28f8592203daf2d7c3b90887f9344ea54fda39451464a306ef0226224e5f4f0e"
   end
 
   def install
+    ENV.delete("HOMEBREW_SDKROOT") if MacOS.version >= :mojave && MacOS::CLT.installed?
     system "./autogen.sh" if build.head?
     system "./configure", "--enable-maxk=128",
                           "--prefix=#{prefix}",

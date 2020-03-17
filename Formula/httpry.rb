@@ -8,6 +8,7 @@ class Httpry < Formula
   bottle do
     cellar :any_skip_relocation
     rebuild 1
+    sha256 "322f399002eec5d9116942db65d231d7eed5bb1b46e9959cdb48c6eb10f41339" => :catalina
     sha256 "32bdf2c6b873fc531455da9f4658746c650203a017c8b367172efde8aa93f9ba" => :mojave
     sha256 "349ba4f39066cb02c151ab0f274f6bb9f4ee2cf558abdb2c5a3ecf0e563874fc" => :high_sierra
     sha256 "71014794d2a136fea229dd19d6fe7dc136037c074a817d70bd7b13713653f19f" => :sierra
@@ -15,6 +16,8 @@ class Httpry < Formula
     sha256 "af0deb9d79e72df6369f57ed1050abeb70c62f77ab481232b556ba6da5ace66c" => :yosemite
     sha256 "ec016612be65aa5761213134d211f9bee121d8904dae9b9d73ebfc37d4de3cea" => :mavericks
   end
+
+  uses_from_macos "libpcap"
 
   def install
     system "make"

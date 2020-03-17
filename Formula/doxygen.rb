@@ -1,27 +1,21 @@
 class Doxygen < Formula
   desc "Generate documentation for several programming languages"
   homepage "http://www.doxygen.org/"
-  url "http://doxygen.nl/files/doxygen-1.8.15.src.tar.gz"
-  mirror "https://downloads.sourceforge.net/project/doxygen/rel-1.8.15/doxygen-1.8.15.src.tar.gz"
-  sha256 "bd9c0ec462b6a9b5b41ede97bede5458e0d7bb40d4cfa27f6f622eb33c59245d"
+  url "http://doxygen.nl/files/doxygen-1.8.17.src.tar.gz"
+  mirror "https://downloads.sourceforge.net/project/doxygen/rel-1.8.17/doxygen-1.8.17.src.tar.gz"
+  sha256 "2cba988af2d495541cbbe5541b3bee0ee11144dcb23a81eada19f5501fd8b599"
   head "https://github.com/doxygen/doxygen.git"
 
   bottle do
     cellar :any_skip_relocation
-    rebuild 2
-    sha256 "e3144ca8ebdb1abd668cb4eee36feb3bb5d545bc3d056f207109d2ae57013f5c" => :mojave
-    sha256 "b6b7234f2644de37a48d7459f3b360127c4e92df8bb56d48b9a4128f58eaf90b" => :high_sierra
-    sha256 "305156f3d060deeee197759c5ce6ea8a1da36ad52f8104b42cd7ccbb2b20c0e7" => :sierra
+    rebuild 1
+    sha256 "e616dc31b1fa5fc8e4f1ff3102b049cfaa2e13f199de9e06123d4dbe33a75790" => :catalina
+    sha256 "609bb888081320306742749bf91f4cfd17815bc8d3d4385ebe25932d1d97302e" => :mojave
+    sha256 "a1054bedac664bf5edbcebd74606d6e67cb8cc8c64871206fc93728cca02d1e1" => :high_sierra
   end
 
+  depends_on "bison" => :build
   depends_on "cmake" => :build
-
-  # Fix build breakage for 1.8.15 and CMake 3.13
-  # https://github.com/Homebrew/homebrew-core/issues/35815
-  patch do
-    url "https://github.com/doxygen/doxygen/commit/889eab308b564c4deba4ef58a3f134a309e3e9d1.diff?full_index=1"
-    sha256 "ba4f9251e2057aa4da3ae025f8c5f97ea11bf26065a3f0e3b313b9acdad0b938"
-  end
 
   def install
     args = std_cmake_args + %W[

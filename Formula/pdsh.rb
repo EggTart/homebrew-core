@@ -1,15 +1,14 @@
 class Pdsh < Formula
   desc "Efficient rsh-like utility, for using hosts in parallel"
   homepage "https://github.com/chaos/pdsh"
-  url "https://github.com/chaos/pdsh/releases/download/pdsh-2.33/pdsh-2.33.tar.gz"
-  sha256 "7368087429d6269f0a6313c406ef38c6a6a947bc003ca7368fc6481b139d942f"
-  revision 1
+  url "https://github.com/chaos/pdsh/releases/download/pdsh-2.34/pdsh-2.34.tar.gz"
+  sha256 "b47b3e4662736ef44b6fe86e3d380f95e591863e69163aa0592e9f9f618521e9"
   head "https://github.com/chaos/pdsh.git"
 
   bottle do
-    sha256 "69d61fe9f4a0ba006e4e5061acaee0b1d9da2b66f8b02af74d510ebea2018e34" => :mojave
-    sha256 "5fa7e12d3877247c072e3d393efc6e54bb295f9a6e837402c693f3805990a74b" => :high_sierra
-    sha256 "d70f3e18351291dcd04bcc6f59d15aabdeec44cee21e1729205ef9862f97099b" => :sierra
+    sha256 "db103afd01523d00761df3c077b309ffeaa7e816a538ab9b739fac7b58a8171b" => :catalina
+    sha256 "d5ce164360edacbda30b059e8964fc6e4c886adc5f63218a37667756419ef51a" => :mojave
+    sha256 "4063ea4d575eef74e2af6993a74658df6c48e42b81df8a77a49aee745c7527a0" => :high_sierra
   end
 
   depends_on "readline"
@@ -21,7 +20,9 @@ class Pdsh < Formula
       --with-nodeupdown
       --with-readline
       --with-ssh
-      --without-dshgroups
+      --with-dshgroups
+      --with-netgroup
+      --with-slurm
       --without-rsh
       --without-xcpu
     ]

@@ -1,34 +1,28 @@
 class Libxkbcommon < Formula
   desc "Keyboard handling library"
   homepage "https://xkbcommon.org/"
-  url "https://xkbcommon.org/download/libxkbcommon-0.8.2.tar.xz"
-  sha256 "7ab8c4b3403d89d01898066b72cb6069bddeb5af94905a65368f671a026ed58c"
+  url "https://xkbcommon.org/download/libxkbcommon-0.10.0.tar.xz"
+  sha256 "57c3630cdc38fb4734cd57fa349e92244f5ae3862813e533cedbd86721a0b6f2"
+  head "https://github.com/xkbcommon/libxkbcommon.git"
 
   bottle do
-    sha256 "95c1b24529a35cc2653397c3d7505fa26332e531264163e3ca6c96b15fef9a67" => :mojave
-    sha256 "68c2c32d4a35e4c7b3984fd4df45b29aef77a3cb74da4bb301ce9e3fff86f2ff" => :high_sierra
-    sha256 "b8deb446b227b5d6b19e752083486168f76e9c911e542b2cad2bf00f310612ec" => :sierra
-    sha256 "ca1f6ac28d09ce0178b219003a3368e60ed3c7de36ec48cb9ea8c57eb844e643" => :el_capitan
-  end
-
-  head do
-    url "https://github.com/xkbcommon/libxkbcommon.git"
-
-    depends_on "autoconf" => :build
-    depends_on "automake" => :build
-    depends_on "libtool" => :build
+    cellar :any
+    sha256 "4cdb1253e94b84d437d265c6e7c893c0bd4ab250de217c1326bc7192917dd53b" => :catalina
+    sha256 "d3f1d57e7ac3f00e3ddf5b95f24446ea09b254d880757ca928ab6f3873aad215" => :mojave
+    sha256 "d9faf6a0432c5c26d3245d401899ee7a4230eade04cdd36995fa49748d1a8a62" => :high_sierra
   end
 
   depends_on "bison" => :build
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on :x11
 
   def install
-    system "./autogen.sh" if build.head?
-    system "./configure", "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}"
-    system "make", "install"
+    mkdir "build" do
+      system "meson", "--prefix=#{prefix}", "-Denable-wayland=false", "-Denable-docs=false", ".."
+      system "ninja", "install", "-v"
+    end
   end
 
   test do

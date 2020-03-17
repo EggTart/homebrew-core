@@ -1,17 +1,17 @@
 class Verilator < Formula
   desc "Verilog simulator"
   homepage "https://www.veripool.org/wiki/verilator"
-  url "https://www.veripool.org/ftp/verilator-4.014.tgz"
-  sha256 "edf517b1b3ae0df98bd8d8189d17142c181cd50948d54a6ecb082f38804a33eb"
+  url "https://www.veripool.org/ftp/verilator-4.030.tgz"
+  sha256 "7e7a3c0acac77e7fda36678a71f50e6c2f54d5af4ba05e5bb061e4d98f9b8d1e"
 
   bottle do
-    sha256 "5f3fb635a4377204d1fa2c24a462635bff80522fb5a3660c3297a075e2f9fc57" => :mojave
-    sha256 "660b6959c21e50f13c374b17a7777f251a1e2da8d661f8478d3a55a5dbd2a99e" => :high_sierra
-    sha256 "3dc134e88d6c90262a18340a4556384d43d613322bf61baf1f82ffc217d99542" => :sierra
+    sha256 "bb71805f6be3d64d2409a541dd0390960a93c978d14096766cc5652b35124237" => :catalina
+    sha256 "f5c4da84c7f08383e77f8af7984c91de4b48ea72de3996a90b8e508ea0df8b27" => :mojave
+    sha256 "d56fb5be0898bfc665a480bd177b9022781a6620ed54471fa667410f3334d2f5" => :high_sierra
   end
 
   head do
-    url "http://git.veripool.org/git/verilator", :using => :git
+    url "https://git.veripool.org/git/verilator", :using => :git
     depends_on "autoconf" => :build
     depends_on "automake" => :build
   end

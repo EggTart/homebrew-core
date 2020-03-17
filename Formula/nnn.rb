@@ -1,25 +1,27 @@
 class Nnn < Formula
   desc "Tiny, lightning fast, feature-packed file manager"
   homepage "https://github.com/jarun/nnn"
-  url "https://github.com/jarun/nnn/archive/v2.4.tar.gz"
-  sha256 "859ba5bd4892016aed9a4830ee1e1b03eb74e94c4f1bd82f0288dc559f7327eb"
+  url "https://github.com/jarun/nnn/archive/v3.0.tar.gz"
+  sha256 "04db6d6710ce1232c779bf70137a86557e486614e20327717122bb63f36348f7"
   head "https://github.com/jarun/nnn.git"
 
   bottle do
     cellar :any
-    sha256 "ddf0361deeb681303efc74a08e5bdce4a08225bb3b9ff6cdb607d6cfb4158860" => :mojave
-    sha256 "b26f8e25a48ebfa64ec49c496a625121e367075778610643181f55740edabd25" => :high_sierra
-    sha256 "997ecd4a9ef2d58c17dc8a23dd83143297a434a81e9e6567097e7f5610c86a6d" => :sierra
+    sha256 "8b409f0677ba59902d219d4b174b3e7ec7e273befb6dd63c69b3477151264122" => :catalina
+    sha256 "b48dbfde5162c222a98fe4077b3d906e60c794dcb8db240f00d5acaa801b065e" => :mojave
+    sha256 "2ba56614606510098df1b196e7191264f08f555dca1d7beaa6556718e08cb8d1" => :high_sierra
   end
 
   depends_on "readline"
 
+  uses_from_macos "ncurses"
+
   def install
     system "make", "install", "PREFIX=#{prefix}"
 
-    bash_completion.install "scripts/auto-completion/bash/nnn-completion.bash"
-    zsh_completion.install "scripts/auto-completion/zsh/_nnn"
-    fish_completion.install "scripts/auto-completion/fish/nnn.fish"
+    bash_completion.install "misc/auto-completion/bash/nnn-completion.bash"
+    zsh_completion.install "misc/auto-completion/zsh/_nnn"
+    fish_completion.install "misc/auto-completion/fish/nnn.fish"
   end
 
   test do

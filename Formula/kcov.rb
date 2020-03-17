@@ -1,19 +1,20 @@
 class Kcov < Formula
   desc "Code coverage tester for compiled programs, Python, and shell scripts"
   homepage "https://simonkagstrom.github.io/kcov/"
-  url "https://github.com/SimonKagstrom/kcov/archive/v36.tar.gz"
-  sha256 "29ccdde3bd44f14e0d7c88d709e1e5ff9b448e735538ae45ee08b73c19a2ea0b"
+  url "https://github.com/SimonKagstrom/kcov/archive/38.tar.gz"
+  sha256 "b37af60d81a9b1e3b140f9473bdcb7975af12040feb24cc666f9bb2bb0be68b4"
   head "https://github.com/SimonKagstrom/kcov.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "eb5bc53867f7dc0ebb53216daf6b1ec62ee45036fa36d60ccfa03722644176ed" => :mojave
-    sha256 "e5c56807425593829fa59be83f58ba473cdde545216c06fdda54e7e59996f413" => :high_sierra
-    sha256 "75e27a93b88782772c9d54db0afcb079f5f1b3d89a6ab1e457306e269c2951a3" => :sierra
+    sha256 "7a3af28e85c85c6f1dc684086884c724dfdbcf72efca48add536c5dd08bda4c0" => :catalina
+    sha256 "833750a5d75e99a392010b305841daca6d0007e5a9b2ccd2ab5d54f18c01b6ad" => :mojave
+    sha256 "e5c6cc5b5ed21b5609107cb80ac67dec4ffc9b9227e272464b9eeade66932bd3" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
+  depends_on "python@3.8" => :build
 
   def install
     mkdir "build" do

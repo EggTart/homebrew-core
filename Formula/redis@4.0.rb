@@ -6,6 +6,7 @@ class RedisAT40 < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "2e9a2c7da7676cca21b9ece9ccdb8576d17060d7aa5e6829127407b4629f22e3" => :catalina
     sha256 "afe26b0f773f004d2bb0a5fa60970d6f9143fe7aab0d604a2e2e453fbdf70d3f" => :mojave
     sha256 "0fa9ceef9985e487714b8ec356c45d77ac1856e99d8a87cef405439ef4939cde" => :high_sierra
     sha256 "537fe6969d900f34df0e072e7f90e43ca85c665f95952b7dea196691e3955592" => :sierra
@@ -34,35 +35,36 @@ class RedisAT40 < Formula
 
   plist_options :manual => "#{HOMEBREW_PREFIX}/opt/redis@4.0/bin/redis-server #{HOMEBREW_PREFIX}/etc/redis.conf"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>KeepAlive</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
         <dict>
-          <key>SuccessfulExit</key>
-          <false/>
+          <key>KeepAlive</key>
+          <dict>
+            <key>SuccessfulExit</key>
+            <false/>
+          </dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>#{opt_bin}/redis-server</string>
+            <string>#{etc}/redis.conf</string>
+            <string>--daemonize no</string>
+          </array>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>WorkingDirectory</key>
+          <string>#{var}</string>
+          <key>StandardErrorPath</key>
+          <string>#{var}/log/redis.log</string>
+          <key>StandardOutPath</key>
+          <string>#{var}/log/redis.log</string>
         </dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_bin}/redis-server</string>
-          <string>#{etc}/redis.conf</string>
-          <string>--daemonize no</string>
-        </array>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>WorkingDirectory</key>
-        <string>#{var}</string>
-        <key>StandardErrorPath</key>
-        <string>#{var}/log/redis.log</string>
-        <key>StandardOutPath</key>
-        <string>#{var}/log/redis.log</string>
-      </dict>
-    </plist>
-  EOS
+      </plist>
+    EOS
   end
 
   test do

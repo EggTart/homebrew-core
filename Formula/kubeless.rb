@@ -1,30 +1,26 @@
 class Kubeless < Formula
   desc "Kubernetes Native Serverless Framework"
   homepage "https://kubeless.io"
-  url "https://github.com/kubeless/kubeless/archive/v1.0.3.tar.gz"
-  sha256 "eacc7879801b7bd0889e37715f8901f9d9b2034cbf9fa40fcd050435bf41c9c7"
+  url "https://github.com/kubeless/kubeless/archive/v1.0.6.tar.gz"
+  sha256 "828a04600eb1506e107f23ddd02dad0335c24450ac89fcf8f261c5f5cd0e570a"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "5eec1d66fd5363fffa6d5e6eb60074569f4b3c8c714aa8e7f7e763cb542fce94" => :mojave
-    sha256 "9d5743f290b012d9e09c4ebe3dc78e44baaeb21ee180122c65f1d89951622474" => :high_sierra
-    sha256 "4b6c75257982b01d806f06db9b946f56729b82226b6ddab30db55f5b5c7c4fd0" => :sierra
+    sha256 "3d9fcaea79166a2d8870050b8b53aabab94ab6c54897dabcb1c0137933aece71" => :catalina
+    sha256 "b644a1285d0a04a22374749bc2af3feec0e1c76446d9a87996ccef6305f1fe15" => :mojave
+    sha256 "1d75ba00b5b9956f585e9bee7e643bb5dc052fa8ee4107dadae88d629f9fc780" => :high_sierra
   end
 
   depends_on "go" => :build
   depends_on "kubernetes-cli"
 
   def install
-    ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/kubeless/kubeless").install buildpath.children
-    cd "src/github.com/kubeless/kubeless" do
-      ldflags = %W[
-        -w -X github.com/kubeless/kubeless/pkg/version.Version=v#{version}
-      ]
-      system "go", "build", "-o", bin/"kubeless", "-ldflags",
-             ldflags.join(" "), "./cmd/kubeless"
-      prefix.install_metafiles
-    end
+    ldflags = %W[
+      -s -w -X github.com/kubeless/kubeless/pkg/version.Version=v#{version}
+    ]
+    system "go", "build", "-ldflags", ldflags.join(" "), "-trimpath",
+           "-o", bin/"kubeless", "./cmd/kubeless"
+    prefix.install_metafiles
   end
 
   test do

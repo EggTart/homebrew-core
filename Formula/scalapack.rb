@@ -1,15 +1,15 @@
 class Scalapack < Formula
   desc "High-performance linear algebra for distributed memory machines"
   homepage "https://www.netlib.org/scalapack/"
-  url "https://www.netlib.org/scalapack/scalapack-2.0.2.tgz"
-  sha256 "0c74aeae690fe5ee4db7926f49c5d0bb69ce09eea75beb915e00bba07530395c"
-  revision 15
+  url "https://www.netlib.org/scalapack/scalapack-2.1.0.tgz"
+  sha256 "61d9216cf81d246944720cfce96255878a3f85dec13b9351f1fa0fd6768220a6"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "5145405aea16d22bc8aa4672fbda2cf9b5ad98a89c4704c0ab2c7d4d94af154e" => :mojave
-    sha256 "a18a1dce08bc8f7114143e35fea3aa9d3bbab7ff92c368664ae00083352ebc83" => :high_sierra
-    sha256 "0973c343b1bec8fade013a41c1ee3cf0bd4a0f6c175be43fe94f42645874998d" => :sierra
+    sha256 "697f1d928914df0d879813afd717597a2939dfa87f3828dd6014011ab3da0b06" => :catalina
+    sha256 "a994dfe2b4d48861f4fa406266fe00a4c29039bd37b5e58f71893e3180b045bd" => :mojave
+    sha256 "770b58ffe8486edf0fe5bdfa788f9f4612e0859af683393b170bfda37fcd7c82" => :high_sierra
   end
 
   depends_on "cmake" => :build

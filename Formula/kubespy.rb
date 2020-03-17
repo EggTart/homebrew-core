@@ -2,14 +2,14 @@ class Kubespy < Formula
   desc "Tools for observing Kubernetes resources in realtime"
   homepage "https://github.com/pulumi/kubespy"
   url "https://github.com/pulumi/kubespy.git",
-      :tag      => "v0.4.0",
-      :revision => "9cca3f1b07e33c5c8a11c804c9276cbb75338641"
+      :tag      => "v0.5.1",
+      :revision => "438edbfd5a9a72992803d45addb1f45b10a0b62f"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e3fff5273f5719aa828347b1d1b825874faac7989f240326ecf1ade567c1f47f" => :mojave
-    sha256 "1f08465867b5108de94ec3e8bc68beb1af8af1300a3bcff246eff662c9d92c65" => :high_sierra
-    sha256 "236a51cb10fd31ecd508ca2deb18c770edc9f850d9a3b30d85c737251269deba" => :sierra
+    sha256 "783702f8de5226fb50d35d30ee4f600f3c8ba82006e2ec52c6f643994f97ed65" => :catalina
+    sha256 "0793f861231c44c23578b3c6d8faab29c868eb3ca4cc5786ad76536863fb04e0" => :mojave
+    sha256 "a39ae5031e190cf58be0863d51738225366da5d36ede449af4146bd782b48e7a" => :high_sierra
   end
 
   depends_on "go" => :build

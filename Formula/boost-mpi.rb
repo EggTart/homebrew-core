@@ -1,14 +1,14 @@
 class BoostMpi < Formula
   desc "C++ library for C++/MPI interoperability"
   homepage "https://www.boost.org/"
-  url "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.bz2"
-  sha256 "8f32d4617390d1c2d16f26a27ab60d97807b35440d45891fa340fc2648b04406"
+  url "https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2"
+  sha256 "59c9b274bc451cf91a9ba1dd2c7fdcaf5d60b1b3aa83f2c9fa143417cc660722"
   head "https://github.com/boostorg/boost.git"
 
   bottle do
-    sha256 "11823e8ed799d8a7714d7d619bba5999fe6170535a4e572b83787b25afd7b29c" => :mojave
-    sha256 "df0cb6020d06a01c45e5a278cf196de77da020d97e2e84732f8d75940e4eb9a7" => :high_sierra
-    sha256 "24d06ffcf80ed94e60176aea55854d7f5bcc5b7cc8e81209ee13321fec32fad8" => :sierra
+    sha256 "85d4a3e20c2b6c3383a6fc6bb2829a08284bd23dfed1ddfe23c95b042ab6a73d" => :catalina
+    sha256 "76a3472fb7d69bd52c36f936d932dc70b800108c8ecedf1c11c132ce094af595" => :mojave
+    sha256 "9f6879e54a786105e9a2d4cc7275a31f22d4aea0f62417b8eed45e7f82d80449" => :high_sierra
   end
 
   depends_on "boost"
@@ -16,21 +16,20 @@ class BoostMpi < Formula
 
   def install
     # "layout" should be synchronized with boost
-    args = ["--prefix=#{prefix}",
-            "--libdir=#{lib}",
-            "-d2",
-            "-j#{ENV.make_jobs}",
-            "--layout=tagged-1.66",
-            "--user-config=user-config.jam",
-            "threading=multi,single",
-            "link=shared,static"]
+    args = %W[
+      -d2
+      -j#{ENV.make_jobs}
+      --layout=tagged-1.66
+      --user-config=user-config.jam
+      install
+      threading=multi,single
+      link=shared,static
+    ]
 
     # Trunk starts using "clang++ -x c" to select C compiler which breaks C++11
     # handling using ENV.cxx11. Using "cxxflags" and "linkflags" still works.
     args << "cxxflags=-std=c++11"
-    if ENV.compiler == :clang
-      args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++"
-    end
+    args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++" if ENV.compiler == :clang
 
     open("user-config.jam", "a") do |file|
       file.write "using darwin : : #{ENV.cxx} ;\n"
@@ -39,9 +38,13 @@ class BoostMpi < Formula
 
     system "./bootstrap.sh", "--prefix=#{prefix}", "--libdir=#{lib}", "--with-libraries=mpi"
 
-    system "./b2", *args
+    system "./b2",
+           "--prefix=install-mpi",
+           "--libdir=install-mpi/lib",
+           *args
 
-    lib.install Dir["stage/lib/*mpi*"]
+    lib.install Dir["install-mpi/lib/*mpi*"]
+    (lib/"cmake").install Dir["install-mpi/lib/cmake/*mpi*"]
 
     # libboost_mpi links to libboost_serialization, which comes from the main boost formula
     boost = Formula["boost"]

@@ -1,14 +1,14 @@
 class GsettingsDesktopSchemas < Formula
   desc "GSettings schemas for desktop components"
   homepage "https://download.gnome.org/sources/gsettings-desktop-schemas/"
-  url "https://download.gnome.org/sources/gsettings-desktop-schemas/3.32/gsettings-desktop-schemas-3.32.0.tar.xz"
-  sha256 "2d59b4b3a548859dfae46314ee4666787a00d5c82db382e97df7aa9d0e310a35"
+  url "https://download.gnome.org/sources/gsettings-desktop-schemas/3.36/gsettings-desktop-schemas-3.36.0.tar.xz"
+  sha256 "764ab683286536324533a58d4e95fc57f81adaba7d880dd0ebbbced63e960ea6"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "b2873d19eca42edb79cbf3055f0814eb66314edd60df6400ce91a3119661a3a9" => :mojave
-    sha256 "b2873d19eca42edb79cbf3055f0814eb66314edd60df6400ce91a3119661a3a9" => :high_sierra
-    sha256 "efa60ccb64f70f0a0d0e73df86d3989592205eabaaa186e0d3d50f705cdb27eb" => :sierra
+    sha256 "2fddc49ef9d3b064f1663d98c34a7c9b042dd529da8eb02b490aad3fde21775e" => :catalina
+    sha256 "2fddc49ef9d3b064f1663d98c34a7c9b042dd529da8eb02b490aad3fde21775e" => :mojave
+    sha256 "2fddc49ef9d3b064f1663d98c34a7c9b042dd529da8eb02b490aad3fde21775e" => :high_sierra
   end
 
   depends_on "gobject-introspection" => :build
@@ -16,6 +16,9 @@ class GsettingsDesktopSchemas < Formula
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "glib"
+  depends_on "python"
+
+  uses_from_macos "expat"
 
   def install
     ENV["DESTDIR"] = "/"

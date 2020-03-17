@@ -1,28 +1,35 @@
 class Pari < Formula
   desc "Computer algebra system designed for fast computations in number theory"
   homepage "https://pari.math.u-bordeaux.fr/"
-  url "https://pari.math.u-bordeaux.fr/pub/pari/unix/pari-2.11.2.tar.gz"
-  sha256 "4a6532b3c77350363fa618ead5cd794a172d7b7e5757a28f7788e658b5469339"
+  url "https://pari.math.u-bordeaux.fr/pub/pari/unix/pari-2.11.3.tar.gz"
+  sha256 "c7100a467eaf908942bb403cbd38036a26d7222e6ee6d39b50ab667d052ca6c9"
 
   bottle do
-    sha256 "a88f042d922a2293a48da12db2d31c0e85042e9bf16ced84cd71eff17139275c" => :mojave
-    sha256 "5d81ced4deafdd19a9bed498f7a4258865b44bb155d347c038c3dc15c3ed8bd9" => :high_sierra
-    sha256 "342bc9f70a5203b9c73657353b30b2873f3b4c369aeeb1cfb258b33bfec4cf4c" => :sierra
+    sha256 "bfac783202e3e6470d3ced0543dbebaf83a1da1b91f8f7bb191ab4bcc9ff3a19" => :catalina
+    sha256 "ecac057aed38361682df4fd71803fc258e44e7b84907cfb3f82c7c4668979c4a" => :mojave
+    sha256 "9504d484f5f4f7794355a0c0790d11cdd566f2b9d513a6b22a4aba207920eb06" => :high_sierra
   end
 
   depends_on "gmp"
   depends_on "readline"
-  depends_on :x11
 
   def install
     readline = Formula["readline"].opt_prefix
     gmp = Formula["gmp"].opt_prefix
     system "./Configure", "--prefix=#{prefix}",
                           "--with-gmp=#{gmp}",
-                          "--with-readline=#{readline}"
+                          "--with-readline=#{readline}",
+                          "--graphic=ps"
     # make needs to be done in two steps
     system "make", "all"
     system "make", "install"
+  end
+
+  def caveats
+    <<~EOS
+      If you need the graphical plotting functions you need to install X11 with:
+        brew cask install xquartz
+    EOS
   end
 
   test do

@@ -1,16 +1,18 @@
 class Libosinfo < Formula
   desc "The Operating System information database"
   homepage "https://libosinfo.org/"
-  url "https://releases.pagure.org/libosinfo/libosinfo-1.4.0.tar.gz"
-  sha256 "a29e61a82b1a5727b145403914812273dfa033a0c07a15500078726bb3b84165"
+  url "https://releases.pagure.org/libosinfo/libosinfo-1.7.1.tar.xz"
+  sha256 "bb26106ad4a9f8523f81b332d2aedb717cdcb0500b3f68ba7c6ff945c4d627e9"
 
   bottle do
-    sha256 "65f55dfae3d1c883d0368883e16c1a7f68e64ab4a0b4451ec13a57fbc0586bf8" => :mojave
-    sha256 "b75e0154484d4206e833df6757750802d74e85bbab41f68cbe98edc776640029" => :high_sierra
-    sha256 "2f1b47a9f2b6cf3c877a79c14ae6f8f7cf3f85a1fbf7c8226f195ae0a3af02a7" => :sierra
+    sha256 "e067499ce7ea69830ea63755751426063e6e1f4b74b09ec9bb35c7ddf825bf25" => :catalina
+    sha256 "a138545c508f69286a5e9b86fc945f95b79eb625de270dc19a853f3d5ab4638c" => :mojave
+    sha256 "594fbfda840d8bd4169da48d5f6cd5076329ec9b0a21d0ebafe96a0732a00cca" => :high_sierra
   end
 
   depends_on "gobject-introspection" => :build
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "check"
   depends_on "gettext"
@@ -19,26 +21,10 @@ class Libosinfo < Formula
   depends_on "libxml2"
 
   def install
-    # avoid wget dependency
-    inreplace "Makefile.in", "wget -q -O", "curl -o"
-
-    args = %W[
-      --prefix=#{prefix}
-      --localstatedir=#{var}
-      --mandir=#{man}
-      --sysconfdir=#{etc}
-      --disable-silent-rules
-      --disable-udev
-      --disable-vala
-      --enable-introspection
-      --enable-tests
-    ]
-
-    system "./configure", *args
-
-    # Compilation of docs doesn't get done if we jump straight to "make install"
-    system "make"
-    system "make", "install"
+    mkdir "build" do
+      system "meson", "--prefix=#{prefix}", "-Denable-gtk-doc=false", ".."
+      system "ninja", "install", "-v"
+    end
   end
 
   test do

@@ -3,14 +3,14 @@ class Arpack < Formula
   homepage "https://github.com/opencollab/arpack-ng"
   url "https://github.com/opencollab/arpack-ng/archive/3.7.0.tar.gz"
   sha256 "972e3fc3cd0b9d6b5a737c9bf6fd07515c0d6549319d4ffb06970e64fa3cc2d6"
-  revision 2
+  revision 4
   head "https://github.com/opencollab/arpack-ng.git"
 
   bottle do
     cellar :any
-    sha256 "bbeb3eecad1a628a980cad61c9da6553696e53ccc9e9d18e42b933b3e0db1053" => :mojave
-    sha256 "428918b64b9519135f9ed5800ee849e0c5ed45aaabfbe12d7db49d31fb25725a" => :high_sierra
-    sha256 "e0f0dc1cf08d16c9b47a6c3f83549f9ad58727f7506a56914c791f5e67f795e1" => :sierra
+    sha256 "d173bfd4d5cad74063506f0a852198124740bb65e44c16be7d1e445e1bd324c0" => :catalina
+    sha256 "db006f0681a1d280da53ac6ac60904a51e0d8158708d20fdcc4e6404289db850" => :mojave
+    sha256 "510b490c32d7adf344c655133c83b74d17fcdba51ccafe6e0a5a1a7f9899f3b1" => :high_sierra
   end
 
   depends_on "autoconf" => :build

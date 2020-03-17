@@ -4,8 +4,8 @@ class Qca < Formula
   head "https://anongit.kde.org/qca.git"
 
   stable do
-    url "https://github.com/KDE/qca/archive/v2.2.1.tar.gz"
-    sha256 "c67fc0fa8ae6cb3d0ba0fbd8fca8ee8e4c5061b99f1fd685fd7d9800cef17f6b"
+    url "https://github.com/KDE/qca/archive/v2.3.0.tar.gz"
+    sha256 "39aa18f0985d82949f4dccce04af3eb8d4b6b64e0c71785786738d38d8183b0a"
 
     # use major version for framework, instead of full version
     # see: https://github.com/KDE/qca/pull/3
@@ -16,14 +16,15 @@ class Qca < Formula
   end
 
   bottle do
-    sha256 "56923c31aaa91a00f6692f135e8f5889182b770d08800f90f0ae685a6edd5b4a" => :mojave
-    sha256 "df6120a7a524c85100ff94912a364903d4eeae0529ab1a24a0e72aa66f52dfa7" => :high_sierra
-    sha256 "1a498fc1f967cf8290d4d0748d7d003442047f5358bb368c4e41d49681799f5d" => :sierra
+    cellar :any
+    sha256 "5af8a815c4534787388cf0d11773e62d8ab906e4b68a52a7e3230bdb0dc97249" => :catalina
+    sha256 "c8b2be92c664d56c6e4bc3ced579181127bf263cffcc900c62dc1943bf40cf69" => :mojave
+    sha256 "3735156d4a76e9f18f01fd7c056698f914f2f932650349dda0bd543942057882" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-  depends_on "openssl" # qca-ossl plugin
+  depends_on "openssl@1.1" # qca-ossl plugin
   depends_on "qt"
 
   def install

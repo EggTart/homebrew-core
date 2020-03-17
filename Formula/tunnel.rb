@@ -1,14 +1,14 @@
 class Tunnel < Formula
-  desc "Expose local servers to internet securely"
-  homepage "https://labstack.com/docs/tunnel"
-  url "https://github.com/labstack/tunnel-client/archive/v0.2.12.tar.gz"
-  sha256 "939ce5a0485c945b8e92eb99a29ae0a12ec46a66e59cef44ad9af2dbe2371163"
+  desc "Expose local servers to the internet securely"
+  homepage "https://tunnel.labstack.com/docs"
+  url "https://github.com/labstack/tunnel-client/archive/v0.5.14.tar.gz"
+  sha256 "83f7d63520171f052ff50d2e3f56675545350b0aa812b3634397c8d6916292fb"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "57a9c7581653336740728f5d9d75e6292f941844ba14c2b2e48060e8d52aad4e" => :mojave
-    sha256 "61e5d30fad5d2011f0bbe8eb9301565d0df9056b4a5dce65acbd5f88e6ba747f" => :high_sierra
-    sha256 "b5cf0fb1637e8d1342bf6a15e6bffe21e2a4d20f157401bafa36f596e8106aba" => :sierra
+    sha256 "2ebbd50a674366bb3dc57632b5aa9a95886cf13ef69a1ecdcb2f9074bb4c6ada" => :catalina
+    sha256 "02b1728c7b8f973e0bec3dea0944f591e00c511179cc1c50f2483833c83d94cd" => :mojave
+    sha256 "94fe0f4a2841c10c8f1031cd9083d0c683b52ed8f94c8d657eefc2de76e7c5c2" => :high_sierra
   end
 
   depends_on "go" => :build
@@ -19,15 +19,6 @@ class Tunnel < Formula
   end
 
   test do
-    begin
-      pid = fork do
-        $stdout.reopen("#{testpath}/out", "w")
-        exec bin/"tunnel", "8080"
-      end
-      sleep 5
-      assert_match "labstack.me", (testpath/"out").read
-    ensure
-      Process.kill("HUP", pid)
-    end
+    system bin/"tunnel", "ping"
   end
 end

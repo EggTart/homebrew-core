@@ -3,42 +3,44 @@ class Ledger < Formula
   homepage "https://ledger-cli.org/"
   url "https://github.com/ledger/ledger/archive/v3.1.3.tar.gz"
   sha256 "b248c91d65c7a101b9d6226025f2b4bf3dabe94c0c49ab6d51ce84a22a39622b"
+  revision 5
   head "https://github.com/ledger/ledger.git"
 
   bottle do
-    sha256 "b225b9fde9487458e32499fc039810a9aa7f73d6744b9132f5326d8c20524563" => :mojave
-    sha256 "95a13d2f8ccf38bcd91030dd86e8abaf39a018ef5ddd0303db772b3380ca6758" => :high_sierra
-    sha256 "8ce321281434ebc6852924f117f34bd932a21d190870edf2bec9887e4e99ecdb" => :sierra
+    sha256 "3b02ee846c8db3ef9957f12b17e6643eae29185fdb17ba8bafef56be146aa465" => :catalina
+    sha256 "d493c478fbb1b38024562f907b726ef85c3ce4407a3d54b7eeccd1e7288f08c2" => :mojave
+    sha256 "cdd130ebc5d4809f403f10dc012ee6abf1d339b98e236a7785a294b7d748358c" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "boost"
-  depends_on "boost-python"
   depends_on "gmp"
   depends_on "mpfr"
-  depends_on "python@2"
+  depends_on "python@3.8"
+
+  uses_from_macos "groff"
 
   def install
     ENV.cxx11
+    ENV.prepend_path "PATH", Formula["python@3.8"].opt_libexec/"bin"
 
     args = %W[
       --jobs=#{ENV.make_jobs}
       --output=build
       --prefix=#{prefix}
       --boost=#{Formula["boost"].opt_prefix}
-      --python
       --
       -DBUILD_DOCS=1
       -DBUILD_WEB_DOCS=1
-      -DUSE_PYTHON27_COMPONENT=1
-    ]
+      -DBoost_NO_BOOST_CMAKE=ON
+      -DPython_FIND_VERSION_MAJOR=3
+    ] + std_cmake_args
     system "./acprep", "opt", "make", *args
     system "./acprep", "opt", "make", "doc", *args
     system "./acprep", "opt", "make", "install", *args
 
     (pkgshare/"examples").install Dir["test/input/*.dat"]
     pkgshare.install "contrib"
-    pkgshare.install "python/demo.py"
     elisp.install Dir["lisp/*.el", "lisp/*.elc"]
     bash_completion.install pkgshare/"contrib/ledger-completion.bash"
   end
@@ -52,7 +54,5 @@ class Ledger < Formula
       "balance", "--collapse", "equity"
     assert_equal "          $-2,500.00  Equity", balance.read.chomp
     assert_equal 0, $CHILD_STATUS.exitstatus
-
-    system "python", pkgshare/"demo.py"
   end
 end

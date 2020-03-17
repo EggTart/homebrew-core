@@ -1,39 +1,23 @@
 class S6 < Formula
   desc "Small & secure supervision software suite"
   homepage "https://skarnet.org/software/s6/"
-
-  stable do
-    url "https://skarnet.org/software/s6/s6-2.7.2.0.tar.gz"
-    sha256 "af54fcbae7028a90bd12c7ee71a8f3954a74c6a4de376a427cc664587fb68a09"
-
-    resource "skalibs" do
-      url "https://skarnet.org/software/skalibs/skalibs-2.7.0.0.tar.gz"
-      sha256 "96494d76669d2f8622511d5d616b6367801a42683c0bb11a8855114e5ccbd756"
-    end
-
-    resource "execline" do
-      url "https://skarnet.org/software/execline/execline-2.5.0.1.tar.gz"
-      sha256 "8d07d14e9e9abb1301e08be271313c4ffa5ddf7248fd262dda19588e78e31049"
-    end
-  end
+  url "https://skarnet.org/software/s6/s6-2.9.1.0.tar.gz"
+  sha256 "05e259532c6db8cb23f5f79938669cee30152008ac9e792ff4acb26db9a01ff7"
 
   bottle do
-    sha256 "de84ce2daa762ee81c1ba5580030e912072ec3659ff3ba876c4da11c27e146ed" => :mojave
-    sha256 "fea087bab9413a1c548c6f9219d901e825be1cf1de5a46e1fd9ac0a3017a1b92" => :high_sierra
-    sha256 "764172107342cea76c6a35b37ff830f5481efaa30410d89bd2b41ed1eda291e5" => :sierra
-    sha256 "760b7806a4f4f9d7e78369406033fca48821933d3f7bdca70298efce5469471f" => :el_capitan
+    sha256 "14e7c8e7cdec7dce8de18d5aa0a651b67aef5891ab82ed5feffc0e93768b4c8e" => :catalina
+    sha256 "cdb4b89814cbc5f59cfe0ea536a29a8e93d13abeb727f78a829c7e44b00ebb34" => :mojave
+    sha256 "9d5d57b1f781d6cda6a4358be131244eeb292158cba2af1ab50e4b1408ddedd1" => :high_sierra
   end
 
-  head do
-    url "https://git.skarnet.org/cgi-bin/cgit.cgi/s6", :using => :git
+  resource "skalibs" do
+    url "https://skarnet.org/software/skalibs/skalibs-2.9.2.0.tar.gz"
+    sha256 "e4c36e91ddb8f94f7bb61479bb3a5fbdaa423772ba7583151a03ce30003f2dc5"
+  end
 
-    resource "skalibs" do
-      url "https://git.skarnet.org/cgi-bin/cgit.cgi/skalibs", :using => :git
-    end
-
-    resource "execline" do
-      url "https://git.skarnet.org/cgi-bin/cgit.cgi/execline", :using => :git
-    end
+  resource "execline" do
+    url "https://skarnet.org/software/execline/execline-2.6.0.0.tar.gz"
+    sha256 "5415f5b98c8e3edb8e94fa9c9d42de1cdb86a8977e9b4212c9122bdcb9dad7d4"
   end
 
   def install

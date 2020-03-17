@@ -1,18 +1,19 @@
 class CrystalIcr < Formula
   desc "Interactive console for Crystal programming language"
   homepage "https://github.com/crystal-community/icr"
-  url "https://github.com/crystal-community/icr/archive/v0.6.0.tar.gz"
-  sha256 "970d5ecbde6bb370c8178339db42e7812b7a2f3a5db3eec868cc18c19523c0ea"
-  revision 2
+  url "https://github.com/crystal-community/icr/archive/v0.8.0.tar.gz"
+  sha256 "8c7825dd035bbb4bc6499873d4bd125185a01cae10dc8dd6f98e6e013def381c"
 
   bottle do
-    sha256 "91e9a61aa1b45edb14bb8a9a382fc047d67e83cf6afa8448302bad7b4af3a335" => :mojave
-    sha256 "e5f01557473604039d63fe72104f0aaa60cc966490864d9426a69fb35556948a" => :high_sierra
-    sha256 "7e8d70d366e73788a9866d21db52daad3783c2ea98ec3425bcbb44196547a01d" => :sierra
+    sha256 "22389822712ed2a634ba8d32817a29e0930eb53669d4c931f740b5c895de9ed4" => :catalina
+    sha256 "5c73c5c37ed0cd5ceb6fc72f88afe4a9156417a0e4752e93500d0aec755646c0" => :mojave
+    sha256 "1ea960e6dd1eeffc8c7e9471a2e17e9dc912eccdc7558d18346a856c10e078bb" => :high_sierra
   end
 
   depends_on "crystal"
-  depends_on "readline"
+  depends_on "libevent"
+  depends_on "libyaml"
+  depends_on "openssl@1.1"
 
   def install
     system "make", "install", "PREFIX=#{prefix}"

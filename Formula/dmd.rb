@@ -3,29 +3,29 @@ class Dmd < Formula
   homepage "https://dlang.org/"
 
   stable do
-    url "https://github.com/dlang/dmd/archive/v2.086.0.tar.gz"
-    sha256 "a76658bfcb4eaf82d532a09762f084ee1f07c292bd3b64ecfa115ccffb986630"
+    url "https://github.com/dlang/dmd/archive/v2.091.0.tar.gz"
+    sha256 "bcca38f4b80b51ae0a1955dc29e6cbfaa4d01d94869ddfcacf9292898c34343a"
 
     resource "druntime" do
-      url "https://github.com/dlang/druntime/archive/v2.086.0.tar.gz"
-      sha256 "64f6f6ac62fcb43ef615bce8e056439aaa837b5b4b74a878f84f3a9a2999297a"
+      url "https://github.com/dlang/druntime/archive/v2.091.0.tar.gz"
+      sha256 "cc8ba196b08cca04488d97d0e35c878f7351b7d8128aec90eaa312d2bd9a6af2"
     end
 
     resource "phobos" do
-      url "https://github.com/dlang/phobos/archive/v2.086.0.tar.gz"
-      sha256 "492e7679c20bbbcc5021107b98ca68390030f942b007114e453263b1553e0d48"
+      url "https://github.com/dlang/phobos/archive/v2.091.0.tar.gz"
+      sha256 "df9f81eecda4366adc5ca9ed31a0b4474c248544b120ff6fa3f6cb45917d8769"
     end
 
     resource "tools" do
-      url "https://github.com/dlang/tools/archive/v2.086.0.tar.gz"
-      sha256 "2bde2f0195aa3323f8743f5bb1000dad76db75833b5a7d8096698d2007f71bb6"
+      url "https://github.com/dlang/tools/archive/v2.091.0.tar.gz"
+      sha256 "e5a6a67fbb60a3e3228cd9966cf5b04fcc46f3c1d82ecde67009e3d8cbbd26c6"
     end
   end
 
   bottle do
-    sha256 "518598accfc5f7423920d42d488fb89c6b78a0781f434a1e23cbbc2c93b38796" => :mojave
-    sha256 "2621e448f360c890121eb549a56a9aa31b408bdda6d28f09a057bf71f6668c56" => :high_sierra
-    sha256 "6089321f5381aa6396767897c4272162df28620b67320dbe01c6faae88dd06a9" => :sierra
+    sha256 "6d8991b6f9f4098b6f82e42db2b37520be57a1cf974e134690549de42738dbbe" => :catalina
+    sha256 "a17eb5a2ebfeff82981c2a6d1df540a979a125047c2255eb2514b25a648e0cbe" => :mojave
+    sha256 "0e77e70cb888814b2edf536a5f547f4938a4c43794b6c9b7dcb2811bca2204c7" => :high_sierra
   end
 
   head do
@@ -44,7 +44,13 @@ class Dmd < Formula
     end
   end
 
+  uses_from_macos "unzip" => :build
+  uses_from_macos "xz" => :build
+
   def install
+    # DMD defaults to v2.088.0 to bootstrap as of DMD 2.090.0
+    # On MacOS Catalina, a version < 2.087.1 would not work due to TLS related symbols missing
+
     make_args = %W[
       INSTALL_DIR=#{prefix}
       MODEL=64

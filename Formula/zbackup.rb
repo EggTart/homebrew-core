@@ -3,18 +3,18 @@ class Zbackup < Formula
   homepage "http://zbackup.org"
   url "https://github.com/zbackup/zbackup/archive/1.4.4.tar.gz"
   sha256 "efccccd2a045da91576c591968374379da1dc4ca2e3dec4d3f8f12628fa29a85"
-  revision 9
+  revision 13
 
   bottle do
     cellar :any
-    sha256 "6f90dd99ebcf108479b5c8b8277905096fa9f13b533b466e07ea6f3eb4ebc839" => :mojave
-    sha256 "6a4bc9f7dfda15391161d00ab8add5e955d48d01c4e9fd6cf64bf2dd53f2b90f" => :high_sierra
-    sha256 "c52a21ad7a2ef67525b77fa7ca8df46ae0f3d1a47e6b111633046af5161e3539" => :sierra
+    sha256 "452f94dd18b72f5e1ed63a87bc3218c7d522910d0f4d49a80ea0cf92cd7ca492" => :catalina
+    sha256 "c4fd2df974342ae963ceb62cffa2bd3868b067286e960b907be0916bfbff8557" => :mojave
+    sha256 "375f0d891c8711b74b468cbc91dcf796ee2807dbfd8a2c153d9c0d3ab54ba6bd" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "lzo"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "protobuf"
   depends_on "xz" # get liblzma compression algorithm library from XZutils
 

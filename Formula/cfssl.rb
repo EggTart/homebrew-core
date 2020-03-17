@@ -1,35 +1,35 @@
 class Cfssl < Formula
   desc "CloudFlare's PKI toolkit"
   homepage "https://cfssl.org/"
-  url "https://github.com/cloudflare/cfssl/archive/1.3.3.tar.gz"
-  sha256 "299ff47700ca323d1b18a691c189afe7d610ede75f08c6935afb409c01fa006b"
+  url "https://github.com/cloudflare/cfssl/archive/v1.4.1.tar.gz"
+  sha256 "c8a86ef10cbb0c168f3b597db15b31f98b170edb7958f7154edeb29aee41315e"
+  revision 1
   head "https://github.com/cloudflare/cfssl.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d0913d189fa05fde1e7942d2ca4be72f920df10e6c1765ba8387be2f0cad3582" => :mojave
-    sha256 "a91377d0a08ae3907b3a71985b0816216cce4d53173e3fd8a3b74b8a093f9d00" => :high_sierra
-    sha256 "97a7646ac9a6435714d6fead6026ca4300292b6ab5f7c5cdf1aa213d072c19d1" => :sierra
+    sha256 "324cc909a9f6ade935def00160e7031fefa4a6aeb54d7595bec67986015e916b" => :catalina
+    sha256 "186357f1d25264be064c11a9aa2f7d7638687b8842a6945f313e576214a0f961" => :mojave
+    sha256 "0ad5f71f0350706a43d6fe121ad328c9d9fee4595c51ea900a0b9b466e4909b0" => :high_sierra
   end
 
   depends_on "go" => :build
   depends_on "libtool"
 
   def install
-    ENV["GOPATH"] = buildpath
-    cfsslpath = buildpath/"src/github.com/cloudflare/cfssl"
-    cfsslpath.install Dir["{*,.git}"]
-    cd "src/github.com/cloudflare/cfssl" do
-      system "go", "build", "-o", "#{bin}/cfssl", "cmd/cfssl/cfssl.go"
-      system "go", "build", "-o", "#{bin}/cfssljson", "cmd/cfssljson/cfssljson.go"
-      system "go", "build", "-o", "#{bin}/cfsslmkbundle", "cmd/mkbundle/mkbundle.go"
-    end
+    ldflags = ["-s", "-w",
+               "-X github.com/cloudflare/cfssl/cli/version.version=#{version}"]
+
+    system "go", "build", "-o", "#{bin}/cfssl", "-ldflags", ldflags, "cmd/cfssl/cfssl.go"
+    system "go", "build", "-o", "#{bin}/cfssljson", "-ldflags", ldflags, "cmd/cfssljson/cfssljson.go"
+    system "go", "build", "-o", "#{bin}/cfsslmkbundle", "cmd/mkbundle/mkbundle.go"
   end
 
-  def caveats; <<~EOS
-    `mkbundle` has been installed as `cfsslmkbundle` to avoid conflict
-    with Mono and other tools that ship the same executable.
-  EOS
+  def caveats
+    <<~EOS
+      `mkbundle` has been installed as `cfsslmkbundle` to avoid conflict
+      with Mono and other tools that ship the same executable.
+    EOS
   end
 
   test do

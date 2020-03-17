@@ -1,22 +1,27 @@
 class Bedtools < Formula
   desc "Tools for genome arithmetic (set theory on the genome)"
   homepage "https://github.com/arq5x/bedtools2"
-  url "https://github.com/arq5x/bedtools2/archive/v2.28.0.tar.gz"
-  sha256 "0f3e5990b5713388531de699d43d195f1535a5772d832acfd47baa151a3a7e59"
+  url "https://github.com/arq5x/bedtools2/archive/v2.29.2.tar.gz"
+  sha256 "bc2f36b5d4fc9890c69f607d54da873032628462e88c545dd633d2c787a544a5"
 
   bottle do
     cellar :any
-    sha256 "6c9819a00f8d56e97500c0eef57a3363fd18c4439ce18ac66c5b0d6638b1bd88" => :mojave
-    sha256 "e1a7e656b89c764f9331a1924ef4b6113769051a260fb76c2a1eee8b4a39cf84" => :high_sierra
-    sha256 "61677f8ce990c4b17ee07fdb9e4d78e2655253a1301f156ef0ad5698e77a37b3" => :sierra
+    sha256 "4cdd660e64c7d78876a2ccf60eec8891f484cdd24e2c40ce36800828dffcce1c" => :catalina
+    sha256 "5c40ac3daf8ba6022cd5229aac50458d80b14920ddd513f2e165b233c9e95e72" => :mojave
+    sha256 "2f534f9efbdd387764924f2a9e3a08b435cab0ff0a0edabd6bafe8fa4123af6a" => :high_sierra
   end
 
+  depends_on "python@3.8" => :build
   depends_on "xz"
 
+  uses_from_macos "bzip2"
+  uses_from_macos "zlib"
+
   def install
+    inreplace "Makefile", "python", "python3"
+
     system "make"
     system "make", "install", "prefix=#{prefix}"
-    prefix.install "RELEASE_HISTORY"
   end
 
   test do

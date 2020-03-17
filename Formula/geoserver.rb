@@ -1,8 +1,8 @@
 class Geoserver < Formula
   desc "Java server to share and edit geospatial data"
   homepage "http://geoserver.org/"
-  url "https://downloads.sourceforge.net/project/geoserver/GeoServer/2.14.3/geoserver-2.14.3-bin.zip"
-  sha256 "07056c692efc5a49726dca3e952767ebcaadfae50cd450e201c02df5426f5ca0"
+  url "https://downloads.sourceforge.net/project/geoserver/GeoServer/2.16.2/geoserver-2.16.2-bin.zip"
+  sha256 "af7ae3e0ed820ce6767431820bbeb622cd304eb1208eb2669ed10092b4f146ea"
 
   bottle :unneeded
 
@@ -18,10 +18,11 @@ class Geoserver < Formula
     EOS
   end
 
-  def caveats; <<~EOS
-    To start geoserver:
-      geoserver path/to/data/dir
-  EOS
+  def caveats
+    <<~EOS
+      To start geoserver:
+        geoserver path/to/data/dir
+    EOS
   end
 
   test do

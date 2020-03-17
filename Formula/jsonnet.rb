@@ -1,21 +1,22 @@
 class Jsonnet < Formula
   desc "Domain specific configuration language for defining JSON data"
   homepage "https://jsonnet.org/"
-  url "https://github.com/google/jsonnet/archive/v0.12.1.tar.gz"
-  sha256 "257c6de988f746cc90486d9d0fbd49826832b7a2f0dbdb60a515cc8a2596c950"
+  url "https://github.com/google/jsonnet/archive/v0.15.0.tar.gz"
+  sha256 "0b58f2a36a5625c717e717a7e85608730e7bb5bfd8be1765dd6fa23be1f9b9e8"
   head "https://github.com/google/jsonnet.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "4f5622fe20d111af4167d68e5773e03e670f8ab6d56b8c0baf04ef5290a97006" => :mojave
-    sha256 "5d47df81ca6ce733af80dd41117066b46de571eec2079a7efe5cb9e52176a1b2" => :high_sierra
-    sha256 "5389ab6d3c9fea659e544058e04ec9cf215c0ad6dca1ed56a6188c3becfbb53c" => :sierra
+    sha256 "04af0ad884bb70f4867a8e7fa602195dc2c2a2c408f633b7579c28f772fadc8b" => :catalina
+    sha256 "6741960348b032bd8bd5bc2d0f50008a649a955bf3449083ba425f7b2dafba48" => :mojave
+    sha256 "435e203d80d12eb8ab887658b1b2f2c6f86860abd8e17134d4b4532f6401b632" => :high_sierra
   end
 
   def install
     ENV.cxx11
     system "make"
     bin.install "jsonnet"
+    bin.install "jsonnetfmt"
   end
 
   test do

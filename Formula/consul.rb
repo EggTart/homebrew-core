@@ -2,25 +2,22 @@ class Consul < Formula
   desc "Tool for service discovery, monitoring and configuration"
   homepage "https://www.consul.io"
   url "https://github.com/hashicorp/consul.git",
-      :tag      => "v1.5.1",
-      :revision => "40cec98468b829e5cdaacb0629b3e23a028db688"
+      :tag      => "v1.7.1",
+      :revision => "2cf0a3c88f12b7be142c165dde81e3112d9feaad"
   head "https://github.com/hashicorp/consul.git",
        :shallow => false
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2643daf7bfd5f8336114eebbf0e962e5c303db85215a7eede8593ebfddf052be" => :mojave
-    sha256 "03def5825488c205398fee07793ee8a42c7298b858aed8ec61b07bdf4834efb5" => :high_sierra
-    sha256 "20a312c05563b319b05aa96c70ff1f841df4d35d84500e459c2b1be8620bebba" => :sierra
+    sha256 "f39df83ee55c6b168bdb8ba3021e69856b4e1ed3406c186ba390701f806d1cf8" => :catalina
+    sha256 "e36e885db5e1593d4da938fac77bee19fa4f728676b10b3465f971fa2dd12a59" => :mojave
+    sha256 "9d1f316eb51694f838b8977fae1655157964bb30a816c54cedc6c20c7df33ba1" => :high_sierra
   end
 
   depends_on "go" => :build
   depends_on "gox" => :build
 
   def install
-    # Avoid running `go get`
-    inreplace "GNUmakefile", "go get -u -v $(GOTOOLS)", ""
-
     ENV["XC_OS"] = "darwin"
     ENV["XC_ARCH"] = "amd64"
     ENV["GOPATH"] = buildpath
@@ -38,37 +35,38 @@ class Consul < Formula
 
   plist_options :manual => "consul agent -dev -advertise 127.0.0.1"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>KeepAlive</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
         <dict>
-          <key>SuccessfulExit</key>
-          <false/>
+          <key>KeepAlive</key>
+          <dict>
+            <key>SuccessfulExit</key>
+            <false/>
+          </dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>#{opt_bin}/consul</string>
+            <string>agent</string>
+            <string>-dev</string>
+            <string>-advertise</string>
+            <string>127.0.0.1</string>
+          </array>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>WorkingDirectory</key>
+          <string>#{var}</string>
+          <key>StandardErrorPath</key>
+          <string>#{var}/log/consul.log</string>
+          <key>StandardOutPath</key>
+          <string>#{var}/log/consul.log</string>
         </dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_bin}/consul</string>
-          <string>agent</string>
-          <string>-dev</string>
-          <string>-advertise</string>
-          <string>127.0.0.1</string>
-        </array>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>WorkingDirectory</key>
-        <string>#{var}</string>
-        <key>StandardErrorPath</key>
-        <string>#{var}/log/consul.log</string>
-        <key>StandardOutPath</key>
-        <string>#{var}/log/consul.log</string>
-      </dict>
-    </plist>
-  EOS
+      </plist>
+    EOS
   end
 
   test do

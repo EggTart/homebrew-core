@@ -3,15 +3,15 @@ class AstrometryNet < Formula
 
   desc "Automatic identification of astronomical images"
   homepage "https://github.com/dstndstn/astrometry.net"
-  url "https://github.com/dstndstn/astrometry.net/releases/download/0.76/astrometry.net-0.76.tar.gz"
-  sha256 "244355ef9716a9e062eb19e8547e8b50434c7df52a8b96f9d0a254bc646d1f0d"
-  revision 2
+  url "https://github.com/dstndstn/astrometry.net/releases/download/0.79/astrometry.net-0.79.tar.gz"
+  sha256 "dd5d5403cc223eb6c51a06a22a5cb893db497d1895971735321354f882c80286"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "bd0a57bbdd91ebd8f48b2a1c5d8b4bb6189b1c186e0ad75a0de21d1c4d7d2bf2" => :mojave
-    sha256 "699fb3223434169ba81f7e62bd0d58dd401157d58556864b11d36b6b5209925e" => :high_sierra
-    sha256 "7916882224fc6064e127129bc7a0e17cef05ff97ff00eaaf15f955339a381942" => :sierra
+    sha256 "2bce9305bf3534c15ff744ccb9766a69da29aa7f7f10f563eee9d52ecba520ba" => :catalina
+    sha256 "79e3df66bb6bb55b39de46b3276af9f08f7b7515b79ef491722fe2967ebe7add" => :mojave
+    sha256 "22578578bdf27e45a82035ecbf9ed4e8a3da76014b0d8f63aba3651e0fe4a88e" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
@@ -27,8 +27,8 @@ class AstrometryNet < Formula
   depends_on "wcslib"
 
   resource "fitsio" do
-    url "https://files.pythonhosted.org/packages/9c/cb/f52534b71f4d99916723af2994898904015b9a1bf0286a165182d0374bbf/fitsio-0.9.11.tar.gz"
-    sha256 "a1196385ca7c42c93d9e53002d5ba574a8db452c3b53ef1189e2c150177d4266"
+    url "https://files.pythonhosted.org/packages/d4/51/57074746cb7c9a7f5fe8039563337fbb1edabbc2c742d2acb99b1b7c204c/fitsio-1.1.0.tar.gz"
+    sha256 "b1a8846d11c3919ea75cca611de9f76bfbdf745c4439e89e983d8a6bcfb92183"
   end
 
   def install
@@ -43,16 +43,12 @@ class AstrometryNet < Formula
 
     ENV["INSTALL_DIR"] = prefix
     xy = Language::Python.major_minor_version "python3"
-    ENV["PY_BASE_INSTALL_DIR"] = "#{libexec}/lib/python#{xy}/site-packages/astrometry"
+    ENV["PY_BASE_INSTALL_DIR"] = libexec/"lib/python#{xy}/site-packages/astrometry"
+    ENV["PY_BASE_LINK_DIR"] = libexec/"lib/python#{xy}/site-packages/astrometry"
 
     system "make"
     system "make", "py"
     system "make", "install"
-
-    # Work around for https://github.com/dstndstn/astrometry.net/issues/142
-    # On the next release, remove the following two lines & add `ENV["PY_BASE_LINK_DIR"] = ...`
-    rm "#{bin}/plotann.py"
-    bin.install_symlink libexec/"lib/python#{xy}/site-packages/astrometry/blind/plotann.py"
   end
 
   test do

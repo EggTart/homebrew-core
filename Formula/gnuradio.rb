@@ -3,13 +3,13 @@ class Gnuradio < Formula
   homepage "https://gnuradio.org/"
   url "https://gnuradio.org/releases/gnuradio/gnuradio-3.7.13.4.tar.gz"
   sha256 "c536c268b1e9c24f1206bbc881a5819ac46e662f4e8beaded6f3f441d3502f0d"
-  revision 6
+  revision 14
   head "https://github.com/gnuradio/gnuradio.git"
 
   bottle do
-    sha256 "ac344e695d2bcc57b2f4f1ff861c39ff0cb0598736cd857e050dd3edc4e9ab46" => :mojave
-    sha256 "d197715a41f5753b2bb663877bc2b0e0df51136af1ba748f929331518674aff9" => :high_sierra
-    sha256 "ac0708a88e8e11708f0433a87412a04a99116c5f413ddc1708db052ce5a36521" => :sierra
+    sha256 "74aa8a8d8c32be557ea8a8864cb8617e82a939e667b73e11c45da13d72b52a3a" => :catalina
+    sha256 "ee2e794d854ab87e00ca35805d4f57232d49e688df5e71a7e9e448883402f540" => :mojave
+    sha256 "ae53bf0abbdda23f25a45829483a6d1e03f096447289f2df72a6855be7af1619" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -20,11 +20,11 @@ class Gnuradio < Formula
   depends_on "boost"
   depends_on "fftw"
   depends_on "gsl"
-  depends_on "numpy"
+  depends_on "numpy@1.16"
   depends_on "portaudio"
-  depends_on "python@2"
   depends_on "uhd"
   depends_on "zeromq"
+  uses_from_macos "python@2" # Does not support Python 3
 
   # cheetah starts here
   resource "Markdown" do
@@ -61,6 +61,12 @@ class Gnuradio < Formula
   resource "cppzmq" do
     url "https://raw.githubusercontent.com/zeromq/cppzmq/46fc0572c5e9f09a32a23d6f22fd79b841f77e00/zmq.hpp"
     sha256 "964031c0944f913933f55ad1610938105a6657a69d1ac5a6dd50e16a679104d5"
+  end
+
+  # patch for boost 1.70.0, remove after next release
+  patch do
+    url "https://github.com/gnuradio/gnuradio/commit/6dc8229fd0dda25c054c2194ee2c9b28affe92d8.patch?full_index=1"
+    sha256 "9836235ea69b3d66b5cd4b2cdc89f80d010797d2bd59dc5c6631a96af921db8c"
   end
 
   def install
@@ -176,7 +182,7 @@ class Gnuradio < Formula
 
       main()
     EOS
-    system "python2.7", testpath/"test.py"
+    system "python", testpath/"test.py"
 
     cd testpath do
       system "#{bin}/gr_modtool", "newmod", "test"

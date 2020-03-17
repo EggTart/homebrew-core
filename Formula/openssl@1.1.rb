@@ -1,16 +1,17 @@
 class OpensslAT11 < Formula
   desc "Cryptography and SSL/TLS Toolkit"
   homepage "https://openssl.org/"
-  url "https://www.openssl.org/source/openssl-1.1.1b.tar.gz"
-  mirror "https://dl.bintray.com/homebrew/mirror/openssl@1.1--1.1.1b.tar.gz"
-  mirror "https://www.mirrorservice.org/sites/ftp.openssl.org/source/openssl-1.1.1b.tar.gz"
-  sha256 "5c557b023230413dfb0756f3137a13e6d726838ccd1430888ad15bfb2b43ea4b"
+  url "https://www.openssl.org/source/openssl-1.1.1d.tar.gz"
+  mirror "https://dl.bintray.com/homebrew/mirror/openssl@1.1--1.1.1d.tar.gz"
+  mirror "https://www.mirrorservice.org/sites/ftp.openssl.org/source/openssl-1.1.1d.tar.gz"
+  sha256 "1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2"
   version_scheme 1
 
   bottle do
-    sha256 "23d2e61b6da013398a279d894da3a1d80384ea04fdc3ad34551bc23de4c3c763" => :mojave
-    sha256 "418b52f93c001b4227191dfebfa6ed951054b013da85dde275b48298818cda40" => :high_sierra
-    sha256 "f54dffd2cbe953f10133ef90fdf345c151379576a8d62b2b1160f8cf39d51798" => :sierra
+    sha256 "d7f992ebfd78f80828051f6dc6a1a99aed405f86b0f39ea651fd0afeadd1b0f4" => :catalina
+    sha256 "104ef018b7bb8fcc49f57e5a60359a28a02d480d85a959e6141394b0571cbb28" => :mojave
+    sha256 "c7681ee40cb3680cd9fafcdb092bde153b9d4903907d67858baa5f19025f927b" => :high_sierra
+    sha256 "a95d756e9aa3a8d118833f9083112048bf635f20c33943de04163bdcf7412328" => :sierra
   end
 
   keg_only :provided_by_macos,
@@ -20,13 +21,14 @@ class OpensslAT11 < Formula
   # SSLv3 & zlib are off by default with 1.1.0 but this may not
   # be obvious to everyone, so explicitly state it for now to
   # help debug inevitable breakage.
-  def configure_args; %W[
-    --prefix=#{prefix}
-    --openssldir=#{openssldir}
-    no-ssl3
-    no-ssl3-method
-    no-zlib
-  ]
+  def configure_args
+    %W[
+      --prefix=#{prefix}
+      --openssldir=#{openssldir}
+      no-ssl3
+      no-ssl3-method
+      no-zlib
+    ]
   end
 
   def install
@@ -36,9 +38,7 @@ class OpensslAT11 < Formula
     # This ensures where Homebrew's Perl is needed the Cellar path isn't
     # hardcoded into OpenSSL's scripts, causing them to break every Perl update.
     # Whilst our env points to opt_bin, by default OpenSSL resolves the symlink.
-    if which("perl") == Formula["perl"].opt_bin/"perl"
-      ENV["PERL"] = Formula["perl"].opt_bin/"perl"
-    end
+    ENV["PERL"] = Formula["perl"].opt_bin/"perl" if which("perl") == Formula["perl"].opt_bin/"perl"
 
     arch_args = %w[darwin64-x86_64-cc enable-ec_nistp_64_gcc_128]
 
@@ -76,14 +76,15 @@ class OpensslAT11 < Formula
     (openssldir/"cert.pem").atomic_write(valid_certs.join("\n") << "\n")
   end
 
-  def caveats; <<~EOS
-    A CA file has been bootstrapped using certificates from the system
-    keychain. To add additional certificates, place .pem files in
-      #{openssldir}/certs
+  def caveats
+    <<~EOS
+      A CA file has been bootstrapped using certificates from the system
+      keychain. To add additional certificates, place .pem files in
+        #{openssldir}/certs
 
-    and run
-      #{opt_bin}/c_rehash
-  EOS
+      and run
+        #{opt_bin}/c_rehash
+    EOS
   end
 
   test do

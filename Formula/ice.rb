@@ -1,14 +1,14 @@
 class Ice < Formula
   desc "Comprehensive RPC framework"
   homepage "https://zeroc.com"
-  url "https://github.com/zeroc-ice/ice/archive/v3.7.2.tar.gz"
-  sha256 "e329a24abf94a4772a58a0fe61af4e707743a272c854552eef3d7833099f40f9"
+  url "https://github.com/zeroc-ice/ice/archive/v3.7.3.tar.gz"
+  sha256 "7cbfac83684a7434499f165e784a7a7bb5b89140717537067d7b969eccc111eb"
 
   bottle do
     cellar :any
-    sha256 "cbb84aa941cb649002f99a17c6689839f460cd98ea9b94c37feba727b25dbfcd" => :mojave
-    sha256 "ad69bfebe60936dd6d32923f004f4f6ebce35c33019470c895251d76d6a46d4e" => :high_sierra
-    sha256 "fa4ee11fe92011c69fd9bc3c64aedc07a38f63e5a71ce1637109b1955df839a5" => :sierra
+    sha256 "3fdec454548d572b2f8524b326570a404c227e546ec4040d302ddb46f7949f07" => :catalina
+    sha256 "6a0804cfa9537a78d77b4c0304fb8ade3238795c3b152ddf2b5f86f05c770205" => :mojave
+    sha256 "5eced597ad649064bb8386c1b5a19e43f4774ae56587f280eb988fd10cd2d9a1" => :high_sierra
   end
 
   depends_on "lmdb"
@@ -35,13 +35,14 @@ class Ice < Formula
     end
   end
 
-  def caveats; <<~EOS
-    slice2py, slice2js and slice2rb were installed in:
+  def caveats
+    <<~EOS
+      slice2py, slice2js and slice2rb were installed in:
 
-      #{opt_libexec}/bin
+        #{opt_libexec}/bin
 
-    You may wish to add this directory to your PATH.
-  EOS
+      You may wish to add this directory to your PATH.
+    EOS
   end
 
   test do

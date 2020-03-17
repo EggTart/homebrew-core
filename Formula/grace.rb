@@ -1,11 +1,12 @@
 class Grace < Formula
   desc "WYSIWYG 2D plotting tool for X11"
-  homepage "http://plasma-gate.weizmann.ac.il/Grace/"
+  homepage "https://plasma-gate.weizmann.ac.il/Grace/"
   url "https://deb.debian.org/debian/pool/main/g/grace/grace_5.1.25.orig.tar.gz"
   sha256 "751ab9917ed0f6232073c193aba74046037e185d73b77bab0f5af3e3ff1da2ac"
   revision 2
 
   bottle do
+    sha256 "7629c4a481667d3acbbb5813789d885beece9f063e41826546b68b5f7170360b" => :catalina
     sha256 "919ed10debaca3045266712e6927d410c152ec92e44f403efc91c11a322652d4" => :mojave
     sha256 "24e9a28ea6b6665f2e8e7a0d179735a6f956bb55b02d5515570017780e4903a1" => :high_sierra
     sha256 "80eae698e6f2cf3dd8a1fb11937871f2e588417b3abfe22ff12d066dd9f0e747" => :sierra

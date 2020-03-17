@@ -1,14 +1,14 @@
 class Ne < Formula
   desc "The nice editor"
-  homepage "http://ne.di.unimi.it/"
-  url "https://github.com/vigna/ne/archive/3.1.2.tar.gz"
-  sha256 "bdf09a377660527857bd25217fc91505ae2b19c41590f8a25efc91aef785a3e2"
+  homepage "https://github.com/vigna/ne"
+  url "https://github.com/vigna/ne/archive/3.3.0.tar.gz"
+  sha256 "77a0c8e8564a29cd18069eebf04cee4855fae183f1e8f25d5fbb0c2651f07e6c"
   head "https://github.com/vigna/ne.git"
 
   bottle do
-    sha256 "cb22f87c5d36b2071dbf02a62ef29e43776ecd3717ab1583e0f4543d8eaa6a69" => :mojave
-    sha256 "a1037e0ec9e8bcfdc3182dcbf328472f73b341c52d4a67d287ae544b254b3b72" => :high_sierra
-    sha256 "0b7140758a418d16e65e16f580a531adc72749932975953c081405a0187c8713" => :sierra
+    sha256 "9c247087abcddef37c90d601611a7473b871d411340b4af1e72660fa60e829e2" => :catalina
+    sha256 "f7eb99d6a26252a621d18ec846920df9319b33c78053771bae8e39eb1997333f" => :mojave
+    sha256 "5de11e9bf7bd2cc2d703a61ba43f154fcf93534a76d195627902061cdf70b6bc" => :high_sierra
   end
 
   depends_on "texinfo" => :build

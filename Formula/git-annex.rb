@@ -5,19 +5,19 @@ class GitAnnex < Formula
 
   desc "Manage files with git without checking in file contents"
   homepage "https://git-annex.branchable.com/"
-  url "https://hackage.haskell.org/package/git-annex-7.20190322/git-annex-7.20190322.tar.gz"
-  sha256 "ddda8ce4c23d76ab77610a0116ab68a9adb2e9a7087db99577e6b7743f1a9ffa"
+  url "https://hackage.haskell.org/package/git-annex-8.20200309/git-annex-8.20200309.tar.gz"
+  sha256 "e5868490fc710b0df4e1960a544dbd6cde55bb8f04624bc8c38ce50265004bfa"
   head "git://git-annex.branchable.com/"
 
   bottle do
     cellar :any
-    sha256 "5d881cc435880923a24b441d7d4c44ef5ad4401eee0d445f615a2b789f830f2c" => :mojave
-    sha256 "90ea6f49af37c6b62042a492f3da3997a4da6a6c280c3fc0c351f36eddde852a" => :high_sierra
-    sha256 "6259cc9d5708af7ec0ade93fb64cbc7f9bb4cb0c9ae051bf54e14243eccdbf86" => :sierra
+    sha256 "bd6423ca21f1968cd265e0648b1479918458db59ae8e5a3d46d12b022404f403" => :catalina
+    sha256 "f347fe81223c99bbaf870fb2f09a91cdc6c5e476e1a053babb13538a26b003dc" => :mojave
+    sha256 "625de91db6cfc2b208f8ea42287fc3f07ed24e70e5fd26c653444f54cf5749df" => :high_sierra
   end
 
   depends_on "cabal-install" => :build
-  depends_on "ghc@8.2" => :build
+  depends_on "ghc@8.6" => :build
   depends_on "pkg-config" => :build
   depends_on "gsasl"
   depends_on "libmagic"
@@ -25,12 +25,8 @@ class GitAnnex < Formula
   depends_on "xdot"
 
   def install
-    # Reported 28 Feb 2018 to aws upstream https://github.com/aristidb/aws/issues/244
-    # This is already resolved in aws 0.20 but we can't move to 0.20 until
-    # esqueleto 2.6.0 ships. See https://github.com/bitemyapp/esqueleto/issues/88
-    # The network 2.7.0.1 issue has been fixed upstream but needs a new release.
-    install_cabal_package "--constraint", "http-conduit<2.3",
-                          "--constraint", "network<2.7.0.1",
+    install_cabal_package "--constraint", "http-conduit>=2.3",
+                          "--constraint", "network>=2.6.3.0",
                           :using => ["alex", "happy", "c2hs"],
                           :flags => ["s3", "webapp"]
     bin.install_symlink "git-annex" => "git-annex-shell"
@@ -38,26 +34,27 @@ class GitAnnex < Formula
 
   plist_options :manual => "git annex assistant --autostart"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>KeepAlive</key>
-        <false/>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_bin}/git-annex</string>
-          <string>assistant</string>
-          <string>--autostart</string>
-        </array>
-      </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+        <dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>KeepAlive</key>
+          <false/>
+          <key>ProgramArguments</key>
+          <array>
+            <string>#{opt_bin}/git-annex</string>
+            <string>assistant</string>
+            <string>--autostart</string>
+          </array>
+        </dict>
+      </plist>
+    EOS
   end
 
   test do
@@ -70,7 +67,7 @@ class GitAnnex < Formula
     system "git", "annex", "init"
     (testpath/"Hello.txt").write "Hello!"
     assert !File.symlink?("Hello.txt")
-    assert_match "add Hello.txt ok", shell_output("git annex add .")
+    assert_match /^add Hello.txt.*ok.*\(recording state in git\.\.\.\)/m, shell_output("git annex add .")
     system "git", "commit", "-a", "-m", "Initial Commit"
     assert File.symlink?("Hello.txt")
 

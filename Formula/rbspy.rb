@@ -1,20 +1,20 @@
 class Rbspy < Formula
   desc "Sampling profiler for Ruby"
   homepage "https://rbspy.github.io/"
-  url "https://github.com/rbspy/rbspy/archive/v0.3.5.tar.gz"
-  sha256 "4002471d4d806eee24e1636dfe5c764433beb3629ce439c5167cb7ccf37e3c72"
+  url "https://github.com/rbspy/rbspy/archive/v0.3.8.tar.gz"
+  sha256 "afde93875ef8cdd856e51002e2623bb896f4be6af494ffdcd2a69c2fe9e5cb5c"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "fd790f4162891858c6dd0c701cbe5ac57e6a675ed6ebac5f7d15b34d34d14538" => :mojave
-    sha256 "c725b8ecbbf3f862b90c74e1d1fa2ba15b34efd39a63bdd55c063f0e883a983f" => :high_sierra
-    sha256 "057cfc99fa9b11f60a22abd6dbc54c4764d9af78e291971174e0f42cf9c76eb0" => :sierra
+    sha256 "99f2a1fdc5051876aee5166aeac783087010dd9ddf6399bfec4764a04d0dc27a" => :catalina
+    sha256 "88c4b1f48597a0b0f7b0c5a679a9d4b898427c631d59b1aab2a93d9b69c2c86c" => :mojave
+    sha256 "ac4f7a5cdc64e8c3fbf6a73e4dcf8312bdd74405b2bac1896f318b9afb5bfde7" => :high_sierra
   end
 
   depends_on "rust" => :build
 
   def install
-    system "cargo", "install", "--root", prefix, "--path", "."
+    system "cargo", "install", "--locked", "--root", prefix, "--path", "."
   end
 
   test do

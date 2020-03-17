@@ -7,6 +7,7 @@ class Minidlna < Formula
 
   bottle do
     cellar :any
+    sha256 "8018faef1d11436216b0c945ba682f52ee37ae437413371f788ff833f88f4334" => :catalina
     sha256 "e47addf7d21436e3b534b14024271d1d3355818f2e11a04da53a924f2acfe8e3" => :mojave
     sha256 "ed1b022aaea8beed91a26b9907c8253da9c5c441fa52482ae0255571cd1744ad" => :high_sierra
     sha256 "5145b3bae1ebb4add544bc8877668a5cea2e80a380a5a0beaba94a6e88cbf33c" => :sierra
@@ -58,38 +59,39 @@ class Minidlna < Formula
 
   plist_options :manual => "minidlna"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_sbin}/minidlnad</string>
-          <string>-d</string>
-          <string>-f</string>
-          <string>#{ENV["HOME"]}/.config/minidlna/minidlna.conf</string>
-          <string>-P</string>
-          <string>#{ENV["HOME"]}/.config/minidlna/minidlna.pid</string>
-        </array>
-        <key>KeepAlive</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
         <dict>
-          <key>Crashed</key>
-          <true/>
-          <key>SuccessfulExit</key>
-          <false/>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>#{opt_sbin}/minidlnad</string>
+            <string>-d</string>
+            <string>-f</string>
+            <string>#{ENV["HOME"]}/.config/minidlna/minidlna.conf</string>
+            <string>-P</string>
+            <string>#{ENV["HOME"]}/.config/minidlna/minidlna.pid</string>
+          </array>
+          <key>KeepAlive</key>
+          <dict>
+            <key>Crashed</key>
+            <true/>
+            <key>SuccessfulExit</key>
+            <false/>
+          </dict>
+          <key>ProcessType</key>
+          <string>Background</string>
+          <key>StandardErrorPath</key>
+          <string>#{var}/log/minidlnad.log</string>
+          <key>StandardOutPath</key>
+          <string>#{var}/log/minidlnad.log</string>
         </dict>
-        <key>ProcessType</key>
-        <string>Background</string>
-        <key>StandardErrorPath</key>
-        <string>#{var}/log/minidlnad.log</string>
-        <key>StandardOutPath</key>
-        <string>#{var}/log/minidlnad.log</string>
-      </dict>
-    </plist>
-  EOS
+      </plist>
+    EOS
   end
 
   test do

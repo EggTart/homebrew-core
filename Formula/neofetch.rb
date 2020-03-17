@@ -1,15 +1,15 @@
 class Neofetch < Formula
   desc "Fast, highly customisable system info script"
   homepage "https://github.com/dylanaraps/neofetch"
-  url "https://github.com/dylanaraps/neofetch/archive/6.0.0.tar.gz"
-  sha256 "264a7689561bb498f97f10231959bdd8f7c873671bac2ffb660de9a5863b1c76"
+  url "https://github.com/dylanaraps/neofetch/archive/7.0.0.tar.gz"
+  sha256 "8c6bd217cf6d34fc1f3dcbb0e8b1137655bc13fbb21165273dbb2a7bce0d3130"
   head "https://github.com/dylanaraps/neofetch.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2d1213f610f53f86dad1a2232559efb129932bac0e2b0201ca092049bc548582" => :mojave
-    sha256 "2427e4319a73db71b2c8eaf7b2ef71ca4e7732054aef09d83e4215c854684388" => :high_sierra
-    sha256 "2427e4319a73db71b2c8eaf7b2ef71ca4e7732054aef09d83e4215c854684388" => :sierra
+    sha256 "bfb4c9f42eee7659b0028a7d4de28524d5a6eb8f1199f83789fa0242b37c456e" => :catalina
+    sha256 "bfb4c9f42eee7659b0028a7d4de28524d5a6eb8f1199f83789fa0242b37c456e" => :mojave
+    sha256 "bfb4c9f42eee7659b0028a7d4de28524d5a6eb8f1199f83789fa0242b37c456e" => :high_sierra
   end
 
   depends_on "imagemagick"

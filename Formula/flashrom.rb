@@ -1,16 +1,15 @@
 class Flashrom < Formula
   desc "Identify, read, write, verify, and erase flash chips"
   homepage "https://flashrom.org/"
-  url "https://download.flashrom.org/releases/flashrom-1.0.tar.bz2"
-  sha256 "3702fa215ba5fb5af8e54c852d239899cfa1389194c1e51cb2a170c4dc9dee64"
+  url "https://download.flashrom.org/releases/flashrom-v1.2.tar.bz2"
+  sha256 "e1f8d95881f5a4365dfe58776ce821dfcee0f138f75d0f44f8a3cd032d9ea42b"
   head "https://review.coreboot.org/flashrom.git"
 
   bottle do
     cellar :any
-    sha256 "268fed961b0db79dd20c9d7d0618d80a2b8fb8b81d19b31911bac5b61b89f557" => :mojave
-    sha256 "9b52a8eed203c15987554132d532210c22e97f9a0eab02d842830c7339b544b7" => :high_sierra
-    sha256 "ae6bb14a2a03c1a44515702f01c06e49e2526e831f0fd7e7cee3761a9bdfb6cd" => :sierra
-    sha256 "7a41ea01cb4dfa262082f96f8a20eeccb45117aee72f806643a9783d92b247ef" => :el_capitan
+    sha256 "5770ff2e0ed9a94ee73da1ddd682405a557acc7d62dc204b6df9f996baea99dc" => :catalina
+    sha256 "50874146b4fb2d1acd735eb3cd0fdf2cfcb5ce900b6870aa4ff3d1414c53812f" => :mojave
+    sha256 "8db77cb559d51f3fae3c2cd75ecd64b51bb2d70a7d268676a5b6ad21b8b839f9" => :high_sierra
   end
 
   depends_on "pkg-config" => :build

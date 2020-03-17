@@ -1,15 +1,15 @@
 class Gcc < Formula
   desc "GNU compiler collection"
   homepage "https://gcc.gnu.org/"
-  url "https://ftp.gnu.org/gnu/gcc/gcc-9.1.0/gcc-9.1.0.tar.xz"
-  mirror "https://ftpmirror.gnu.org/gcc/gcc-9.1.0/gcc-9.1.0.tar.xz"
-  sha256 "79a66834e96a6050d8fe78db2c3b32fb285b230b855d0a66288235bc04b327a0"
+  url "https://ftp.gnu.org/gnu/gcc/gcc-9.3.0/gcc-9.3.0.tar.xz"
+  mirror "https://ftpmirror.gnu.org/gcc/gcc-9.3.0/gcc-9.3.0.tar.xz"
+  sha256 "71e197867611f6054aa1119b13a0c0abac12834765fe2d81f35ac57f84f742d1"
   head "https://gcc.gnu.org/git/gcc.git"
 
   bottle do
-    sha256 "1af51e1a8c5394297c13b85548203a84279a2e24e6ab982fb299c526bdde3079" => :mojave
-    sha256 "be85387a2c7c9313da23e258013ff6de215cf1f0cb997b2edf72fb1af725d72f" => :high_sierra
-    sha256 "ca1bf59a0726ea16f4fe22ad98532e4ac0171bbb518154929d71d7f2032657ee" => :sierra
+    sha256 "6b84b7dcd0fe04ca70e7cac5dcf35f8a256f5620ddb671a91e10b0bb692f587e" => :catalina
+    sha256 "af7aa4f1aee84374500b1150fe6ce58c381e0f133b4f8cd674955b9d4d22efe8" => :mojave
+    sha256 "75c2a1e504d82b82d0cbbab4be731004077794d4ed7f5f102123001a50909a48" => :high_sierra
   end
 
   # The bottles are built on systems with the CLT installed, and do not work
@@ -23,6 +23,8 @@ class Gcc < Formula
   depends_on "isl"
   depends_on "libmpc"
   depends_on "mpfr"
+
+  uses_from_macos "zlib"
 
   # GCC bootstraps itself, so it is OK to have an incompatible C++ stdlib
   cxxstdlib_check :skip
@@ -80,7 +82,7 @@ class Gcc < Formula
       elsif MacOS.version >= :mojave
         # System headers are no longer located in /usr/include
         args << "--with-native-system-header-dir=/usr/include"
-        args << "--with-sysroot=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
+        args << "--with-sysroot=/Library/Developer/CommandLineTools/SDKs/MacOSX#{MacOS.version}.sdk"
       end
 
       system "../configure", *args

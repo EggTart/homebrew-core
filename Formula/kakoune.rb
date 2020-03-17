@@ -1,27 +1,23 @@
 class Kakoune < Formula
   desc "Selection-based modal text editor"
   homepage "https://github.com/mawww/kakoune"
-  url "https://github.com/mawww/kakoune/releases/download/v2019.01.20/kakoune-2019.01.20.tar.bz2"
-  sha256 "991103a227be00ca1b10ad575fd6c749fa4c99eb19763971c7b1e113e299b995"
+  url "https://github.com/mawww/kakoune/releases/download/v2020.01.16/kakoune-2020.01.16.tar.bz2"
+  sha256 "a094f1689f0228308f631e371b382b0c0522391fc8b6c23a6cbc71ff404a0dae"
+  head "https://github.com/mawww/kakoune.git"
 
   bottle do
     cellar :any
-    sha256 "898cd671f9407a36f4f0a039113251fcb0c18839415b25067de7b823cbcf7122" => :mojave
-    sha256 "a5992a3e250758a4026927218c78b387cc7054de11353f59c28278f2236a8e17" => :high_sierra
-    sha256 "225f222b1abe79c31cfaebf60756eef4f47d79a365e75c03261e143f21ea52af" => :sierra
+    sha256 "d3b04db4808b72c01136283294fee71a4a9208b12960d01d4f723be63e2c063c" => :catalina
+    sha256 "6704180fb31e7f274185553876c4f84d730e2f0ddf1ae152103237207baf5a59" => :mojave
+    sha256 "df9167e16c2f1b8fbca85511b47dd56c74b096b7acfd6e95f2215c2078d6902b" => :high_sierra
   end
 
   depends_on "asciidoc" => :build
   depends_on "docbook-xsl" => :build
+  depends_on :macos => :high_sierra # needs C++17
   depends_on "ncurses"
 
-  if MacOS.version <= :el_capitan
-    depends_on "gcc"
-    fails_with :clang do
-      build 800
-      cause "New C++ features"
-    end
-  end
+  uses_from_macos "libxslt" => :build
 
   def install
     ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"

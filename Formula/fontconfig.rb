@@ -5,6 +5,7 @@ class Fontconfig < Formula
   sha256 "f655dd2a986d7aa97e052261b36aa67b0a64989496361eca8d604e6414006741"
 
   bottle do
+    sha256 "64ff208b28613dfe2a65b9d74fd9b0129f3ca7e423db78329144cdaf51b36f70" => :catalina
     sha256 "1c704a5a4249252bf42dc4f2a458f911a7858a931858ad257d9ec39978ca5095" => :mojave
     sha256 "3b763143a4d6e3c74b3a8b237d2e5a383696347ea3599d07957f73a3f6521d23" => :high_sierra
     sha256 "631531c4eb502bd97e4a5bef30760d1eef87dd50306ef2defb9460ac3338cfe1" => :sierra
@@ -29,6 +30,9 @@ class Fontconfig < Formula
   depends_on "pkg-config" => :build
   depends_on "freetype"
 
+  uses_from_macos "bzip2"
+  uses_from_macos "expat"
+
   def install
     font_dirs = %w[
       /System/Library/Fonts
@@ -36,9 +40,7 @@ class Fontconfig < Formula
       ~/Library/Fonts
     ]
 
-    if MacOS.version >= :sierra
-      font_dirs << Dir["/System/Library/Assets/com_apple_MobileAsset_Font*"].max
-    end
+    font_dirs << Dir["/System/Library/Assets{,V2}/com_apple_MobileAsset_Font*"].max if MacOS.version >= :sierra
 
     system "autoreconf", "-iv" if build.head?
     system "./configure", "--disable-dependency-tracking",

@@ -4,18 +4,18 @@ class Gitup < Formula
   desc "Update multiple git repositories at once"
   homepage "https://github.com/earwig/git-repo-updater"
   url "https://github.com/earwig/git-repo-updater.git",
-      :tag      => "v0.5",
-      :revision => "ba5eec698999c36cb3d603ae46baa6f076b7b695"
+      :tag      => "v0.5.1",
+      :revision => "b502b2eaa46a6a10d9db228209f984bb235444a7"
+  revision 2
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "80a1da9109342ec500c6cdb89c7a90b79048a80438d20368169cfc03b2f57776" => :mojave
-    sha256 "013423ddf1b0b48b22cf16fcc60b35f3e06e73615f24dc226fa004669d09e392" => :high_sierra
-    sha256 "2b3a5f5cdc84e26488f87e2fdc390612bc79c016fb5ce2915eddc8c49dc71473" => :sierra
-    sha256 "3099d2c8e9b7adb5150b23d08f95832808e8d175186f25109459f106c3d31564" => :el_capitan
+    sha256 "61b9abe9e481e9fa3a86074756d065f48f92cf71420e6855e95ad1ecdc92cecb" => :catalina
+    sha256 "2e1fb0d6519682a80737b73136fd6cf1c81928d993e88e835cb053725ff40bf2" => :mojave
+    sha256 "63c2169d68aed5aca9a91bba014cdb96238b61316267691dd7c63ef566b89fc8" => :high_sierra
   end
 
-  depends_on "python"
+  depends_on "python@3.8"
 
   resource "colorama" do
     url "https://files.pythonhosted.org/packages/e6/76/257b53926889e2835355d74fec73d82662100135293e17d382e2b74d1669/colorama-0.3.9.tar.gz"

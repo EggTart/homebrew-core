@@ -6,6 +6,7 @@ class Ogmtools < Formula
 
   bottle do
     cellar :any
+    sha256 "6a2e3ed95e0569dca709b5d0431ea309c008400f3f88b91133d6854340babed7" => :catalina
     sha256 "0c4c8271cbdc79f5d444aca60f7e32c489961f364923e475107021f857122b64" => :mojave
     sha256 "c84b3fe9a525a0f6719bab86a5b919af73b067b48134e9b9ff3225af9b728260" => :high_sierra
     sha256 "ec07a396ce68d5c646c838e3129dbe6c8ca8ff7ea9126cd31f9844016582d0ec" => :sierra
@@ -30,11 +31,12 @@ class Ogmtools < Formula
   end
 
   # Borrow warning from MacPorts
-  def caveats; <<~EOS
-    Ogmtools has not been updated since 2004 and is no longer being developed,
-    maintained or supported. There are several issues, especially on 64-bit
-    architectures, which the author will not fix or accept patches for.
-    Keep this in mind when deciding whether to use this software.
-  EOS
+  def caveats
+    <<~EOS
+      Ogmtools has not been updated since 2004 and is no longer being developed,
+      maintained or supported. There are several issues, especially on 64-bit
+      architectures, which the author will not fix or accept patches for.
+      Keep this in mind when deciding whether to use this software.
+    EOS
   end
 end

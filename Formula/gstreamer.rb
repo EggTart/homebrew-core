@@ -1,13 +1,13 @@
 class Gstreamer < Formula
   desc "Development framework for multimedia applications"
   homepage "https://gstreamer.freedesktop.org/"
-  url "https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.16.0.tar.xz"
-  sha256 "0e8e2f7118be437cba879353970cf83c2acced825ecb9275ba05d9186ef07c00"
+  url "https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.16.2.tar.xz"
+  sha256 "e3f044246783fd685439647373fa13ba14f7ab0b346eadd06437092f8419e94e"
 
   bottle do
-    sha256 "156abcabde77a54e45942449f643191b60da4ebf2a3434126355f723f67db0dc" => :mojave
-    sha256 "3694d158c391d341e4623f0f9e150b4d627b7ba08d3ffbd5351ed7e2d0cd8823" => :high_sierra
-    sha256 "718fafb11b85509bcb2a9aa1f751b1e45a8410b9d6247f5542a023557d886777" => :sierra
+    sha256 "3473eef6aadd51a378f722c08a399922c4b401f38d8d5bffe7e2cb0ba845f919" => :catalina
+    sha256 "6427cd64ac1c541d35fc57f869dd1290e57aab8a2a9f5589b79f6e078e4432d5" => :mojave
+    sha256 "b1a6cbfbac2bb152ce023fbe283ef38ec371ceccff48ae1545cdeac1a36933ba" => :high_sierra
   end
 
   head do
@@ -23,6 +23,8 @@ class Gstreamer < Formula
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "glib"
+
+  uses_from_macos "flex" => :build
 
   def install
     args = %W[
@@ -54,12 +56,13 @@ class Gstreamer < Formula
     system "make", "install"
   end
 
-  def caveats; <<~EOS
-    Consider also installing gst-plugins-base and gst-plugins-good.
+  def caveats
+    <<~EOS
+      Consider also installing gst-plugins-base and gst-plugins-good.
 
-    The gst-plugins-* packages contain gstreamer-video-1.0, gstreamer-audio-1.0,
-    and other components needed by most gstreamer applications.
-  EOS
+      The gst-plugins-* packages contain gstreamer-video-1.0, gstreamer-audio-1.0,
+      and other components needed by most gstreamer applications.
+    EOS
   end
 
   test do

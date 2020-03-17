@@ -1,14 +1,14 @@
 class SharedMimeInfo < Formula
   desc "Database of common MIME types"
   homepage "https://wiki.freedesktop.org/www/Software/shared-mime-info"
-  url "https://gitlab.freedesktop.org/xdg/shared-mime-info/uploads/80c7f1afbcad2769f38aeb9ba6317a51/shared-mime-info-1.12.tar.xz"
-  sha256 "18b2f0fe07ed0d6f81951a5fd5ece44de9c8aeb4dc5bb20d4f595f6cc6bd403e"
+  url "https://gitlab.freedesktop.org/xdg/shared-mime-info/uploads/b27eb88e4155d8fccb8bb3cd12025d5b/shared-mime-info-1.15.tar.xz"
+  sha256 "f482b027437c99e53b81037a9843fccd549243fd52145d016e9c7174a4f5db90"
 
   bottle do
     cellar :any
-    sha256 "a7fb52d858dfbd75c6c5553b0cf688dd982b9aa49b60569a44a0a1ea270b52c4" => :mojave
-    sha256 "97b2ec767496ccab0c890c4310ddfd03d0ba318a494f88556a47a69a87a14bdd" => :high_sierra
-    sha256 "3ee458bfa61d4517eafaa2fa24e03044c7c695acbbdf84eb28566bc3be4495c2" => :sierra
+    sha256 "137dfd734f5e7fe9b9ee80d1efa135f95a3ade95ceab83b2f79cd7ca1fd4d313" => :catalina
+    sha256 "1be57687d8aef14d6bc95be0a02a5dfdbce4bf859ea057c93e3ff8545c700fcd" => :mojave
+    sha256 "87ec03b8d25d6c3c455c98dbc8d9ac3569df6abaae0c07ad9444a1cfa462cd06" => :high_sierra
   end
 
   head do
@@ -19,9 +19,12 @@ class SharedMimeInfo < Formula
   end
 
   depends_on "intltool" => :build
+  depends_on "itstool" => :build
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "glib"
+
+  uses_from_macos "libxml2"
 
   def install
     # Disable the post-install update-mimedb due to crash
@@ -41,10 +44,21 @@ class SharedMimeInfo < Formula
   end
 
   def post_install
-    ln_sf HOMEBREW_PREFIX/"share/mime", share/"mime"
-    (HOMEBREW_PREFIX/"share/mime/packages").mkpath
-    cp (pkgshare/"packages").children, HOMEBREW_PREFIX/"share/mime/packages"
-    system bin/"update-mime-database", HOMEBREW_PREFIX/"share/mime"
+    global_mime = HOMEBREW_PREFIX/"share/mime"
+    cellar_mime = share/"mime"
+
+    # Remove bad links created by old libheif postinstall
+    rm_rf global_mime if global_mime.symlink?
+
+    if !cellar_mime.exist? || !cellar_mime.symlink?
+      rm_rf cellar_mime
+      ln_sf global_mime, cellar_mime
+    end
+
+    (global_mime/"packages").mkpath
+    cp (pkgshare/"packages").children, global_mime/"packages"
+
+    system bin/"update-mime-database", global_mime
   end
 
   test do

@@ -3,13 +3,13 @@ class Qrupdate < Formula
   homepage "https://sourceforge.net/projects/qrupdate/"
   url "https://downloads.sourceforge.net/qrupdate/qrupdate-1.1.2.tar.gz"
   sha256 "e2a1c711dc8ebc418e21195833814cb2f84b878b90a2774365f0166402308e08"
-  revision 10
+  revision 12
 
   bottle do
     cellar :any
-    sha256 "cbaca0a12ab0f6527739e37a9100b82e3aaa5b35760739e679395dbfd63dca44" => :mojave
-    sha256 "fee484380157553a368f516ad9b8cbe01be53bca3bd20068a0d255c33d8ccf94" => :high_sierra
-    sha256 "2e7760a64f95a7243f0ac9dfc85be775943b40b462c00c7fc25241ea2b2eef36" => :sierra
+    sha256 "a889b3e1cc1687c9c66d4a211af53eca5b8e2df93f83bdd8d7f0e93d03181921" => :catalina
+    sha256 "9777925cc61c2c29a9d0bae3681ac3afaa00de667c34b5fc2f37f4872acd1016" => :mojave
+    sha256 "67079bff23bf70ed8688b65d18096f55f9f19eb405b1ef4e2b297072e4ea3c91" => :high_sierra
   end
 
   depends_on "gcc" # for gfortran

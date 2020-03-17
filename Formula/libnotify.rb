@@ -1,36 +1,32 @@
 class Libnotify < Formula
   desc "Library that sends desktop notifications to a notification daemon"
   homepage "https://developer.gnome.org/libnotify"
-  url "https://download.gnome.org/sources/libnotify/0.7/libnotify-0.7.8.tar.xz"
-  sha256 "69209e0b663776a00c7b6c0e560302a8dbf66b2551d55616304f240bba66e18c"
+  url "https://download.gnome.org/sources/libnotify/0.7/libnotify-0.7.9.tar.xz"
+  sha256 "66c0517ed16df7af258e83208faaf5069727dfd66995c4bbc51c16954d674761"
 
   bottle do
-    sha256 "890c7a9086b1e6bc54cc28fbcae17c8f1a2106953ecb06a41b72bb134dc8052f" => :mojave
-    sha256 "e3089bf440369fc09f2498402a235f96ea0de37c7a39e7d1b089e4594381acd6" => :high_sierra
-    sha256 "7adeffb01878acf29de20e4c22714597ba09c80aee07755c31c1287116c7618a" => :sierra
+    cellar :any
+    sha256 "367a8d51cb565452392b9bc92c753ca641c23f91fc4ff93fb6166b63f2beafda" => :catalina
+    sha256 "e6d5a6a87f885bf421e6a70c9cef1c6aaf89db46a98216af6c06754246a8f896" => :mojave
+    sha256 "0560e601843a3e42a4823904dd5534212efd823292444a9588f1cf99ea8bc8f5" => :high_sierra
   end
 
-  depends_on "autoconf" => :build
-  depends_on "automake" => :build
+  depends_on "docbook-xsl" => :build
   depends_on "gobject-introspection" => :build
   depends_on "gtk-doc" => :build
-  depends_on "libtool" => :build
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "gdk-pixbuf"
 
   def install
-    # the latest build does not include configure so we need to
-    # generate it from configure.ac.
-    # Upstream issue at https://gitlab.gnome.org/GNOME/libnotify/issues/5
-    mkdir_p "m4"
-    system "gtkdocize", "--copy"
-    system "autoreconf", "-i"
-    system "./configure", "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}",
-                          "--disable-tests",
-                          "--enable-introspection"
-    system "make", "install"
+    ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"
+
+    mkdir "build" do
+      system "meson", "..", "--prefix=#{prefix}", "-Dtests=false"
+      system "ninja"
+      system "ninja", "install"
+    end
   end
 
   test do

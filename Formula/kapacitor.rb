@@ -2,15 +2,15 @@ class Kapacitor < Formula
   desc "Open source time series data processor"
   homepage "https://github.com/influxdata/kapacitor"
   url "https://github.com/influxdata/kapacitor.git",
-      :tag      => "v1.5.2",
-      :revision => "3086452d00830e01d932838d8c6d1df818648ad3"
+      :tag      => "v1.5.4",
+      :revision => "1f648f85772efe222a3853fe1a0d9ef88854a8c1"
   head "https://github.com/influxdata/kapacitor.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "44ba2e5cd5045717759cde7c82e7752eca277f80a49ffc653ef35819fd153678" => :mojave
-    sha256 "5f982cb2044276f9041453ef8a0b15120bf1f180eb5fff9794173d2d5a6027fc" => :high_sierra
-    sha256 "09136286c7d4c14c9bdc8a684e6d45ffff0750049fe30dd75dd45cbbb9e19e53" => :sierra
+    sha256 "8af6b08a8e349ae4713e81f08a68a798138721c6e90928aad2820d1ad36e8f77" => :catalina
+    sha256 "6e9bbd9b233325ed8dbfdaeba2f447ab47b79ab27f9102c77b39ad7ad0897070" => :mojave
+    sha256 "422565754a61ecfa4386d4f2ede3168a39a3baf68eaabd3ae1547a35d30c04e2" => :high_sierra
   end
 
   depends_on "go" => :build
@@ -43,35 +43,36 @@ class Kapacitor < Formula
 
   plist_options :manual => "kapacitord -config #{HOMEBREW_PREFIX}/etc/kapacitor.conf"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>KeepAlive</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
         <dict>
-          <key>SuccessfulExit</key>
-          <false/>
+          <key>KeepAlive</key>
+          <dict>
+            <key>SuccessfulExit</key>
+            <false/>
+          </dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>#{opt_bin}/kapacitord</string>
+            <string>-config</string>
+            <string>#{HOMEBREW_PREFIX}/etc/kapacitor.conf</string>
+          </array>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>WorkingDirectory</key>
+          <string>#{var}</string>
+          <key>StandardErrorPath</key>
+          <string>#{var}/log/kapacitor.log</string>
+          <key>StandardOutPath</key>
+          <string>#{var}/log/kapacitor.log</string>
         </dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_bin}/kapacitord</string>
-          <string>-config</string>
-          <string>#{HOMEBREW_PREFIX}/etc/kapacitor.conf</string>
-        </array>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>WorkingDirectory</key>
-        <string>#{var}</string>
-        <key>StandardErrorPath</key>
-        <string>#{var}/log/kapacitor.log</string>
-        <key>StandardOutPath</key>
-        <string>#{var}/log/kapacitor.log</string>
-      </dict>
-    </plist>
-  EOS
+      </plist>
+    EOS
   end
 
   test do

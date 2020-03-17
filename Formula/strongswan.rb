@@ -1,13 +1,13 @@
 class Strongswan < Formula
   desc "VPN based on IPsec"
   homepage "https://www.strongswan.org"
-  url "https://download.strongswan.org/strongswan-5.8.0.tar.bz2"
-  sha256 "15b1e10c7dd6253ab5d791fe9b9cb84624e24c118aecd9b90251b4e60daa0933"
+  url "https://download.strongswan.org/strongswan-5.8.2.tar.bz2"
+  sha256 "86900ddbe7337c923dadf2c8339ae8ed2b9158e3691745884d08ae534677430e"
 
   bottle do
-    sha256 "b7ecdc25dcb364981e83f6aed2d115f054d61321ebe6c7c61754456fe0744302" => :mojave
-    sha256 "bf050912991b312ff534cb38a5507a69154c76bb1a4c959dbaeb3d11f8d1a5eb" => :high_sierra
-    sha256 "4614d547317a13c48a9cfccd0a8ff4aa097c6122ae5262e21f91d9e4b934d7d1" => :sierra
+    sha256 "09147538543405ab5feb83c4aad866d147ed3acdc6d67e3fc423b7d1aa968663" => :catalina
+    sha256 "1ec03a199f80d10c7726ed50d61ea92a0f1b250f292ba44986086814b1f51b35" => :mojave
+    sha256 "507157d52fbbe0d7ba3194abfa56dfbdb7cd0b98dcfcf7b54af8d39e1c0ed595" => :high_sierra
   end
 
   head do
@@ -21,7 +21,7 @@ class Strongswan < Formula
     depends_on "pkg-config" => :build
   end
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     args = %W[
@@ -69,9 +69,10 @@ class Strongswan < Formula
     system "make", "install"
   end
 
-  def caveats; <<~EOS
-    You will have to run both "ipsec" and "charon-cmd" with "sudo".
-  EOS
+  def caveats
+    <<~EOS
+      You will have to run both "ipsec" and "charon-cmd" with "sudo".
+    EOS
   end
 
   test do

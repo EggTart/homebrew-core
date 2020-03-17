@@ -1,14 +1,15 @@
 class Pypy3 < Formula
   desc "Implementation of Python 3 in Python"
   homepage "https://pypy.org/"
-  url "https://bitbucket.org/pypy/pypy/downloads/pypy3.6-v7.0.0-src.tar.bz2"
-  sha256 "7ccbf81db5c647fa0c27636c7d18d059d2570fff7eaffc03857c67bee84b8a26"
+  url "https://bitbucket.org/pypy/pypy/downloads/pypy3.6-v7.3.0-src.tar.bz2"
+  sha256 "48d12c15fbcbcf4a32882a883195e1f922997cde78e7a16d4342b9b521eefcfa"
+  head "https://foss.heptapod.net/pypy/pypy", :using => :hg, :branch => "py3.7"
 
   bottle do
     cellar :any
-    sha256 "d84192d75138a909a590edba538e5887325489bf1d882ece92618316cec06c9c" => :mojave
-    sha256 "572e61330699307ab49d425f9683e90e226325ddd3b2107857c1b92026c9307e" => :high_sierra
-    sha256 "59dbf2859908c30f12904b68caadf5d6b48093d4f51043d8a91d7c15fec28995" => :sierra
+    sha256 "d1af1b4bbbd226a50df7989c2e5b21d5fb97f0defa7d12a96cd859c595d25c29" => :catalina
+    sha256 "da12adec658ce8d292bd9f3ad1766268116f0ef11514e18ec9b1f1551179095d" => :mojave
+    sha256 "3e1db4fb3c9e627b285a8d08123513bd5ebe6d351148b7637f9da6a21a3cc111" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
@@ -18,26 +19,32 @@ class Pypy3 < Formula
   # pypy does not find system libffi, and its location cannot be given
   # as a build option
   depends_on "libffi" if DevelopmentTools.clang_build_version >= 1000
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "sqlite"
+  depends_on "tcl-tk"
   depends_on "xz"
+
+  uses_from_macos "expat"
+  uses_from_macos "libffi"
+  uses_from_macos "unzip"
+  uses_from_macos "zlib"
 
   # packaging depends on pyparsing
   resource "pyparsing" do
-    url "https://files.pythonhosted.org/packages/3c/ec/a94f8cf7274ea60b5413df054f82a8980523efd712ec55a59e7c3357cf7c/pyparsing-2.2.0.tar.gz"
-    sha256 "0832bcf47acd283788593e7a0f542407bd9550a55a8a8435214a1960e04bcb04"
+    url "https://files.pythonhosted.org/packages/a2/56/0404c03c83cfcca229071d3c921d7d79ed385060bbe969fde3fd8f774ebd/pyparsing-2.4.6.tar.gz"
+    sha256 "4c830582a84fb022400b85429791bc551f1f4871c33f23e44f353119e92f969f"
   end
 
   # packaging and setuptools depend on six
   resource "six" do
-    url "https://files.pythonhosted.org/packages/16/d8/bc6316cf98419719bd59c91742194c111b6f2e85abac88e496adefaf7afe/six-1.11.0.tar.gz"
-    sha256 "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
+    url "https://files.pythonhosted.org/packages/94/3e/edcf6fef41d89187df7e38e868b2dd2182677922b600e880baad7749c865/six-1.13.0.tar.gz"
+    sha256 "30f610279e8b2578cab6db20741130331735c781b56053c59c4076da27f06b66"
   end
 
   # setuptools depends on packaging
   resource "packaging" do
-    url "https://files.pythonhosted.org/packages/77/32/439f47be99809c12ef2da8b60a2c47987786d2c6c9205549dd6ef95df8bd/packaging-17.1.tar.gz"
-    sha256 "f019b770dd64e585a99714f1fd5e01c7a8f11b45635aa953fd41c689a657375b"
+    url "https://files.pythonhosted.org/packages/c7/cf/d84b72480a556d9bd4a191a91b0a8ea71cb48e6f6132f12d9d365c51bdb6/packaging-20.0.tar.gz"
+    sha256 "fe1d8331dfa7cc0a883b49d75fc76380b2ab2734b220fbb87d774e4fd4b851f8"
   end
 
   # setuptools depends on appdirs
@@ -47,31 +54,33 @@ class Pypy3 < Formula
   end
 
   resource "setuptools" do
-    url "https://files.pythonhosted.org/packages/72/c2/c09362ab29338413ab687b47dab03bab4a792e2bbb727a1eb5e0a88e3b86/setuptools-39.0.1.zip"
-    sha256 "bec7badf0f60e7fc8153fac47836edc41b74e5d541d7692e614e635720d6a7c7"
+    url "https://files.pythonhosted.org/packages/b0/f3/44da7482ac6da3f36f68e253cb04de37365b3dba9036a3c70773b778b485/setuptools-44.0.0.zip"
+    sha256 "e5baf7723e5bb8382fc146e33032b241efc63314211a3a120aaa55d62d2bb008"
   end
 
   resource "pip" do
-    url "https://files.pythonhosted.org/packages/ae/e8/2340d46ecadb1692a1e455f13f75e596d4eab3d11a57446f08259dee8f02/pip-10.0.1.tar.gz"
-    sha256 "f2bd08e0cd1b06e10218feaf6fef299f473ba706582eb3bd9d52203fdbd7ee68"
+    url "https://files.pythonhosted.org/packages/ce/ea/9b445176a65ae4ba22dce1d93e4b5fe182f953df71a145f557cffaffc1bf/pip-19.3.1.tar.gz"
+    sha256 "21207d76c1031e517668898a6b46a9fb1501c7a4710ef5dfd6a40ad9e6757ea7"
   end
 
   def install
-    ENV.append "CFLAGS", "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
-
+    ENV.prepend_path "PKG_CONFIG_PATH", "#{prefix}/opt/openssl/lib/pkgconfig:#{prefix}/opt/tcl-tk/lib/pkgconfig"
+    ENV.prepend "LDFLAGS", "-L#{prefix}/opt/tcl-tk/lib"
+    ENV.prepend "CPPFLAGS", "-I#{prefix}/opt/tcl-tk/include"
     # Work around "dyld: Symbol not found: _utimensat"
-    if MacOS.version == :sierra && MacOS::Xcode.version >= "9.0"
-      ENV.delete("SDKROOT")
+    ENV.delete("SDKROOT") if MacOS.version == :sierra && MacOS::Xcode.version >= "9.0"
+
+    # Fix build on High Sierra
+    inreplace "lib_pypy/_tkinter/tklib_build.py" do |s|
+      s.gsub! "/System/Library/Frameworks/Tk.framework/Versions/Current/Headers/",
+              "#{prefix}/opt/tcl-tk/include"
+      s.gsub! "libdirs = []",
+              "libdirs = ['#{prefix}/opt/tcl-tk/lib']"
     end
 
     # This has been completely rewritten upstream in master so check with
     # the next release whether this can be removed or not.
     inreplace "pypy/tool/build_cffi_imports.py" do |s|
-      s.gsub! "http://", "https://"
-      s.gsub! "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.6.2.tar.gz",
-              "https://mirrorservice.org/pub/OpenBSD/LibreSSL/libressl-2.6.2.tar.gz"
-      s.gsub! "https://tukaani.org/xz/xz-5.2.3.tar.gz",
-              "https://netix.dl.sourceforge.net/project/lzmautils/xz-5.2.3.tar.gz"
       s.gsub! "os.path.join(tempfile.gettempdir(), 'pypy-archives')",
               "os.path.join('#{buildpath}', 'pypy-archives')"
     end
@@ -111,7 +120,7 @@ class Pypy3 < Formula
     # we want to avoid putting PyPy's Python.h somewhere that configure
     # scripts will find it.
     bin.install_symlink libexec/"bin/pypy3"
-    bin.install_symlink libexec/"bin/pypy" => "pypy3.5"
+    bin.install_symlink libexec/"bin/pypy" => "pypy3.6"
     lib.install_symlink libexec/"lib/libpypy3-c.dylib"
   end
 
@@ -139,7 +148,7 @@ class Pypy3 < Formula
       install-scripts=#{scripts_folder}
     EOS
 
-    %w[appdirs pyparsing six packaging setuptools pip].each do |pkg|
+    %w[appdirs six packaging setuptools pyparsing pip].each do |pkg|
       resource(pkg).stage do
         system bin/"pypy3", "-s", "setup.py", "install", "--force", "--verbose"
       end
@@ -153,24 +162,25 @@ class Pypy3 < Formula
     %w[easy_install_pypy3 pip_pypy3].each { |e| (HOMEBREW_PREFIX/"bin").install_symlink bin/e }
   end
 
-  def caveats; <<~EOS
-    A "distutils.cfg" has been written to:
-      #{distutils}
-    specifying the install-scripts folder as:
-      #{scripts_folder}
+  def caveats
+    <<~EOS
+      A "distutils.cfg" has been written to:
+        #{distutils}
+      specifying the install-scripts folder as:
+        #{scripts_folder}
 
-    If you install Python packages via "pypy3 setup.py install", easy_install_pypy3,
-    or pip_pypy3, any provided scripts will go into the install-scripts folder
-    above, so you may want to add it to your PATH *after* #{HOMEBREW_PREFIX}/bin
-    so you don't overwrite tools from CPython.
+      If you install Python packages via "pypy3 setup.py install", easy_install_pypy3,
+      or pip_pypy3, any provided scripts will go into the install-scripts folder
+      above, so you may want to add it to your PATH *after* #{HOMEBREW_PREFIX}/bin
+      so you don't overwrite tools from CPython.
 
-    Setuptools and pip have been installed, so you can use easy_install_pypy3 and
-    pip_pypy3.
-    To update pip and setuptools between pypy3 releases, run:
-        pip_pypy3 install --upgrade pip setuptools
+      Setuptools and pip have been installed, so you can use easy_install_pypy3 and
+      pip_pypy3.
+      To update pip and setuptools between pypy3 releases, run:
+          pip_pypy3 install --upgrade pip setuptools
 
-    See: https://docs.brew.sh/Homebrew-and-Python
-  EOS
+      See: https://docs.brew.sh/Homebrew-and-Python
+    EOS
   end
 
   # The HOMEBREW_PREFIX location of site-packages

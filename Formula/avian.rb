@@ -18,6 +18,8 @@ class Avian < Formula
 
   depends_on :java => "1.8"
 
+  uses_from_macos "zlib"
+
   def install
     system "make", "use-clang=true"
     bin.install Dir["build/macosx-*/avian*"]

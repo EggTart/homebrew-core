@@ -5,25 +5,25 @@ class Ghc < Formula
 
   desc "Glorious Glasgow Haskell Compilation System"
   homepage "https://haskell.org/ghc/"
-  url "https://downloads.haskell.org/~ghc/8.6.5/ghc-8.6.5-src.tar.xz"
-  sha256 "4d4aa1e96f4001b934ac6193ab09af5d6172f41f5a5d39d8e43393b9aafee361"
+  url "https://downloads.haskell.org/~ghc/8.8.3/ghc-8.8.3-src.tar.xz"
+  sha256 "e0dcc0aaf3e234c5978f29e6df62947e97720ab404ec0158343df211c5480f89"
 
   bottle do
-    sha256 "ab7cfe45159057538fcde888c14ccf19b0154ac6e0e2d9bd92727c5a0b7734d5" => :mojave
-    sha256 "6736c0d1bbff9d7c775c70979b4df8e54d2183ded84965bc44fa6b0c16a0996c" => :high_sierra
-    sha256 "4cb157956afc659f762e22e54c189e609d93a7f04f0d1ae6919eaafa5b255f74" => :sierra
+    sha256 "efba70e7b2639df91b366fb54580b2de9cf8b774c367e4eeadf662bf8b6c7696" => :catalina
+    sha256 "6ce78524676be247d1729f219faea5fc0c91f084f48fce18d77d590d7f9d1a1b" => :mojave
+    sha256 "8724b8bd4409b1500ef78616a3edce4843c8c47e540605224458f6ff82dc213d" => :high_sierra
   end
 
   head do
-    url "https://git.haskell.org/ghc.git", :branch => "ghc-8.6"
+    url "https://gitlab.haskell.org/ghc/ghc.git", :branch => "ghc-8.8"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
     depends_on "libtool" => :build
 
     resource "cabal" do
-      url "https://hackage.haskell.org/package/cabal-install-2.4.0.0/cabal-install-2.4.0.0.tar.gz"
-      sha256 "1329e9564b736b0cfba76d396204d95569f080e7c54fe355b6d9618e3aa0bef6"
+      url "https://hackage.haskell.org/package/cabal-install-3.0.0.0/cabal-install-3.0.0.0.tar.gz"
+      sha256 "a432a7853afe96c0fd80f434bd80274601331d8c46b628cd19a0d8e96212aaf1"
     end
   end
 
@@ -37,11 +37,13 @@ class Ghc < Formula
     sha256 "87b565e89a9a684fe4ebeeddb8399dce2599f9c9049854ca8c0dfbdea0e21912"
   end
 
-  # https://www.haskell.org/ghc/download_ghc_8_0_1#macosx_x86_64
+  # https://www.haskell.org/ghc/download_ghc_8_6_5.html#macosx_x86_64
   # "This is a distribution for Mac OS X, 10.7 or later."
+  # Need to use 8.6.5 to build 8.8.1 because of
+  # https://gitlab.haskell.org/ghc/ghc/issues/17146
   resource "binary" do
-    url "https://downloads.haskell.org/~ghc/8.4.4/ghc-8.4.4-x86_64-apple-darwin.tar.xz"
-    sha256 "28dc89ebd231335337c656f4c5ead2ae2a1acc166aafe74a14f084393c5ef03a"
+    url "https://downloads.haskell.org/~ghc/8.6.5/ghc-8.6.5-x86_64-apple-darwin.tar.xz"
+    sha256 "dfc1bdb1d303a87a8552aa17f5b080e61351f2823c2b99071ec23d0837422169"
   end
 
   def install
@@ -58,7 +60,6 @@ class Ghc < Formula
       system "./configure", "--prefix=#{gmp}", "--with-pic", "--disable-shared",
                             "--build=#{Hardware.oldest_cpu}-apple-darwin#{`uname -r`.to_i}"
       system "make"
-      system "make", "check"
       system "make", "install"
     end
 
@@ -118,6 +119,6 @@ class Ghc < Formula
 
   test do
     (testpath/"hello.hs").write('main = putStrLn "Hello Homebrew"')
-    system "#{bin}/runghc", testpath/"hello.hs"
+    assert_match "Hello Homebrew", shell_output("#{bin}/runghc hello.hs")
   end
 end

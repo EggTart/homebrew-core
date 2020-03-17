@@ -5,28 +5,27 @@ class Futhark < Formula
 
   desc "Data-parallel functional programming language"
   homepage "https://futhark-lang.org/"
-  url "https://github.com/diku-dk/futhark/archive/v0.10.2.tar.gz"
-  sha256 "6a389196d843b583ab33bf1b844b6898868ddb536e99cfb1d03b80534c52b4eb"
+  url "https://github.com/diku-dk/futhark/archive/v0.15.1.tar.gz"
+  sha256 "0aedd5cd1bfdef721dae4ab5776d0e3dc6646775c35e45f2053f0cbf3236eaa8"
   head "https://github.com/diku-dk/futhark.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "9c11527c221bcd225dc9d25a2a913e4a8e068c0e404c3b420de36ec4604d6aa2" => :mojave
-    sha256 "a7c3d6f2f5a1aa82fe89c23841bafa7336f16274a5a83d1cdd38d56d89c4bb9d" => :high_sierra
-    sha256 "0172254dfbb2894ecfb518145df4f8e74a6b01d595c4c5f28a021a80bbde4a85" => :sierra
+    sha256 "617749922c76b3deb41dac499f4a6d507ad1327769132bae615023e78ea4c475" => :catalina
+    sha256 "056a06f503ecfb1d88066776dc40512c13c1cfd7051069d9e5029f2a3c15ee9e" => :mojave
+    sha256 "793f6eb1f8d859a31a47f647d6e7c6368b128bec0e94b3e15fde3e8373afeac3" => :high_sierra
   end
 
   depends_on "cabal-install" => :build
   depends_on "ghc" => :build
   depends_on "sphinx-doc" => :build
 
-  def install
-    cabal_sandbox do
-      cabal_install "hpack"
-      system "./.cabal-sandbox/bin/hpack"
+  uses_from_macos "ncurses"
+  uses_from_macos "zlib"
 
-      install_cabal_package :using => ["alex", "happy"]
-    end
+  def install
+    system "cabal", "v2-update"
+    system "cabal", "v2-install", *std_cabal_v2_args
 
     system "make", "-C", "docs", "man"
     man1.install Dir["docs/_build/man/*.1"]

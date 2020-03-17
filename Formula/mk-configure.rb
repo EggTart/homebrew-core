@@ -1,15 +1,14 @@
 class MkConfigure < Formula
   desc "Lightweight replacement for GNU autotools"
   homepage "https://github.com/cheusov/mk-configure"
-  url "https://downloads.sourceforge.net/project/mk-configure/mk-configure/mk-configure-0.30.0/mk-configure-0.30.0.tar.gz"
-  sha256 "5c8f953d82a2d36f9492cafcad61d34e81b892d1d91b401af406b086046ef227"
+  url "https://downloads.sourceforge.net/project/mk-configure/mk-configure/mk-configure-0.34.0/mk-configure-0.34.0.tar.gz"
+  sha256 "32b21dfa16fb315caff9b983373f22b3347d5f1a431ada960ae6a97afcfb6f2e"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "5da2a7b494096eedfe770fede39f69845f32890d419a89944ae8ed9352bd8551" => :mojave
-    sha256 "1fbce32c61d2840795d80acbb69dba077a17190307e001e7297f34ba279bf2b4" => :high_sierra
-    sha256 "1fbce32c61d2840795d80acbb69dba077a17190307e001e7297f34ba279bf2b4" => :sierra
-    sha256 "1fbce32c61d2840795d80acbb69dba077a17190307e001e7297f34ba279bf2b4" => :el_capitan
+    sha256 "59cb3bc8e8c34490e50d3d8ffee35db5c6f5ec3b2d452d773fdd3a35ad2f864e" => :catalina
+    sha256 "59cb3bc8e8c34490e50d3d8ffee35db5c6f5ec3b2d452d773fdd3a35ad2f864e" => :mojave
+    sha256 "9dfe100ba1a66a267d791a986831ce2856db6e074394c3e65fb80c679c19c584" => :high_sierra
   end
 
   depends_on "bmake"

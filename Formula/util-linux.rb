@@ -1,16 +1,18 @@
 class UtilLinux < Formula
   desc "Collection of Linux utilities"
   homepage "https://github.com/karelzak/util-linux"
-  url "https://www.kernel.org/pub/linux/utils/util-linux/v2.33/util-linux-2.33.2.tar.xz"
-  sha256 "631be8eac6cf6230ba478de211941d526808dba3cd436380793334496013ce97"
-  revision 1
+  url "https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.35/util-linux-2.35.1.tar.xz"
+  sha256 "d9de3edd287366cd908e77677514b9387b22bc7b88f45b83e1922c3597f1d7f9"
 
   bottle do
     cellar :any
-    sha256 "4378cde04082e8ae81a32a02c329989f10a7b582354d248e81f5958d4a5cf150" => :mojave
-    sha256 "618e77696340f47cda39e0f80dfdc9ddaf18462ee11b536139689c8dc1381b5c" => :high_sierra
-    sha256 "569009c8d2f16d8ebaae5f56a8e6cf528e593f4c9e0ad3f32cf244fb6ddc8e65" => :sierra
+    sha256 "8202113bd4c4c4970eea7e60163c61a8e58a37e76d172df392c1bd04e9414ada" => :catalina
+    sha256 "fb15676437f91b315044d8dca6f22e57c93b56df3d6077fb8fc94ffed600972e" => :mojave
+    sha256 "fe781f80737fd6353a86d43e485d04694e5147d00e38790bd8c8b45cb9da1591" => :high_sierra
   end
+
+  uses_from_macos "ncurses"
+  uses_from_macos "zlib"
 
   keg_only "macOS provides the uuid.h header"
 
@@ -18,11 +20,10 @@ class UtilLinux < Formula
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--prefix=#{prefix}",
-                          "--disable-ipcs",        # does not build on macOS
-                          "--disable-ipcrm",       # does not build on macOS
-                          "--disable-wall",        # already comes with macOS
-                          "--enable-libuuid",      # conflicts with ossp-uuid
-                          "--disable-libsmartcols" # macOS already ships 'column'
+                          "--disable-ipcs",  # does not build on macOS
+                          "--disable-ipcrm", # does not build on macOS
+                          "--disable-wall",  # already comes with macOS
+                          "--enable-libuuid" # conflicts with ossp-uuid
 
     system "make", "install"
 
@@ -37,14 +38,21 @@ class UtilLinux < Formula
 
     # install completions only for installed programs
     Pathname.glob("bash-completion/*") do |prog|
-      if (bin/prog.basename).exist? || (sbin/prog.basename).exist?
-        bash_completion.install prog
-      end
+      bash_completion.install prog if (bin/prog.basename).exist? || (sbin/prog.basename).exist?
     end
   end
 
   test do
-    out = shell_output("#{bin}/namei -lx /usr").split("\n")
-    assert_equal ["f: /usr", "Drwxr-xr-x root wheel /", "drwxr-xr-x root wheel usr"], out
+    stat  = File.stat "/usr"
+    owner = Etc.getpwuid(stat.uid).name
+    group = Etc.getgrgid(stat.gid).name
+
+    flags = ["x", "w", "r"] * 3
+    perms = flags.each_with_index.reduce("") do |sum, (flag, index)|
+      sum.insert 0, ((stat.mode & (2 ** index)).zero? ? "-" : flag)
+    end
+
+    out = shell_output("#{bin}/namei -lx /usr").split("\n").last.split(" ")
+    assert_equal ["d#{perms}", owner, group, "usr"], out
   end
 end

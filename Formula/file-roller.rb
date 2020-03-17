@@ -1,13 +1,13 @@
 class FileRoller < Formula
   desc "GNOME archive manager"
   homepage "https://wiki.gnome.org/Apps/FileRoller"
-  url "https://download.gnome.org/sources/file-roller/3.32/file-roller-3.32.1.tar.xz"
-  sha256 "1cab0847845b3236725a99f81a638c504d06ac0576c7a947824208e498383547"
+  url "https://download.gnome.org/sources/file-roller/3.36/file-roller-3.36.0.tar.xz"
+  sha256 "b9144de8f536f583ec29d703c2c170bf2d00c6c166cd5e3f7efabda551f10478"
 
   bottle do
-    sha256 "e070592be2f1f124fa79de20236a831dbc6eaeec85e77c76a74c6720fe6814b8" => :mojave
-    sha256 "5a43e0be9444065350922bc667a98ba3e460c37ed3c75b3b721858d3b3e44a9f" => :high_sierra
-    sha256 "89c4d42379d14deef41d9989a3b824bae73f32058f652f3f4ba16d4d8662fdc7" => :sierra
+    sha256 "aedbff97f1b074de0bea4ccd5717695c7d6ca00fe80a187b1b386952d791da1a" => :catalina
+    sha256 "404b85fa90759193b42355d01aa22d83cf552d9f9802c6bb4555e842ac30fd1c" => :mojave
+    sha256 "c128d93fa4886cfe7ecdb497546827a662ba40b25c36c24dc83c6392da1af98e" => :high_sierra
   end
 
   depends_on "itstool" => :build

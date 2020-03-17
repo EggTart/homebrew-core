@@ -1,13 +1,13 @@
 class Gedit < Formula
   desc "The GNOME text editor"
   homepage "https://wiki.gnome.org/Apps/Gedit"
-  url "https://download.gnome.org/sources/gedit/3.32/gedit-3.32.0.tar.xz"
-  sha256 "c9e2e2a865c962ef172892a5d3459dc834871761ae6456b68436b3b577f22ad3"
+  url "https://download.gnome.org/sources/gedit/3.36/gedit-3.36.0.tar.xz"
+  sha256 "c983dd12a4e9db7af1aaa3062e6f042811ef99a4d6382659096f2ef8fc559435"
 
   bottle do
-    sha256 "3ba61e6ff3336762087c9f14d2ad1541c5e4cc579158a1d3e53d61e16d1a2da0" => :mojave
-    sha256 "a77ce65f68f102ef824bf36b0b245c0d132b0d414c7da3435e80d96625121fb5" => :high_sierra
-    sha256 "ebad9cb275ba042b10b97904e9ec80a2f8c50cd365aa53814f8a7ff56cb24680" => :sierra
+    sha256 "27300727b546549c379cd116e54fbf4322139d10ab0e661c1c2c5289b7e0afed" => :catalina
+    sha256 "cfc9bd9e8c9cdec2ed73e84db3f1a1afb74a4d89ed86c5c284d4eafc872a3985" => :mojave
+    sha256 "a6f422581c87419f30e313fc124e884af5a887c00b92ecc589559d35ca783b8b" => :high_sierra
   end
 
   depends_on "itstool" => :build
@@ -25,21 +25,17 @@ class Gedit < Formula
   depends_on "gsettings-desktop-schemas"
   depends_on "gspell"
   depends_on "gtk+3"
-  depends_on "gtk-mac-integration"
   depends_on "gtksourceview4"
   depends_on "libpeas"
   depends_on "libsoup"
   depends_on "libxml2"
   depends_on "pango"
+  depends_on "tepl"
 
-  # issue opened at https://gitlab.gnome.org/GNOME/gedit/issues/132
+  # see https://gitlab.gnome.org/GNOME/gedit/-/merge_requests/74
   patch :DATA
 
   def install
-    # rename objc files
-    mv "gedit/gedit-app-osx.c", "gedit/gedit-app-osx.m"
-    mv "gedit/gedit-file-chooser-dialog-osx.c", "gedit/gedit-file-chooser-dialog-osx.m"
-
     ENV["DESTDIR"] = "/"
 
     mkdir "build" do
@@ -77,6 +73,7 @@ class Gedit < Formula
     gobject_introspection = Formula["gobject-introspection"]
     gtkx3 = Formula["gtk+3"]
     gtksourceview4 = Formula["gtksourceview4"]
+    harfbuzz = Formula["harfbuzz"]
     libepoxy = Formula["libepoxy"]
     libffi = Formula["libffi"]
     libpeas = Formula["libpeas"]
@@ -96,7 +93,8 @@ class Gedit < Formula
       -I#{gobject_introspection.opt_include}/gobject-introspection-1.0
       -I#{gtksourceview4.opt_include}/gtksourceview-4
       -I#{gtkx3.opt_include}/gtk-3.0
-      -I#{include}/gedit-3.14
+      -I#{harfbuzz.opt_include}/harfbuzz
+      -I#{include}/gedit-3.36
       -I#{libepoxy.opt_include}
       -I#{libffi.opt_lib}/libffi-3.0.13/include
       -I#{libpeas.opt_include}/libpeas-1.0
@@ -121,7 +119,7 @@ class Gedit < Formula
       -lcairo-gobject
       -lgdk-3
       -lgdk_pixbuf-2.0
-      -lgedit-3.14
+      -lgedit-3.36
       -lgio-2.0
       -lgirepository-1.0
       -lglib-2.0
@@ -141,180 +139,31 @@ class Gedit < Formula
 end
 
 __END__
-diff --git a/gedit/meson.build b/gedit/meson.build
-index b920453..b6bf8a4 100644
---- a/gedit/meson.build
-+++ b/gedit/meson.build
-@@ -137,9 +137,20 @@ libgedit_deps = [
-
- if windowing_target == 'quartz'
-   libgedit_sources += files(
--    'gedit-app-osx.c',
--    'gedit-file-chooser-dialog-osx.c',
-+    'gedit-app-osx.m',
-+    'gedit-file-chooser-dialog-osx.m',
-   )
-+  libgedit_c_args += [
-+    '-DOS_OSX=1',
-+  ]
-+  libgedit_link_args += [
-+    '-Wl,-framework', '-Wl,Foundation',
-+    '-Wl,-framework', '-Wl,AppKit',
-+  ]
-+  gtk_mac_integration_dep = dependency('gtk-mac-integration-gtk3')
-+  libgedit_deps += [
-+    gtk_mac_integration_dep,
-+  ]
- elif windowing_target == 'win32'
-   libgedit_sources += files(
-     'gedit-app-win32.c',
-@@ -293,6 +304,12 @@ gedit_c_args = [
-   '-DHAVE_CONFIG_H',
- ]
-
-+if windowing_target == 'quartz'
-+  gedit_c_args += [
-+    '-DOS_OSX=1',
-+  ]
-+endif
+diff --git a/gedit/gedit-app-osx.m b/gedit/gedit-app-osx.m
+index 07774cc53..5df1b94da 100644
+--- a/gedit/gedit-app-osx.m
++++ b/gedit/gedit-app-osx.m
+@@ -32,6 +32,10 @@
+ #include "gedit-commands.h"
+ #include "gedit-commands-private.h"
+ #include "gedit-recent.h"
++#import <AppKit/AppKit.h>
 +
- gedit_deps = [
-   libgedit_dep,
- ]
-diff --git a/meson.build b/meson.build
-index 237c2ca..fe61b33 100644
---- a/meson.build
-+++ b/meson.build
-@@ -1,5 +1,5 @@
- project(
--  'gedit', 'c',
-+  'gedit', ['c', 'objc'],
-   version: '3.32.0',
-   meson_version: '>=0.46.0',
-   license: 'GPL2'
-@@ -128,6 +128,13 @@ configure_file(
-   configuration: config_h
- )
++NSWindow *gdk_quartz_window_get_nswindow(GdkWindow *window);
++NSEvent *gdk_quartz_event_get_nsevent(GdkEvent *event);
 
-+module_suffix = []
-+# Keep the autotools convention for shared module suffix because GModule
-+# depends on it: https://gitlab.gnome.org/GNOME/glib/issues/520
-+if ['darwin', 'ios'].contains(host_machine.system())
-+  module_suffix = 'so'
-+endif
+ static GeditWindow *
+ ensure_window (GeditAppOSX *app,
+diff --git a/gedit/gedit-file-chooser-dialog-osx.m b/gedit/gedit-file-chooser-dialog-osx.m
+index ecfbee62a..f897c81cd 100644
+--- a/gedit/gedit-file-chooser-dialog-osx.m
++++ b/gedit/gedit-file-chooser-dialog-osx.m
+@@ -29,6 +29,8 @@
+ #include "gedit-encodings-dialog.h"
+ #include "gedit-utils.h"
+
++NSWindow *gdk_quartz_window_get_nswindow(GdkWindow *window);
 +
- # Options
- build_plugins = get_option('plugins')
-
-diff --git a/plugins/checkupdate/meson.build b/plugins/checkupdate/meson.build
-index 1755357..dc55d53 100644
---- a/plugins/checkupdate/meson.build
-+++ b/plugins/checkupdate/meson.build
-@@ -21,7 +21,8 @@ libcheckupdate_sha = shared_module(
-   install_dir: join_paths(
-     pkglibdir,
-     'plugins',
--  )
-+  ),
-+  name_suffix: module_suffix,
- )
-
- custom_target(
-diff --git a/plugins/docinfo/meson.build b/plugins/docinfo/meson.build
-index 14a9cff..d59951d 100644
---- a/plugins/docinfo/meson.build
-+++ b/plugins/docinfo/meson.build
-@@ -22,7 +22,8 @@ libdocinfo_sha = shared_module(
-   install_dir: join_paths(
-     pkglibdir,
-     'plugins',
--  )
-+  ),
-+  name_suffix: module_suffix,
- )
-
- custom_target(
-diff --git a/plugins/filebrowser/meson.build b/plugins/filebrowser/meson.build
-index 374d7ed..708f7f1 100644
---- a/plugins/filebrowser/meson.build
-+++ b/plugins/filebrowser/meson.build
-@@ -73,7 +73,8 @@ libfilebrowser_sha = shared_module(
-   install_dir: join_paths(
-     pkglibdir,
-     'plugins',
--  )
-+  ),
-+  name_suffix: module_suffix,
- )
-
- # FIXME: https://github.com/mesonbuild/meson/issues/1687
-diff --git a/plugins/modelines/meson.build b/plugins/modelines/meson.build
-index 3801150..598dfe1 100644
---- a/plugins/modelines/meson.build
-+++ b/plugins/modelines/meson.build
-@@ -21,7 +21,8 @@ libmodelines_sha = shared_module(
-   install_dir: join_paths(
-     pkglibdir,
-     'plugins',
--  )
-+  ),
-+  name_suffix: module_suffix,
- )
-
- custom_target(
-diff --git a/plugins/quickhighlight/meson.build b/plugins/quickhighlight/meson.build
-index 2be303c..0580a63 100644
---- a/plugins/quickhighlight/meson.build
-+++ b/plugins/quickhighlight/meson.build
-@@ -20,7 +20,8 @@ libquickhighlight_sha = shared_module(
-   install_dir: join_paths(
-     pkglibdir,
-     'plugins',
--  )
-+  ),
-+  name_suffix: module_suffix,
- )
-
- custom_target(
-diff --git a/plugins/sort/meson.build b/plugins/sort/meson.build
-index 64063ac..187dfc0 100644
---- a/plugins/sort/meson.build
-+++ b/plugins/sort/meson.build
-@@ -22,7 +22,8 @@ libsort_sha = shared_module(
-   install_dir: join_paths(
-     pkglibdir,
-     'plugins',
--  )
-+  ),
-+  name_suffix: module_suffix,
- )
-
- custom_target(
-diff --git a/plugins/spell/meson.build b/plugins/spell/meson.build
-index f9c4f6c..7310348 100644
---- a/plugins/spell/meson.build
-+++ b/plugins/spell/meson.build
-@@ -22,7 +22,8 @@ libspell_sha = shared_module(
-   install_dir: join_paths(
-     pkglibdir,
-     'plugins',
--  )
-+  ),
-+  name_suffix: module_suffix,
- )
-
- custom_target(
-diff --git a/plugins/time/meson.build b/plugins/time/meson.build
-index 36fdeb6..4294abc 100644
---- a/plugins/time/meson.build
-+++ b/plugins/time/meson.build
-@@ -38,7 +38,8 @@ libtime_sha = shared_module(
-   install_dir: join_paths(
-     pkglibdir,
-     'plugins',
--  )
-+  ),
-+  name_suffix: module_suffix,
- )
-
- configure_file(
+ struct _GeditFileChooserDialogOSX
+ {
+	GObject parent_instance;

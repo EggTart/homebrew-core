@@ -1,24 +1,24 @@
 class Distcc < Formula
   desc "Distributed compiler client and server"
   homepage "https://github.com/distcc/distcc/"
-  url "https://github.com/distcc/distcc/releases/download/v3.3.2/distcc-3.3.2.tar.gz"
-  sha256 "64894de2970c631801d29c9962553673ea7a1d150e6855d7e166d273fca5cdfc"
+  url "https://github.com/distcc/distcc/releases/download/v3.3.3/distcc-3.3.3.tar.gz"
+  sha256 "bead25471d5a53ecfdf8f065a6fe48901c14d5008956c318c700e56bc87bf0bc"
+  revision 1
   head "https://github.com/distcc/distcc.git"
 
   bottle do
-    rebuild 1
-    sha256 "cc6733686bc22b48972455982fe93656bcc27f3f4fea1d202c42316a2baceb6a" => :mojave
-    sha256 "e0e26dfa751cc3790a81de8ed8bda041a36ff487cbc9c18790e11a1d487893ae" => :high_sierra
-    sha256 "5839cf82df4187c62f5035c26762f88ed84da15e472501ab2d9097d2c77a023e" => :sierra
+    sha256 "396eca7aa3ec899e2eff031b2cdcd7169939996efd98dafee94cfb9f2e658a68" => :catalina
+    sha256 "4a4f365ee6991e812eb3aba1aa8bab9ae2f780e49793efe12b6b2bcb5e792fcf" => :mojave
+    sha256 "f759768f1363120b7bd6b3ee7717ef75d2c703082c697f0bfc607809cf6c32f6" => :high_sierra
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
-  depends_on "python"
+  depends_on "python@3.8"
 
   resource "libiberty" do
-    url "https://deb.debian.org/debian/pool/main/libi/libiberty/libiberty_20190122.orig.tar.xz"
-    sha256 "45bd422ace29f124c068ad44edf41f845b2061ee043275ef3e233a3f647ab509"
+    url "https://deb.debian.org/debian/pool/main/libi/libiberty/libiberty_20190907.orig.tar.xz"
+    sha256 "4c649c2cee918399dd5c4051bbac8d4ca4bbfb8c8e83215c00143f413578f236"
   end
 
   def install
@@ -44,29 +44,30 @@ class Distcc < Formula
 
   plist_options :manual => "distccd"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>KeepAlive</key>
-        <true/>
-        <key>ProgramArguments</key>
-        <array>
-            <string>#{opt_prefix}/bin/distccd</string>
-            <string>--daemon</string>
-            <string>--no-detach</string>
-            <string>--allow=192.168.0.1/24</string>
-        </array>
-        <key>WorkingDirectory</key>
-        <string>#{opt_prefix}</string>
-      </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+        <dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>KeepAlive</key>
+          <true/>
+          <key>ProgramArguments</key>
+          <array>
+              <string>#{opt_prefix}/bin/distccd</string>
+              <string>--daemon</string>
+              <string>--no-detach</string>
+              <string>--allow=192.168.0.1/24</string>
+          </array>
+          <key>WorkingDirectory</key>
+          <string>#{opt_prefix}</string>
+        </dict>
+      </plist>
+    EOS
   end
 
   test do

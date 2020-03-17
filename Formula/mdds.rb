@@ -1,14 +1,14 @@
 class Mdds < Formula
   desc "Multi-dimensional data structure and indexing algorithm"
   homepage "https://gitlab.com/mdds/mdds"
-  url "https://kohei.us/files/mdds/src/mdds-1.4.3.tar.bz2"
-  sha256 "25ce3d5af9f6609e1de05bb22b2316e57b74a72a5b686fbb2da199da72349c81"
+  url "https://kohei.us/files/mdds/src/mdds-1.6.0.tar.bz2"
+  sha256 "f1585c9cbd12f83a6d43d395ac1ab6a9d9d5d77f062c7b5f704e24ed72dae07d"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "5707c206606cdb5020ae0a2a096396e1bec98e569c7b6316cc8031877a3af038" => :mojave
-    sha256 "5707c206606cdb5020ae0a2a096396e1bec98e569c7b6316cc8031877a3af038" => :high_sierra
-    sha256 "97bf21c72c5c248112b363f8f95b908b8bafcf3b178fefa22652bfde440f82d5" => :sierra
+    sha256 "b62a69bbecdd3c731bf16c6fcc3384b2fa67c34295cfa1013914af13620511ef" => :catalina
+    sha256 "b62a69bbecdd3c731bf16c6fcc3384b2fa67c34295cfa1013914af13620511ef" => :mojave
+    sha256 "b62a69bbecdd3c731bf16c6fcc3384b2fa67c34295cfa1013914af13620511ef" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -19,7 +19,7 @@ class Mdds < Formula
     inreplace "configure.ac", "$CPPFLAGS -I/usr/include -I/usr/local/include",
                               "$CPPFLAGS -I/usr/local/include"
     system "autoconf"
-    system "./configure", "--prefix=#{prefix}"
+    system "./configure", "--prefix=#{prefix}", "--disable-openmp"
     system "make", "install"
   end
 

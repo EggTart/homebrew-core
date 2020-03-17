@@ -1,14 +1,14 @@
 class SpiceProtocol < Formula
   desc "Headers for SPICE protocol"
   homepage "https://www.spice-space.org/"
-  url "https://www.spice-space.org/download/releases/spice-protocol-0.12.15.tar.bz2"
-  sha256 "8b4db23baa4b1337a50d049d9bf43f932331dd95f204836c0ce46c4962306419"
+  url "https://www.spice-space.org/download/releases/spice-protocol-0.14.1.tar.bz2"
+  sha256 "79e6da61834b080a143234c1cd4c099a8ead1a64b5039489610b72ab282c132a"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "b899ebffaf616bb0801dd3ad1b0f87b9b05b756257875a3311534c4408aecc08" => :mojave
-    sha256 "0d946742733d9edd6fcb9c2b6ca5c50dda97655cec7e1baa4f4032875e4eed4e" => :high_sierra
-    sha256 "0d946742733d9edd6fcb9c2b6ca5c50dda97655cec7e1baa4f4032875e4eed4e" => :sierra
+    sha256 "ac166e2e8a89dfa451a4abe531b31430fb6c3f5b386cf92f39b1a518837ff0ac" => :catalina
+    sha256 "ac166e2e8a89dfa451a4abe531b31430fb6c3f5b386cf92f39b1a518837ff0ac" => :mojave
+    sha256 "ac166e2e8a89dfa451a4abe531b31430fb6c3f5b386cf92f39b1a518837ff0ac" => :high_sierra
   end
 
   def install

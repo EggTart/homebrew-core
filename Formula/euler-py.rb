@@ -3,15 +3,14 @@ class EulerPy < Formula
   homepage "https://github.com/iKevinY/EulerPy"
   url "https://github.com/iKevinY/EulerPy/archive/v1.3.0.tar.gz"
   sha256 "ffe2d74b5a0fbde84a96dfd39f1f899fc691e3585bf0d46ada976899038452e1"
-  revision 1
+  revision 2
   head "https://github.com/iKevinY/EulerPy.git"
 
   bottle do
     cellar :any_skip_relocation
-    rebuild 1
-    sha256 "c057672da8bc304a9483e353103cab54c50ec149269d0f597b28c0ded5121362" => :mojave
-    sha256 "474ce35d2bd7beca1a7d63c0bec4cb162f9f2144d20695a6a58436433955492f" => :high_sierra
-    sha256 "474ce35d2bd7beca1a7d63c0bec4cb162f9f2144d20695a6a58436433955492f" => :sierra
+    sha256 "cf75217697b88543c07748ec0f75d1ca39389bd92bf5d5247da0b525c7becaf2" => :catalina
+    sha256 "cf75217697b88543c07748ec0f75d1ca39389bd92bf5d5247da0b525c7becaf2" => :mojave
+    sha256 "cf75217697b88543c07748ec0f75d1ca39389bd92bf5d5247da0b525c7becaf2" => :high_sierra
   end
 
   depends_on "python"
@@ -40,11 +39,10 @@ class EulerPy < Formula
 
   test do
     require "open3"
-    Open3.popen3("#{bin}/euler") do |stdin, stdout, _|
-      stdin.write("\n")
-      stdin.close
-      assert_match 'Successfully created "001.py".', stdout.read
-    end
-    assert_equal 0, $CHILD_STATUS.exitstatus
+    output = Open3.capture2("#{bin}/euler", :stdin_data => "\n")
+    # output[0] is the stdout text, output[1] is the exit code
+    assert_match 'Successfully created "001.py".', output[0]
+    assert_equal 0, output[1]
+    assert_predicate testpath/"001.py", :exist?
   end
 end

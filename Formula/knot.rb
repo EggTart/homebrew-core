@@ -1,13 +1,14 @@
 class Knot < Formula
   desc "High-performance authoritative-only DNS server"
   homepage "https://www.knot-dns.cz/"
-  url "https://secure.nic.cz/files/knot-dns/knot-2.8.1.tar.xz"
-  sha256 "b21bf03e5cb6804df4e0e8b3898446349e86ddae5bf110edaf240d0ad1e2a2c6"
+  url "https://secure.nic.cz/files/knot-dns/knot-2.8.4.tar.xz"
+  sha256 "541e7e43503765c91405c5797b3838103bb656154712e69b3f959c6ab0e700a9"
 
   bottle do
-    sha256 "bb8eb25cd8f1519450e9818a9dc219930db35496b093e889f6a757b398290545" => :mojave
-    sha256 "11f116128b5868110d2cb787d4c50b916694c3f2c014c62852dc9019e28410e6" => :high_sierra
-    sha256 "983ff10d8a6caf5fde20c21df00fbbf20b27d5b51548f3a7c24693cef0dcea07" => :sierra
+    sha256 "a3b574d75b38744bbb32ea2a077e81be97116e632e07ca1015d2a036f4fa4902" => :catalina
+    sha256 "6c5c90612e187974dceb1b65631f717466f5e14d2ff85ef21988b8d6ba524198" => :mojave
+    sha256 "9edf381f0cb6f032d8555d09f73d8bed00ab521272599b6e0f23c9231cca0d2a" => :high_sierra
+    sha256 "70932776472512c70875050822363b65e443e77363f8f85b2519f0fc5d3cf090" => :sierra
   end
 
   head do
@@ -53,50 +54,52 @@ class Knot < Formula
     (var/"knot").mkpath
   end
 
-  def knot_conf; <<~EOS
-    server:
-      rundir: "#{var}/knot"
-      listen: [ "0.0.0.0@53", "::@53" ]
+  def knot_conf
+    <<~EOS
+      server:
+        rundir: "#{var}/knot"
+        listen: [ "0.0.0.0@53", "::@53" ]
 
-    log:
-      - target: "stderr"
-        any: "info"
+      log:
+        - target: "stderr"
+          any: "info"
 
-    control:
-      listen: "knot.sock"
+      control:
+        listen: "knot.sock"
 
-    template:
-      - id: "default"
-        storage: "#{var}/knot"
-  EOS
+      template:
+        - id: "default"
+          storage: "#{var}/knot"
+    EOS
   end
 
   plist_options :startup => true
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>EnableTransactions</key>
-      <true/>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_sbin}/knotd</string>
-      </array>
-      <key>StandardInPath</key>
-      <string>/dev/null</string>
-      <key>StandardOutPath</key>
-      <string>/dev/null</string>
-      <key>StandardErrorPath</key>
-      <string>#{var}/log/knot.log</string>
-    </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>EnableTransactions</key>
+        <true/>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_sbin}/knotd</string>
+        </array>
+        <key>StandardInPath</key>
+        <string>/dev/null</string>
+        <key>StandardOutPath</key>
+        <string>/dev/null</string>
+        <key>StandardErrorPath</key>
+        <string>#{var}/log/knot.log</string>
+      </dict>
+      </plist>
+    EOS
   end
 
   test do

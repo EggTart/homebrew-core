@@ -2,15 +2,15 @@ class MinioMc < Formula
   desc "Replacement for ls, cp and other commands for object storage"
   homepage "https://github.com/minio/mc"
   url "https://github.com/minio/mc.git",
-      :tag      => "RELEASE.2019-05-23T01-33-27Z",
-      :revision => "c1ed052638091e7564b605158c864775a0e32b5d"
-  version "20190523013327"
+      :tag      => "RELEASE.2020-03-14T01-23-37Z",
+      :revision => "5b5d65a142c5562e412de022a3114e83378096a5"
+  version "20200314012337"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "04e0779ca9d97186841b438116fab06042fe8fa93d761ee71e19a4add40b4fa3" => :mojave
-    sha256 "28bdc5b7883f2eb348e14a5cba262a33cfe1a20ee6a67b209c19faf939b83d9c" => :high_sierra
-    sha256 "c5fd4591b44818eb6401d3978823e084459da0d8d34296c0ba6ce97215001a49" => :sierra
+    sha256 "eef4607db190e2514f77e67bf0db82dac5200d1dda034cd146ae9d585fd41d78" => :catalina
+    sha256 "86d94729e3c9ea7617509c7b58002588703fe51b41d0867108af064f18d2afc2" => :mojave
+    sha256 "999ea2a246a3b2c181c53d4cc867ebe827737943a135190474a2c32dee981e9a" => :high_sierra
   end
 
   depends_on "go" => :build
@@ -18,28 +18,21 @@ class MinioMc < Formula
   conflicts_with "midnight-commander", :because => "Both install a `mc` binary"
 
   def install
-    ENV["GOPATH"] = buildpath
-    ENV["GO111MODULE"] = "on"
-    src = buildpath/"src/github.com/minio/mc"
-    src.install buildpath.children
-    src.cd do
-      if build.head?
-        system "go", "build", "-o", buildpath/"mc"
-      else
-        minio_release = `git tag --points-at HEAD`.chomp
-        minio_version = minio_release.gsub(/RELEASE\./, "").chomp.gsub(/T(\d+)\-(\d+)\-(\d+)Z/, 'T\1:\2:\3Z')
-        minio_commit = `git rev-parse HEAD`.chomp
-        proj = "github.com/minio/mc"
+    if build.head?
+      system "go", "build", "-trimpath", "-o", bin/"mc"
+    else
+      minio_release = `git tag --points-at HEAD`.chomp
+      minio_version = minio_release.gsub(/RELEASE\./, "").chomp.gsub(/T(\d+)\-(\d+)\-(\d+)Z/, 'T\1:\2:\3Z')
+      minio_commit = `git rev-parse HEAD`.chomp
+      proj = "github.com/minio/mc"
 
-        system "go", "build", "-o", buildpath/"mc", "-ldflags", <<~EOS
-          -X #{proj}/cmd.Version=#{minio_version}
-          -X #{proj}/cmd.ReleaseTag=#{minio_release}
-          -X #{proj}/cmd.CommitID=#{minio_commit}
-        EOS
-      end
+      system "go", "build", "-trimpath", "-o", bin/"mc", "-ldflags", <<~EOS
+        -X #{proj}/cmd.Version=#{minio_version}
+        -X #{proj}/cmd.ReleaseTag=#{minio_release}
+        -X #{proj}/cmd.CommitID=#{minio_commit}
+      EOS
     end
 
-    bin.install buildpath/"mc"
     prefix.install_metafiles
   end
 

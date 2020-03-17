@@ -1,36 +1,43 @@
 class Postgresql < Formula
   desc "Object-relational database system"
   homepage "https://www.postgresql.org/"
-  url "https://ftp.postgresql.org/pub/source/v11.3/postgresql-11.3.tar.bz2"
-  sha256 "2a85e082fc225944821dfd23990e32dfcd2284c19060864b0ad4ca537d30522d"
+  url "https://ftp.postgresql.org/pub/source/v12.2/postgresql-12.2.tar.bz2"
+  sha256 "ad1dcc4c4fc500786b745635a9e1eba950195ce20b8913f50345bb7d5369b5de"
   head "https://github.com/postgres/postgres.git"
 
   bottle do
-    sha256 "f25a87e028236bda624af6f7cc0d6ad5de35266fe3bda0c64720e0fc4b103376" => :mojave
-    sha256 "791e0d014207c4195d1553a7e0bf9a5e89ccac89b6e35f06ddbdffae8a91f578" => :high_sierra
-    sha256 "cdd0a002a0d8a06a09a61520fabdf1fd7e7ba937264bc7c4c9fa03e3f1d87c91" => :sierra
+    sha256 "9717b8fc90e082cf2ea87150e0b3395855e3ab5696ac70f5466a26586c658587" => :catalina
+    sha256 "4176831e3914529b4e37292d4c2de54eae2edbfaadab98fdc1404eea763e41a4" => :mojave
+    sha256 "534e6689788d31a06a5064f2bfc992ea6ae03faf2a63588ad280db7f36b9e327" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "icu4c"
-  depends_on "openssl"
+
+  # GSSAPI provided by Kerberos.framework crashes when forked.
+  # See https://github.com/Homebrew/homebrew-core/issues/47494.
+  depends_on "krb5"
+
+  depends_on "openssl@1.1"
   depends_on "readline"
 
-  conflicts_with "postgres-xc",
-    :because => "postgresql and postgres-xc install the same binaries."
+  uses_from_macos "libxml2"
+  uses_from_macos "libxslt"
+  uses_from_macos "perl"
 
   def install
     # avoid adding the SDK library directory to the linker search path
     ENV["XML2_CONFIG"] = "xml2-config --exec-prefix=/usr"
 
-    ENV.prepend "LDFLAGS", "-L#{Formula["openssl"].opt_lib} -L#{Formula["readline"].opt_lib}"
-    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl"].opt_include} -I#{Formula["readline"].opt_include}"
+    ENV.prepend "LDFLAGS", "-L#{Formula["openssl@1.1"].opt_lib} -L#{Formula["readline"].opt_lib}"
+    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl@1.1"].opt_include} -I#{Formula["readline"].opt_include}"
 
     args = %W[
       --disable-debug
       --prefix=#{prefix}
       --datadir=#{HOMEBREW_PREFIX}/share/postgresql
       --libdir=#{HOMEBREW_PREFIX}/lib
+      --includedir=#{HOMEBREW_PREFIX}/include
       --sysconfdir=#{etc}
       --docdir=#{doc}
       --enable-thread-safety
@@ -57,7 +64,11 @@ class Postgresql < Formula
     system "make"
     system "make", "install-world", "datadir=#{pkgshare}",
                                     "libdir=#{lib}",
-                                    "pkglibdir=#{lib}/postgresql"
+                                    "pkglibdir=#{lib}/postgresql",
+                                    "includedir=#{include}",
+                                    "pkgincludedir=#{include}/postgresql",
+                                    "includedir_server=#{include}/postgresql/server",
+                                    "includedir_internal=#{include}/postgresql/internal"
   end
 
   def post_install
@@ -68,40 +79,42 @@ class Postgresql < Formula
     end
   end
 
-  def caveats; <<~EOS
-    To migrate existing data from a previous major version of PostgreSQL run:
-      brew postgresql-upgrade-database
-  EOS
+  def caveats
+    <<~EOS
+      To migrate existing data from a previous major version of PostgreSQL run:
+        brew postgresql-upgrade-database
+    EOS
   end
 
   plist_options :manual => "pg_ctl -D #{HOMEBREW_PREFIX}/var/postgres start"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>KeepAlive</key>
-      <true/>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_bin}/postgres</string>
-        <string>-D</string>
-        <string>#{var}/postgres</string>
-      </array>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>WorkingDirectory</key>
-      <string>#{HOMEBREW_PREFIX}</string>
-      <key>StandardOutPath</key>
-      <string>#{var}/log/postgres.log</string>
-      <key>StandardErrorPath</key>
-      <string>#{var}/log/postgres.log</string>
-    </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_bin}/postgres</string>
+          <string>-D</string>
+          <string>#{var}/postgres</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>WorkingDirectory</key>
+        <string>#{HOMEBREW_PREFIX}</string>
+        <key>StandardOutPath</key>
+        <string>#{var}/log/postgres.log</string>
+        <key>StandardErrorPath</key>
+        <string>#{var}/log/postgres.log</string>
+      </dict>
+      </plist>
+    EOS
   end
 
   test do

@@ -1,46 +1,61 @@
 class BoostPython < Formula
   desc "C++ library for C++/Python2 interoperability"
   homepage "https://www.boost.org/"
-  url "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.bz2"
-  sha256 "8f32d4617390d1c2d16f26a27ab60d97807b35440d45891fa340fc2648b04406"
+  url "https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2"
+  sha256 "59c9b274bc451cf91a9ba1dd2c7fdcaf5d60b1b3aa83f2c9fa143417cc660722"
   head "https://github.com/boostorg/boost.git"
 
   bottle do
     cellar :any
-    sha256 "b377edc8e5bc2ea6b3873d54d694298590278c291eb2820d408691e7491b853a" => :mojave
-    sha256 "51810bd5962d2ed44d696fb583de2a9f4b35084ad768d0789490701f748365a4" => :high_sierra
-    sha256 "23a5aadabf25a54196083be6478c105efd8c1503fc36330cfd5cafff62b16a80" => :sierra
+    sha256 "c15c8bf03d5ca454c93782648f700c1149c164bec8334561ef3727eee0f0435a" => :catalina
+    sha256 "12e538b3468eff6e1afe41cbe595a389473ad37972fbc1ea69a5abc37ead890e" => :mojave
+    sha256 "d0ff391db5f8864d6025e654708a84629aba54d59bdf7b366a6eb7cdca808918" => :high_sierra
   end
 
   depends_on "boost"
 
+  uses_from_macos "python@2"
+
   def install
     # "layout" should be synchronized with boost
-    args = ["--prefix=#{prefix}",
-            "--libdir=#{lib}",
-            "-d2",
-            "-j#{ENV.make_jobs}",
-            "--layout=tagged-1.66",
-            "threading=multi,single",
-            "link=shared,static"]
+    args = %W[
+      -d2
+      -j#{ENV.make_jobs}
+      --layout=tagged-1.66
+      install
+      threading=multi,single
+      link=shared,static
+    ]
 
     # Boost is using "clang++ -x c" to select C compiler which breaks C++14
     # handling using ENV.cxx14. Using "cxxflags" and "linkflags" still works.
     args << "cxxflags=-std=c++14"
-    if ENV.compiler == :clang
-      args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++"
-    end
+    args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++" if ENV.compiler == :clang
 
     pyver = Language::Python.major_minor_version "python"
 
     system "./bootstrap.sh", "--prefix=#{prefix}", "--libdir=#{lib}",
                              "--with-libraries=python", "--with-python=python"
 
-    system "./b2", "--build-dir=build-python", "--stagedir=stage-python",
-                   "python=#{pyver}", *args
+    system "./b2", "--build-dir=build-python",
+                   "--stagedir=stage-python",
+                   "--libdir=install-python/lib",
+                   "--prefix=install-python",
+                   "python=#{pyver}",
+                   *args
 
+    lib.install Dir["install-python/lib/*.*"]
     lib.install Dir["stage-python/lib/*py*"]
     doc.install Dir["libs/python/doc/*"]
+  end
+
+  def caveats
+    <<~EOS
+      This formula provides Boost.Python for Python 2. Due to a
+      collision with boost-python3, the CMake Config files are not
+      available. Please use -DBoost_NO_BOOST_CMAKE=ON when building
+      with CMake or switch to Python 3.
+    EOS
   end
 
   test do

@@ -1,14 +1,14 @@
 class Libomp < Formula
   desc "LLVM's OpenMP runtime library"
   homepage "https://openmp.llvm.org/"
-  url "https://releases.llvm.org/8.0.0/openmp-8.0.0.src.tar.xz"
-  sha256 "f7b1705d2f16c4fc23d6531f67d2dd6fb78a077dd346b02fed64f4b8df65c9d5"
+  url "https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/openmp-9.0.1.src.tar.xz"
+  sha256 "5c94060f846f965698574d9ce22975c0e9f04c9b14088c3af5f03870af75cace"
 
   bottle do
     cellar :any
-    sha256 "6c8f66a6582efa00620593e16a41f3649018778a300cc772afbe79c711c2c396" => :mojave
-    sha256 "4cc6fd69f1558f29165608c3e52aed88be6c56e3b0da10c9f6912ea3345daf3a" => :high_sierra
-    sha256 "e5d63a6b2cfeb05ded546b5f8d381acc592a2a37767cbae20569981229c66ac8" => :sierra
+    sha256 "a8e25c1cb3c210b9be41aa4e93da1723d420138e8ff1ebffc3ac93c55cf8865e" => :catalina
+    sha256 "6aca3210c348307206043e772c9d98527337e7c42e38b4981534a2baccf25591" => :mojave
+    sha256 "a6f0785589272c07d40703d14404da79e880fdceb4e49dc2095fb05fd0054c0d" => :high_sierra
   end
 
   depends_on "cmake" => :build

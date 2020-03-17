@@ -1,14 +1,14 @@
 class Remctl < Formula
   desc "Client/server application for remote execution of tasks"
   homepage "https://www.eyrie.org/~eagle/software/remctl/"
-  url "https://archives.eyrie.org/software/kerberos/remctl-3.15.tar.xz"
-  sha256 "873c9fbba51ff721acb666e927f58f4407f08eb79f53b5a058801f5f404f4db2"
+  url "https://archives.eyrie.org/software/kerberos/remctl-3.16.tar.xz"
+  sha256 "d1c444ab6c817c82413ec9686d178b9d760cd684eae7d24782bbe5c9ce5b0908"
 
   bottle do
-    sha256 "f2497816a9b4f36e804de521937b994292369f2c28099430cbc81e00ecfd8f45" => :mojave
-    sha256 "699be918b80d41c46ec8aabb4e04219123fec8beb60f1169c33b8a14ef7e24c1" => :high_sierra
-    sha256 "3dfefe916442dcae4f049f56673ce735ee84b931423b184f4d7fab770d7a5f39" => :sierra
-    sha256 "301065db3a4020b2237268eee8709a639d33dac24b21a3294641f7d9beef0ab0" => :el_capitan
+    cellar :any
+    sha256 "0c94a53cbd26ed882a5b4c8f973562120dd1cf0a6f76457d392cc5fe59d5ee89" => :catalina
+    sha256 "3472db7e7bd12cb03c12b6dc2db8168439a24eef73bde7fbec775a41db628042" => :mojave
+    sha256 "777fb3b5f47e4da6caeacba3c4959a38ebf7113a89555aebe74d41854c70104a" => :high_sierra
   end
 
   depends_on "libevent"

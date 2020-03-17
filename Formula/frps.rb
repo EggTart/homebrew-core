@@ -2,14 +2,14 @@ class Frps < Formula
   desc "Server app of fast reverse proxy to expose a local server to the internet"
   homepage "https://github.com/fatedier/frp"
   url "https://github.com/fatedier/frp.git",
-      :tag      => "v0.27.0",
-      :revision => "95444ea46b40ca4b7f636a66530f48e8b68969bf"
+      :tag      => "v0.32.0",
+      :revision => "ea62bc5a3448e574618f45d7f764e3c09465f81f"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "c26454e010b8225d946598deced88fd26378f3ff316aad4cdad0709b06e29fc1" => :mojave
-    sha256 "f22cdfe3ced0f9f37eb865c853ced54f08f8ae742da09c7de9ad0c8088ff1e06" => :high_sierra
-    sha256 "858cb03f5a4c8d128749d7bce7bb54e509edaccd1cd31b63d0d84bf9f7a04a78" => :sierra
+    sha256 "71ad026828e9e35c9a54564bd191bce3f7e9cbc17cf40e556064a2fd91eb2d68" => :catalina
+    sha256 "bc9302bbc263cc71ec8354b3172a18eecb5a648207c45b9a123343e431e52596" => :mojave
+    sha256 "89fb402e20a3afe2d0cd14aedc927d96a2493cbd3f82c5df0fccbe3948c83ba9" => :high_sierra
   end
 
   depends_on "go" => :build
@@ -33,28 +33,29 @@ class Frps < Formula
 
   plist_options :manual => "frps -c #{HOMEBREW_PREFIX}/etc/frp/frps.ini"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>KeepAlive</key>
-        <true/>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_bin}/frps</string>
-          <string>-c</string>
-          <string>#{etc}/frp/frps.ini</string>
-        </array>
-        <key>StandardErrorPath</key>
-        <string>#{var}/log/frps.log</string>
-        <key>StandardOutPath</key>
-        <string>#{var}/log/frps.log</string>
-      </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+        <dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>KeepAlive</key>
+          <true/>
+          <key>ProgramArguments</key>
+          <array>
+            <string>#{opt_bin}/frps</string>
+            <string>-c</string>
+            <string>#{etc}/frp/frps.ini</string>
+          </array>
+          <key>StandardErrorPath</key>
+          <string>#{var}/log/frps.log</string>
+          <key>StandardOutPath</key>
+          <string>#{var}/log/frps.log</string>
+        </dict>
+      </plist>
+    EOS
   end
 
   test do

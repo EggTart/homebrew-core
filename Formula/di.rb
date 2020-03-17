@@ -1,15 +1,14 @@
 class Di < Formula
   desc "Advanced df-like disk information utility"
   homepage "https://gentoo.com/di/"
-  url "https://gentoo.com/di/di-4.47.tar.gz"
-  sha256 "b5031c1f3b98536eee95fb91634fe700cec5e08a3cf38e14fffc47f969bf8a7e"
+  url "https://gentoo.com/di/di-4.47.3.tar.gz"
+  sha256 "9339281811b10704dc80c2059294e4ff8c74b2687dfcf282d1c56950d4ba9654"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "fff63e3d3c7b90005d39cb7ff0ee142758a28828f28e5ebeaca2c32bcc0c59f6" => :mojave
-    sha256 "ade98ec67db4be6998cf0cf62a99d58cb67e357eac09c1b9590be4980050f742" => :high_sierra
-    sha256 "b41b06335b72784f20a71e8932f58c751ad15496508a7362953b51c210a435ad" => :sierra
-    sha256 "9f684e70615dde634dd78feaa4b32e03b203301c4ef888b12816182416e2817f" => :el_capitan
+    sha256 "a4b64171a6e90bc58cfacbf2cfe0f8bad54ace4c2a5e566e0dc5bd0a31acc151" => :catalina
+    sha256 "67db1cb7a092f8bc638ee8221d88944b7d49d347a124f1dc9dfabf9f5391ba1d" => :mojave
+    sha256 "951df832d9e3d0c3c580ae567659e470321ea4097928a19e385d884007f37d9a" => :high_sierra
   end
 
   def install

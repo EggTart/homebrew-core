@@ -1,15 +1,15 @@
 class Tinyxml2 < Formula
   desc "Improved tinyxml (in memory efficiency and size)"
   homepage "http://grinninglizard.com/tinyxml2"
-  url "https://github.com/leethomason/tinyxml2/archive/7.0.1.tar.gz"
-  sha256 "a381729e32b6c2916a23544c04f342682d38b3f6e6c0cad3c25e900c3a7ef1a6"
+  url "https://github.com/leethomason/tinyxml2/archive/8.0.0.tar.gz"
+  sha256 "6ce574fbb46751842d23089485ae73d3db12c1b6639cda7721bf3a7ee862012c"
   head "https://github.com/leethomason/tinyxml2.git"
 
   bottle do
     cellar :any
-    sha256 "233eac209902fba3aebf51fa81d15a5b472064eec22bc5364b8685453166a08a" => :mojave
-    sha256 "cc447f7fcf805805c97e4d9aedacd5638b103177de32fb30986bcaec37698c18" => :high_sierra
-    sha256 "90fda15a1ce430ed1e77891a23c65a53092deca1b585330aa86fbde8ea3b80b5" => :sierra
+    sha256 "de43d8d170826747b593e29cff70f84fba2e35aef5c25bec5c02c406c29bbf84" => :catalina
+    sha256 "65527a3b8385c01fabbaeef1ff1dc3cc301dcf5f49e0875d210d80fc5181379d" => :mojave
+    sha256 "eaacca900292a86dc5d4e95e2a71042a6e2fe7e766341d0b5078cf99cd25c0da" => :high_sierra
   end
 
   depends_on "cmake" => :build

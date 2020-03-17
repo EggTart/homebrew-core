@@ -7,6 +7,7 @@ class Libhttpserver < Formula
 
   bottle do
     cellar :any
+    sha256 "e0166077c271995554782fdbf558be98893e2ef64aadbcec200398b81db87f3d" => :catalina
     sha256 "086dcf919fa2afba8883e7d6c26bdd9823d8741b93ffe3864226534f71a218d9" => :mojave
     sha256 "948c65b78b36e0baf3682fb94459c33ae5283b811b836b7f4abdf27a94aa8859" => :high_sierra
     sha256 "59d96bc3f9f33c84c0700318deed666528a9ee60da8a55d45fd3450185ecfed0" => :sierra
@@ -17,6 +18,8 @@ class Libhttpserver < Formula
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "libmicrohttpd"
+
+  uses_from_macos "curl" => :test
 
   def install
     args = [
@@ -34,12 +37,25 @@ class Libhttpserver < Formula
   end
 
   test do
-    system ENV.cxx, pkgshare/"examples/hello_world.cpp",
+    require "socket"
+
+    server = TCPServer.new(0)
+    port = server.addr[1]
+    server.close
+
+    cp pkgshare/"examples/hello_world.cpp", testpath
+    inreplace "hello_world.cpp", "create_webserver(8080)",
+                                 "create_webserver(#{port})"
+
+    system ENV.cxx, "hello_world.cpp",
       "-std=c++11", "-o", "hello_world", "-L#{lib}", "-lhttpserver", "-lcurl"
+
     pid = fork { exec "./hello_world" }
+
     sleep 1 # grace time for server start
+
     begin
-      assert_match /Hello World!!!/, shell_output("curl http://127.0.0.1:8080/hello")
+      assert_match /Hello World!!!/, shell_output("curl http://127.0.0.1:#{port}/hello")
     ensure
       Process.kill 9, pid
       Process.wait pid

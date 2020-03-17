@@ -1,55 +1,38 @@
 class Folly < Formula
   desc "Collection of reusable C++ library artifacts developed at Facebook"
   homepage "https://github.com/facebook/folly"
-  url "https://github.com/facebook/folly/archive/v2019.03.18.00.tar.gz"
-  sha256 "45b47d5d0ee5652bcb87bde6b03cf5a3232b04b3750056831b9e72ea4e1871db"
-  revision 2
+  url "https://github.com/facebook/folly/archive/v2020.03.09.00.tar.gz"
+  sha256 "8b6c70e296a98bc441d380e51bf5dd5264820e494ac7f89ebfec952a3f55d928"
   head "https://github.com/facebook/folly.git"
 
   bottle do
     cellar :any
-    sha256 "34403daae605becd5da491a2354f903498bbc9309e5b7e8847ecc83fe310f9ad" => :mojave
-    sha256 "f86f5dffe2a308e6b9ad5a46da71cc5e015fe5eb76fc914ca111c745c7d0908a" => :high_sierra
+    sha256 "efea341ee385dae18cd75ae1a7317c5546119982399d012b34b4580bf287f691" => :catalina
+    sha256 "4dd44e057af7a99b79c0828f60c9ac1a11f39e048ef2af8a59ecee10fa297620" => :mojave
+    sha256 "ebd03869fe4a25a664b04f9f267813f03a733ae417762ae25f99fc3b76c5305d" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
   depends_on "boost"
   depends_on "double-conversion"
+  depends_on "fmt"
   depends_on "gflags"
   depends_on "glog"
   depends_on "libevent"
   depends_on "lz4"
-
   # https://github.com/facebook/folly/issues/966
   depends_on :macos => :high_sierra
-
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "snappy"
   depends_on "xz"
   depends_on "zstd"
 
-  # Known issue upstream. They're working on it:
-  # https://github.com/facebook/folly/pull/445
-  fails_with :gcc => "6"
-
-  # patch for pclmul compiler flags to fix mojave build
-  patch do
-    url "https://github.com/facebook/folly/commit/964ca3c4979f72115ebfec58056e968a69d5942c.diff?full_index=1"
-    sha256 "b719dd8783f655f0d98cd0e2339ef66753a8d2503c82d334456a86763b0b889f"
-  end
-
   def install
-    ENV.cxx11
-
     mkdir "_build" do
       args = std_cmake_args + %w[
         -DFOLLY_USE_JEMALLOC=OFF
       ]
-
-      # Upstream issue 10 Jun 2018 "Build fails on macOS Sierra"
-      # See https://github.com/facebook/folly/issues/864
-      args << "-DCOMPILER_HAS_F_ALIGNED_NEW=OFF" if MacOS.version == :sierra
 
       system "cmake", "..", *args, "-DBUILD_SHARED_LIBS=ON"
       system "make"
@@ -75,7 +58,7 @@ class Folly < Formula
         return 0;
       }
     EOS
-    system ENV.cxx, "-std=c++11", "test.cc", "-I#{include}", "-L#{lib}",
+    system ENV.cxx, "-std=c++14", "test.cc", "-I#{include}", "-L#{lib}",
                     "-lfolly", "-o", "test"
     system "./test"
   end

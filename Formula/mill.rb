@@ -1,17 +1,17 @@
 class Mill < Formula
   desc "Scala build tool"
   homepage "https://www.lihaoyi.com/mill/"
-  url "https://github.com/lihaoyi/mill/releases/download/0.4.0/0.4.0"
-  sha256 "745756498e5a67c55277534c62959c6fdfa382cda2c1a6e34ef0ea6b49c90880"
+  url "https://github.com/lihaoyi/mill/releases/download/0.6.1/0.6.1"
+  sha256 "9c5900c6c5a5a58e49b122c86ef4c400080f77079b235c61e7b457d85bc98aae"
 
   bottle :unneeded
 
-  depends_on :java => "1.8"
+  depends_on "openjdk"
 
   def install
     libexec.install Dir["*"].shift => "mill"
     chmod 0555, libexec/"mill"
-    (bin/"mill").write_env_script libexec/"mill", Language::Java.java_home_env("1.8")
+    (bin/"mill").write_env_script libexec/"mill", :JAVA_HOME => "${JAVA_HOME:-#{Formula["openjdk"].opt_prefix}}"
   end
 
   test do

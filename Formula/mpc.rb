@@ -1,13 +1,14 @@
 class Mpc < Formula
   desc "Command-line music player client for mpd"
   homepage "https://www.musicpd.org/clients/mpc/"
-  url "https://www.musicpd.org/download/mpc/0/mpc-0.31.tar.xz"
-  sha256 "62373e83a8a165b2ed43967975efecd3feee530f4557d6b861dd08aa89d52b2d"
+  url "https://www.musicpd.org/download/mpc/0/mpc-0.33.tar.xz"
+  sha256 "4f40ccbe18f5095437283cfc525a97815e983cbfd3a29e48ff610fa4f1bf1296"
 
   bottle do
-    sha256 "a0978aee21d1d4326cac85904ad4dc381ffd0fae96c66b98912ecd5260b548a4" => :mojave
-    sha256 "70bf0925e52814689cc58579288dafbefcd512caf3e4bcaa48f78d6c84fd7f36" => :high_sierra
-    sha256 "34dc577f9ac9551204d7c36448468da5a69c152b2de21622fc5e649c051a98de" => :sierra
+    cellar :any
+    sha256 "341a4c3cef23004a47f37fa299047e63baedceb07405813d6fc112c9ad7d4ff2" => :catalina
+    sha256 "29742180fafe0fffeba3fc09c3d355395084ef3d063004347a96bc37c72682db" => :mojave
+    sha256 "84bd2c475a7880bf1f36c560a5696c12c27ff6cdb5cd907082d14ffd094b1081" => :high_sierra
   end
 
   depends_on "meson" => :build

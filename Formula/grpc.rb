@@ -1,14 +1,16 @@
 class Grpc < Formula
   desc "Next generation open source RPC library and framework"
   homepage "https://grpc.io/"
-  url "https://github.com/grpc/grpc/archive/v1.21.1.tar.gz"
-  sha256 "1bf082fb3016154d3f806da8eb5876caf05743da4b2e8130fadd000df74b5bb6"
+  url "https://github.com/grpc/grpc.git",
+    :tag      => "v1.27.3",
+    :revision => "e73882dc0fcedab1ffe789e44ed6254819639ce3",
+    :shallow  => false
   head "https://github.com/grpc/grpc.git"
 
   bottle do
-    sha256 "14767163457d692bc8671b13dd7597e567f040bff08e02e6dcfea026619b8b23" => :mojave
-    sha256 "db7d11bbc9c28ea81d1bab456790ee94e5b165cbe7ac4bb63146861f0ad1e9d8" => :high_sierra
-    sha256 "58e9b5d34ce4d3cc7ced6cd980b14d921971defb2c38983b7dc3e9060ea79d0d" => :sierra
+    sha256 "fa2e5c88428afa430740568e0513f94a9acc85a5536455ee9a72cbfc2ab9c830" => :catalina
+    sha256 "a55d2205d7877dfae54869fab6be4fd6fe5ed22f309064179d5a72fb3d50af1e" => :mojave
+    sha256 "205c61401c7e3bf11c0a23edbe4fcde77ae6e81a5075f26e4a45ab8aa263be82" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -16,12 +18,12 @@ class Grpc < Formula
   depends_on "libtool" => :build
   depends_on "c-ares"
   depends_on "gflags"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "protobuf"
 
   resource "gtest" do
-    url "https://github.com/google/googletest/archive/release-1.8.1.tar.gz"
-    sha256 "9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c"
+    url "https://github.com/google/googletest/archive/release-1.10.0.tar.gz"
+    sha256 "9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb"
   end
 
   def install

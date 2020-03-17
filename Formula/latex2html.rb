@@ -1,14 +1,14 @@
 class Latex2html < Formula
   desc "LaTeX-to-HTML translator"
   homepage "https://www.latex2html.org"
-  url "https://github.com/latex2html/latex2html/archive/v2019.tar.gz"
-  sha256 "095b6d43599506aa0936b548ee92c7742c8b127d64e3829000f7681a254a7917"
+  url "https://github.com/latex2html/latex2html/archive/v2020.tar.gz"
+  sha256 "414194e7c5164b447b72e1f70b9cfe3e2aeb0c60d81a84def6a8a08bf47c3771"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2a8631d720a4628e09e09448e866504d01cb3a26e8ea7bc20620199e01b0cbed" => :mojave
-    sha256 "488549a6634ef38ec4c7493e1649d2754d40fa1b200fd9f2ab33ec12e1fd6572" => :high_sierra
-    sha256 "d3019ab7c34e06538dd3c24c4fae92bb212abf165144e84589bf8af9af54fdc3" => :sierra
+    sha256 "67047d5b5d62383ce1aa89f7e686f597cc5681f73f70ff4cbcca7adb501a2fde" => :catalina
+    sha256 "09197aae2b56daffdec8b1310524a54bf5f150ba6b01028f9fbd9fc826a024ca" => :mojave
+    sha256 "505bfd350877a8cac8dbe37e3fc40eee907b896a1309ec379ba02ceabb32d929" => :high_sierra
   end
 
   depends_on "ghostscript"

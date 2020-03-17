@@ -2,15 +2,15 @@ class Serf < Formula
   desc "Service orchestration and management tool"
   homepage "https://serfdom.io/"
   url "https://github.com/hashicorp/serf.git",
-      :tag      => "v0.8.3",
-      :revision => "15cfd05de3dffb3664aa37b06e91f970b825e380"
+      :tag      => "v0.9.0",
+      :revision => "cd08d5c62353f383882b630bf238a77b4d5ef73b"
   head "https://github.com/hashicorp/serf.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "692266b0fa6ba7a7772849938ba42dc9246d1f117a216bdcb8bd1a130181a814" => :mojave
-    sha256 "979604efa2ecf8c34e88d7060c84ffb003fe9eeafd26871bbc3cc94a77e0eede" => :high_sierra
-    sha256 "e6578320d01e78c038df703f072ef26b9a340ce00146cd96ae1b9585331fa48b" => :sierra
+    sha256 "e305c7030488bdd5b875bfb0a1fe65297ed1571b85971249001e37971341f99c" => :catalina
+    sha256 "125b3e7bb154a472bbaf465b98a66f5a353473d22e41c0b1994ea262c901d8fc" => :mojave
+    sha256 "5aede7f9c0a33b1db1ab0ed80373474d96227d2b6db87bda0c2f680a016a3233" => :high_sierra
   end
 
   depends_on "go" => :build
@@ -36,16 +36,14 @@ class Serf < Formula
   end
 
   test do
-    begin
-      pid = fork do
-        exec "#{bin}/serf", "agent"
-      end
-      sleep 1
-      assert_match /:7946.*alive$/, shell_output("#{bin}/serf members")
-    ensure
-      system "#{bin}/serf", "leave"
-      Process.kill "SIGINT", pid
-      Process.wait pid
+    pid = fork do
+      exec "#{bin}/serf", "agent"
     end
+    sleep 1
+    assert_match /:7946.*alive$/, shell_output("#{bin}/serf members")
+  ensure
+    system "#{bin}/serf", "leave"
+    Process.kill "SIGINT", pid
+    Process.wait pid
   end
 end

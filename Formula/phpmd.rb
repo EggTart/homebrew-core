@@ -1,8 +1,8 @@
 class Phpmd < Formula
   desc "PHP Mess Detector"
   homepage "https://phpmd.org"
-  url "https://static.phpmd.org/php/2.6.0/phpmd.phar"
-  sha256 "69bec1176370a3bcbb81e1d422253f70305432ecf5b2c50d04ec33adb0e20f7a"
+  url "https://github.com/phpmd/phpmd/releases/download/2.8.1/phpmd.phar"
+  sha256 "86b2f14553e23f9bf05e5231b366aab41357a72159c7f0f85c275dca5ce332e6"
 
   bottle :unneeded
 
@@ -21,6 +21,7 @@ class Phpmd < Formula
       }
     EOS
 
-    assert_match /Avoid unused parameters such as '\$name'\.$/, shell_output("#{bin}/phpmd --ignore-violations-on-exit src/HelloWorld/Greetings.php text unusedcode")
+    assert_match /Avoid unused parameters such as '\$name'\.$/,
+      shell_output("#{bin}/phpmd --ignore-violations-on-exit src/HelloWorld/Greetings.php text unusedcode")
   end
 end

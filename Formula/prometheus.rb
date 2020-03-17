@@ -1,63 +1,85 @@
 class Prometheus < Formula
   desc "Service monitoring system and time series database"
   homepage "https://prometheus.io/"
-  url "https://github.com/prometheus/prometheus/archive/v2.10.0.tar.gz"
-  sha256 "0362f4aa2fb44cc2c572df140da742bdf99fe9f338157a83f6634694fd693000"
+  url "https://github.com/prometheus/prometheus/archive/v2.16.0.tar.gz"
+  sha256 "5649b33a752eb231f86649a4781af2a532d7df5afb212bf0e6ec57fd1826cbbc"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "4d2a7005356b329c5fab1aa0bbb13034e139ddd73439302cedfa9c9cb5e99c5a" => :mojave
-    sha256 "039d4dd438004103a8f18d3537d9aff3ec95f62e3479053fc5269110aebdf848" => :high_sierra
-    sha256 "47f498051efb821140af097766e5676ab42b07d5c7e672cb27a09fe88f207801" => :sierra
+    sha256 "a2b0e8dd03e8c10721d8ed50bd2ffda451ab525b23697fbadb647b3126699026" => :catalina
+    sha256 "72d841f9285cf94cb39df7631961fdfe22e0893c82cf2b60139c8650b6e7e5fd" => :mojave
+    sha256 "c48918658678ca828b473fa6378dbbcdc5183cfd4951bdbb6f9225261e65b505" => :high_sierra
   end
 
   depends_on "go" => :build
+  depends_on "node" => :build
+  depends_on "yarn" => :build
 
   def install
     mkdir_p buildpath/"src/github.com/prometheus"
     ln_sf buildpath, buildpath/"src/github.com/prometheus/prometheus"
 
+    system "make", "assets"
     system "make", "build"
     bin.install %w[promtool prometheus]
     libexec.install %w[consoles console_libraries]
   end
 
-  def caveats; <<~EOS
-    When used with `brew services`, prometheus' configuration is stored as command line flags in
-      #{etc}/prometheus.args
+  def post_install
+    (etc/"prometheus.args").write <<~EOS
+      --config.file #{etc}/prometheus.yml
+      --web.listen-address=127.0.0.1:9090
+      --storage.tsdb.path #{var}/prometheus
+    EOS
 
-    Example configuration:
-      echo "--config.file ~/.config/prometheus.yml" > #{etc}/prometheus.args
+    (etc/"prometheus.yml").write <<~EOS
+      global:
+        scrape_interval: 15s
 
-  EOS
+      scrape_configs:
+        - job_name: "prometheus"
+          static_configs:
+          - targets: ["localhost:9090"]
+    EOS
+  end
+
+  def caveats
+    <<~EOS
+      When used with `brew services`, prometheus' configuration is stored as command line flags in:
+        #{etc}/prometheus.args
+
+      Configuration for prometheus is located in the #{etc}/prometheus.yml file.
+
+    EOS
   end
 
   plist_options :manual => "prometheus"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>sh</string>
-          <string>-c</string>
-          <string>#{opt_bin}/prometheus $(&lt; #{etc}/prometheus.args)</string>
-        </array>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>KeepAlive</key>
-        <false/>
-        <key>StandardErrorPath</key>
-        <string>#{var}/log/prometheus.err.log</string>
-        <key>StandardOutPath</key>
-        <string>#{var}/log/prometheus.log</string>
-      </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>sh</string>
+            <string>-c</string>
+            <string>#{opt_bin}/prometheus $(&lt; #{etc}/prometheus.args)</string>
+          </array>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>KeepAlive</key>
+          <false/>
+          <key>StandardErrorPath</key>
+          <string>#{var}/log/prometheus.err.log</string>
+          <key>StandardOutPath</key>
+          <string>#{var}/log/prometheus.log</string>
+        </dict>
+      </plist>
+    EOS
   end
 
   test do

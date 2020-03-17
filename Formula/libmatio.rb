@@ -1,16 +1,15 @@
 class Libmatio < Formula
   desc "C library for reading and writing MATLAB MAT files"
   homepage "https://matio.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/matio/matio/1.5.12/matio-1.5.12.tar.gz"
-  sha256 "8695e380e465056afa5b5e20128935afe7d50e03830f9f7778a72e1e1894d8a9"
-  revision 3
+  url "https://downloads.sourceforge.net/project/matio/matio/1.5.17/matio-1.5.17.tar.gz"
+  sha256 "5e455527d370ab297c4abe5a2ab4d599c93ac7c1a0c85d841cc5c22f8221c400"
+  revision 2
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "5d2703b87aee0b2c3204cb78b7689c650b076157a274c5d543aa5852bbd7febb" => :mojave
-    sha256 "5ce978cdcbe04527d730b8fdb018304eba54328104afce7c8754dd71218b5bc8" => :high_sierra
-    sha256 "3d5970022b653c12d7b1f1b2720d9ad87e6f478e7116175fc914a3d377a2c9e3" => :sierra
+    sha256 "5b8bf79fa47dddfa85405fc2e0ea4e0ca44d9154ff690144568b1b8d334edd03" => :catalina
+    sha256 "fb0f8804978485fedcdd4cd8b6800840aa0b25778be9bbfab29b4dcabb76f5d8" => :mojave
+    sha256 "961900fbb90c3c37a0e1607bead7c92baa23f289afaee607775731303e335b4b" => :high_sierra
   end
 
   depends_on "hdf5"

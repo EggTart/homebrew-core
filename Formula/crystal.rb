@@ -3,8 +3,8 @@ class Crystal < Formula
   homepage "https://crystal-lang.org/"
 
   stable do
-    url "https://github.com/crystal-lang/crystal/archive/0.28.0.tar.gz"
-    sha256 "4206f57c6345454504ec4cd8cbd1b9354b9be29fae4cdcdd173f4a28cc13b102"
+    url "https://github.com/crystal-lang/crystal/archive/0.33.0.tar.gz"
+    sha256 "88f08685f172e98f01f93f1a83fc3548c6d28df19a39c91859b167a796730289"
 
     resource "shards" do
       url "https://github.com/crystal-lang/shards/archive/v0.8.1.tar.gz"
@@ -13,9 +13,9 @@ class Crystal < Formula
   end
 
   bottle do
-    sha256 "131fc2303d2f15e46f3c928487ed64bf0d139cb3deb64fe9ff25c0df886f4101" => :mojave
-    sha256 "1189ba40af5f99c898361112a0c393bf5ca98f2cb1ac01e0d75edaf44ed12fee" => :high_sierra
-    sha256 "e9ced10a0d2b3e5a4d19b8f1c6dc84c432abddfbc380317c4d1ddd6bec6be4c4" => :sierra
+    sha256 "3ee8d5d0e6c6e96e0f54b4a7e0d5795e3c450a346ac208b0b6f1208e34bf1567" => :catalina
+    sha256 "8102e213251723389bab813719ec7a7a54abb5730983ae7d2b47d6f2cfed1463" => :mojave
+    sha256 "1acff2894744122bebae34438a3a32fd0fe79be82e024b62e1cfdda995e96c6a" => :high_sierra
   end
 
   head do
@@ -34,7 +34,8 @@ class Crystal < Formula
   depends_on "gmp" # std uses it but it's not linked
   depends_on "libevent"
   depends_on "libyaml"
-  depends_on "llvm@6"
+  depends_on "llvm"
+  depends_on "openssl@1.1" # std uses it but it's not linked
   depends_on "pcre"
   depends_on "pkg-config" # @[Link] will use pkg-config if available
 
@@ -45,25 +46,23 @@ class Crystal < Formula
 
     # extension to handle multi-threading
     patch :p1 do
-      url "https://raw.githubusercontent.com/crystal-lang/distribution-scripts/ab683792f34c60159f0e697adf792ff5b0fcbf91/linux/files/feature-thread-stackbottom.patch"
-      sha256 "acbae8cfe10e3efac403a629490cfd05e809554d23e9c3a88acddbb66f8ef7e0"
+      url "https://github.com/ivmai/bdwgc/commit/5668de71107022a316ee967162bc16c10754b9ce.patch?full_index=1"
+      sha256 "5c42d4b37cf4997bb6af3f9b00f5513644e1287c322607dc980a1955a09246e3"
     end
   end
 
   resource "boot" do
-    url "https://github.com/crystal-lang/crystal/releases/download/0.27.2/crystal-0.27.2-1-darwin-x86_64.tar.gz"
-    version "0.27.2-1"
-    sha256 "2fcd11a3c3d12176004c13aa90d8ca15acde7d1ffa9a82cbaadcd526984a8691"
+    url "https://github.com/crystal-lang/crystal/releases/download/0.32.1/crystal-0.32.1-1-darwin-x86_64.tar.gz"
+    version "0.32.1-1"
+    sha256 "2901e8709da36a12ce0a94464741c1db8e5b5080f216fb8c1f7016667370bc94"
   end
 
   def install
     (buildpath/"boot").install resource("boot")
 
-    if build.head?
-      ENV["CRYSTAL_CONFIG_BUILD_COMMIT"] = Utils.popen_read("git rev-parse --short HEAD").strip
-    end
+    ENV["CRYSTAL_CONFIG_BUILD_COMMIT"] = Utils.popen_read("git rev-parse --short HEAD").strip if build.head?
 
-    ENV["CRYSTAL_CONFIG_PATH"] = prefix/"src:lib"
+    ENV["CRYSTAL_CONFIG_PATH"] = "lib:#{prefix/"src"}"
     ENV["CRYSTAL_CONFIG_LIBRARY_PATH"] = prefix/"embedded/lib"
     ENV.append_path "PATH", "boot/bin"
 
@@ -76,15 +75,7 @@ class Crystal < Formula
       system "make"
     end
 
-    # TODO: in 0.29.0 this can be replaced with CRYSTAL_LIBRARY_PATH
-    #       in order to build the compiler binary with a static libgc.a
-    ENV.prepend_path "PKG_CONFIG_PATH", buildpath
-    (buildpath/"gc.pc").write <<~EOS
-      Name: bdwgc
-      Description:
-      Version: 8.0.4+mt
-      Libs: #{buildpath/"gc"}/.libs/libgc.a
-    EOS
+    ENV.prepend_path "CRYSTAL_LIBRARY_PATH", buildpath/"gc/.libs"
 
     # Build crystal
     (buildpath/".build").mkpath
@@ -99,16 +90,27 @@ class Crystal < Formula
 
     # Build shards
     resource("shards").stage do
-      system buildpath/"bin/crystal", "build", "-o", buildpath/".build/shards", "src/shards.cr"
+      system buildpath/"bin/crystal", "build",
+                                      "-o", buildpath/".build/shards",
+                                      "src/shards.cr",
+                                      "--release", "--no-debug"
+
+      man1.install "man/shards.1"
+      man5.install "man/shard.yml.5"
     end
 
     bin.install ".build/shards"
-    bin.install ".build/crystal"
+    libexec.install ".build/crystal"
+    (bin/"crystal").write_env_script libexec/"crystal",
+      :PKG_CONFIG_PATH => "${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}#{Formula["openssl"].opt_lib/"pkgconfig"}"
+
     prefix.install "src"
     (prefix/"embedded/lib").install "#{buildpath/"gc"}/.libs/libgc.a"
 
     bash_completion.install "etc/completion.bash" => "crystal"
     zsh_completion.install "etc/completion.zsh" => "_crystal"
+
+    man1.install "man/crystal.1"
   end
 
   test do

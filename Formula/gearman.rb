@@ -1,14 +1,14 @@
 class Gearman < Formula
   desc "Application framework to farm out work to other machines or processes"
   homepage "http://gearman.org/"
-  url "https://github.com/gearman/gearmand/releases/download/1.1.18/gearmand-1.1.18.tar.gz"
-  sha256 "d789fa24996075a64c5af5fd2adef10b13f77d71f7d44edd68db482b349c962c"
-  revision 1
+  url "https://github.com/gearman/gearmand/releases/download/1.1.19.1/gearmand-1.1.19.1.tar.gz"
+  sha256 "8ea6e0d16a0c924e6a65caea8a7cd49d3840b9256d440d991de4266447166bfb"
 
   bottle do
     cellar :any
-    sha256 "a29334389cd7ca1245ee0a914959bd3472ae3562b2e4b2f92e44f0ec70d02022" => :mojave
-    sha256 "1d069b8eca915e388207d735c45f143b139f801eedd302b6c690d1f8e4aaee30" => :sierra
+    sha256 "3a1a4bc57288dea7905134d9290c88a04273f7cc6361646694324e3bc9eb42d3" => :catalina
+    sha256 "582d1de464569352536501e2aa832a9bc540220eae335b682411ecadffbfe198" => :mojave
+    sha256 "8664f5b9c91ef99190cb70000758aa3d50f68afcad01d2e8cac234adf6a5424c" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
@@ -20,11 +20,14 @@ class Gearman < Formula
   def install
     # Work around "error: no member named 'signbit' in the global namespace"
     # encountered when trying to detect boost regex in configure
-    ENV.delete("SDKROOT") if DevelopmentTools.clang_build_version >= 900
+    if MacOS.version == :high_sierra
+      ENV.delete("HOMEBREW_SDKROOT")
+      ENV.delete("SDKROOT")
+    end
 
     # https://bugs.launchpad.net/gearmand/+bug/1368926
     Dir["tests/**/*.cc", "libtest/main.cc"].each do |test_file|
-      next unless /std::unique_ptr/ =~ File.read(test_file)
+      next unless /std::unique_ptr/.match?(File.read(test_file))
 
       inreplace test_file, "std::unique_ptr", "std::auto_ptr"
     end
@@ -57,21 +60,22 @@ class Gearman < Formula
 
   plist_options :manual => "gearmand -d"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
-    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>Program</key>
-        <string>#{opt_sbin}/gearmand</string>
-        <key>RunAtLoad</key>
-        <true/>
-      </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+      "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+        <dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>Program</key>
+          <string>#{opt_sbin}/gearmand</string>
+          <key>RunAtLoad</key>
+          <true/>
+        </dict>
+      </plist>
+    EOS
   end
 
   test do

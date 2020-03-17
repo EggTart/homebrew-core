@@ -2,31 +2,30 @@
 class Macvim < Formula
   desc "GUI for vim, made for macOS"
   homepage "https://github.com/macvim-dev/macvim"
-  url "https://github.com/macvim-dev/macvim/archive/snapshot-155.tar.gz"
-  version "8.1-155"
-  sha256 "c7553db8b949fac7d2dc54f8a2a44f6e99d3c73bae9318aecf0df292acec105a"
+  url "https://github.com/macvim-dev/macvim/archive/snapshot-162.tar.gz"
+  version "8.2-162"
+  sha256 "e4d47e4ce441b291bc4fbee613e54f75fe065b77ea7fdbee1c85ae2c24d704b1"
   head "https://github.com/macvim-dev/macvim.git"
 
   bottle do
     cellar :any
-    sha256 "f2e20acd4fb3964a860353e8ffa5fbef80852eef762248badf0544ea54c77bcc" => :mojave
-    sha256 "57bd123c4c9f913932bbaeee65517e04e3056dc0402535cfcef004a53b687d44" => :high_sierra
-    sha256 "eeead308b30d6f4373955b9000c4fc56ea1b37adf16f99af9e99814c6518a1d8" => :sierra
+    sha256 "7bb6dd7e6d3e28d167e497e4993d7bc1c44c654069bef1c0c51e2d4bd9b17565" => :catalina
+    sha256 "d62e3967c82b0b681be1209ca3bf4e38b9aeb2e72b80b0e6a3b29ddc66658061" => :mojave
+    sha256 "f4876c40c8276b6a9cd3ca58d6b9ddc87ed72a7a04d83a985908fe3dc1e3f005" => :high_sierra
   end
 
   depends_on :xcode => :build
   depends_on "cscope"
   depends_on "lua"
   depends_on "python"
+  depends_on "ruby"
 
   conflicts_with "vim",
     :because => "vim and macvim both install vi* binaries"
 
   def install
     # Avoid issues finding Ruby headers
-    if MacOS.version == :sierra || MacOS.version == :yosemite
-      ENV.delete("SDKROOT")
-    end
+    ENV.delete("SDKROOT")
 
     # MacVim doesn't have or require any Python package, so unset PYTHONPATH
     ENV.delete("PYTHONPATH")
@@ -48,7 +47,8 @@ class Macvim < Formula
                           "--enable-luainterp",
                           "--with-lua-prefix=#{Formula["lua"].opt_prefix}",
                           "--enable-luainterp",
-                          "--enable-python3interp"
+                          "--enable-python3interp",
+                          "--disable-sparkle"
     system "make"
 
     prefix.install "src/MacVim/build/Release/MacVim.app"

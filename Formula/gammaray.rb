@@ -1,15 +1,15 @@
 class Gammaray < Formula
   desc "Examine and manipulate Qt application internals at runtime"
-  homepage "https://www.kdab.com/kdab-products/gammaray/"
-  url "https://github.com/KDAB/GammaRay/releases/download/v2.10.0/gammaray-2.10.0.tar.gz"
-  sha256 "0554e43067c2eba3517cf746a921385cf15675db79f879e1c3a7851c4951ffbe"
+  homepage "https://www.kdab.com/gammaray"
+  url "https://github.com/KDAB/GammaRay/releases/download/v2.11.1/gammaray-2.11.1.tar.gz"
+  sha256 "87a1d72ad1ad6d1a0156c54a85b0976ab38c6a64136458ca7c4ee491566d25d0"
   head "https://github.com/KDAB/GammaRay.git"
 
   bottle do
     cellar :any
-    sha256 "38093769a703351f1298dc84ebde0b8200b2f164fcb5d33cb89642e2ce239eee" => :mojave
-    sha256 "6fdd21a02f532fb58d3e0cfe535274366b3351f9feaac26dffe9affea2846df7" => :high_sierra
-    sha256 "a8f3ab656767e132b97b772d716db309316802dce79d0440568e5d0789b1bac7" => :sierra
+    sha256 "d43f04f5d9d8f0f26ff7ec8164b8a6a6397174e56476a60abf7f592a5e8ef2d8" => :catalina
+    sha256 "daaad613868d4159d40b7c954dfca613ac68a6cbd75e1471d35e04958ff5ae16" => :mojave
+    sha256 "652ed0574b07f8e0bffa9b7927c718295cbc4d1e5b69148101923d8edebcf406" => :high_sierra
   end
 
   depends_on "cmake" => :build

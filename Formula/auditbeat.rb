@@ -2,23 +2,26 @@ class Auditbeat < Formula
   desc "Lightweight Shipper for Audit Data"
   homepage "https://www.elastic.co/products/beats/auditbeat"
   url "https://github.com/elastic/beats.git",
-      :tag      => "v6.8.0",
-      :revision => "c01de6731c401c73d03ed996cdf21f5724ad83f4"
+      :tag      => "v6.8.7",
+      :revision => "c3db7425739e1c0d1eeefe77f4c0b735a90a3254"
   head "https://github.com/elastic/beats.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "3a48d40026cd8e289f54e7aca084c3a157357b138d871759e05d2596847af041" => :mojave
-    sha256 "5554228254742a6ce6b1da87374160fd2e09aa73accda060be54378c89794544" => :high_sierra
-    sha256 "cf82c02743ef6693319cfc2988bcc218fd71bac399acc1a30cf3b9d6ae0f72cf" => :sierra
+    sha256 "7bda17ae93e5afa4aec267a1451baed2b7f843195f3d73d04686c976c65fe4d3" => :catalina
+    sha256 "36b8adf700d6701436249a14beae242cdc7e2bd9e5ef958ca2d1297a18e78f64" => :mojave
+    sha256 "47b0654038e92daf765ddc8ce4c1b26052a04b8959e5e1e8def2a7f3d0f84b15" => :high_sierra
   end
 
   depends_on "go" => :build
-  depends_on "python@2" => :build
 
+  # https://github.com/elastic/beats/pull/14798
+  uses_from_macos "python@2" => :build # does not support Python 3
+
+  # Newer virtualenvs are not compatible with Python 2.7.10 on high sierra, use an old version
   resource "virtualenv" do
-    url "https://files.pythonhosted.org/packages/8b/f4/360aa656ddb0f4168aeaa1057d8784b95d1ce12f34332c1cf52420b6db4e/virtualenv-16.3.0.tar.gz"
-    sha256 "729f0bcab430e4ef137646805b5b1d8efbb43fe53d4a0f33328624a84a5121f7"
+    url "https://files.pythonhosted.org/packages/d4/0c/9840c08189e030873387a73b90ada981885010dd9aea134d6de30cd24cb8/virtualenv-15.1.0.tar.gz"
+    sha256 "02f8102c2436bb03b3ee6dede1919d1dac8a427541652e5ec95171ec8adbc93a"
   end
 
   # Patch required to build against go 1.11 (Can be removed with v7.0.0)
@@ -81,21 +84,22 @@ class Auditbeat < Formula
 
   plist_options :manual => "auditbeat"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
-    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>Program</key>
-        <string>#{opt_bin}/auditbeat</string>
-        <key>RunAtLoad</key>
-        <true/>
-      </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+      "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+        <dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>Program</key>
+          <string>#{opt_bin}/auditbeat</string>
+          <key>RunAtLoad</key>
+          <true/>
+        </dict>
+      </plist>
+    EOS
   end
 
   test do

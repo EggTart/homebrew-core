@@ -1,14 +1,15 @@
 class Subversion < Formula
   desc "Version control system designed to be a better CVS"
   homepage "https://subversion.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=subversion/subversion-1.12.0.tar.bz2"
-  mirror "https://archive.apache.org/dist/subversion/subversion-1.12.0.tar.bz2"
-  sha256 "7fae7c73d8a007c107c0ae5eb372bc0bb013dbfe966fcd5c59cd5a195a5e2edf"
+  url "https://www.apache.org/dyn/closer.lua?path=subversion/subversion-1.13.0.tar.bz2"
+  mirror "https://archive.apache.org/dist/subversion/subversion-1.13.0.tar.bz2"
+  sha256 "bc50ce2c3faa7b1ae9103c432017df98dfd989c4239f9f8270bb3a314ed9e5bd"
+  revision 3
 
   bottle do
-    sha256 "9fd5dbe51db910462158ec335367ad051e808e8e09915a1dee090bab4483bd6e" => :mojave
-    sha256 "d93fbb37e55fd694e79d049b544be3cf48e0c0a69199447377eb027496b66a54" => :high_sierra
-    sha256 "9e905cca66cfca6706e0b0d06aef3c1515cbefd1b7e43f91d9c35d650cd8664b" => :sierra
+    sha256 "55de698b991fb2736cb7fe0df32f07c4427a5d131a9eceaf12dd0d3cd7675b94" => :catalina
+    sha256 "a9aede95dca0be2ca0c2c27a28fee3775f6b6e294dfbfcf8a428eb4cf09e7433" => :mojave
+    sha256 "87d2b96723350f459e308acfbfedd3cb4ab41a0582b9eb405c5b2cebc8258312" => :high_sierra
   end
 
   head do
@@ -19,10 +20,10 @@ class Subversion < Formula
     depends_on "gettext" => :build
   end
 
-  depends_on :java => ["1.8+", :build]
+  depends_on "openjdk" => :build
   depends_on "pkg-config" => :build
   depends_on "scons" => :build # For Serf
-  depends_on "swig" => :build
+  depends_on "swig@3" => :build # https://issues.apache.org/jira/browse/SVN-4818
   depends_on "apr"
   depends_on "apr-util"
 
@@ -30,13 +31,22 @@ class Subversion < Formula
   # gettext, lz4, perl, sqlite and utf8proc for consistency
   depends_on "gettext"
   depends_on "lz4"
-  depends_on "openssl" # For Serf
+  depends_on "openssl@1.1" # For Serf
   depends_on "perl"
+  depends_on "python@3.8"
   depends_on "sqlite"
   depends_on "utf8proc"
 
+  uses_from_macos "expat"
+  uses_from_macos "krb5"
+  uses_from_macos "libmagic"
+  uses_from_macos "libtool"
+  uses_from_macos "ruby"
+  uses_from_macos "util-linux"
+  uses_from_macos "zlib"
+
   resource "serf" do
-    url "https://www.apache.org/dyn/closer.cgi?path=serf/serf-1.3.9.tar.bz2"
+    url "https://www.apache.org/dyn/closer.lua?path=serf/serf-1.3.9.tar.bz2"
     mirror "https://archive.apache.org/dist/serf/serf-1.3.9.tar.bz2"
     sha256 "549c2d21c577a8a9c0450facb5cca809f26591f048e466552240947bdf7a87cc"
   end
@@ -47,18 +57,26 @@ class Subversion < Formula
   patch :DATA
 
   def install
-    ENV.prepend_path "PATH", "/System/Library/Frameworks/Python.framework/Versions/2.7/bin"
-    # Fix #33530 by ensuring the system Ruby can build test programs.
-    ENV.delete "SDKROOT"
+    ENV.prepend_path "PATH", Formula["python@3.8"].opt_libexec/"bin"
 
     serf_prefix = libexec/"serf"
 
     resource("serf").stage do
+      inreplace "SConstruct" do |s|
+        s.gsub! "print 'Warning: Used unknown variables:', ', '.join(unknown.keys())",
+        "print('Warning: Used unknown variables:', ', '.join(unknown.keys()))"
+        s.gsub! "match = re.search('SERF_MAJOR_VERSION ([0-9]+).*'",
+        "match = re.search(b'SERF_MAJOR_VERSION ([0-9]+).*'"
+        s.gsub! "'SERF_MINOR_VERSION ([0-9]+).*'",
+        "b'SERF_MINOR_VERSION ([0-9]+).*'"
+        s.gsub! "'SERF_PATCH_VERSION ([0-9]+)'",
+        "b'SERF_PATCH_VERSION ([0-9]+)'"
+      end
       # scons ignores our compiler and flags unless explicitly passed
       args = %W[
         PREFIX=#{serf_prefix} GSSAPI=/usr CC=#{ENV.cc}
         CFLAGS=#{ENV.cflags} LINKFLAGS=#{ENV.ldflags}
-        OPENSSL=#{Formula["openssl"].opt_prefix}
+        OPENSSL=#{Formula["openssl@1.1"].opt_prefix}
         APR=#{Formula["apr"].opt_prefix}
         APU=#{Formula["apr-util"].opt_prefix}
       ]
@@ -78,6 +96,7 @@ class Subversion < Formula
       --with-apr-util=#{Formula["apr-util"].opt_prefix}
       --with-apr=#{Formula["apr"].opt_prefix}
       --with-apxs=no
+      --with-jdk=#{Formula["openjdk"].opt_prefix}
       --with-ruby-sitedir=#{lib}/ruby
       --with-serf=#{serf_prefix}
       --with-sqlite=#{Formula["sqlite"].opt_prefix}
@@ -109,11 +128,7 @@ class Subversion < Formula
 
     system "make", "swig-py"
     system "make", "install-swig-py"
-    (lib/"python2.7/site-packages").install_symlink Dir["#{lib}/svn-python/*"]
-
-    # Peg to system Ruby
-    system "make", "swig-rb", "EXTRA_SWIG_LDFLAGS=-L/usr/lib"
-    system "make", "install-swig-rb"
+    (lib/"python3.8/site-packages").install_symlink Dir["#{lib}/svn-python/*"]
 
     # Java and Perl support don't build correctly in parallel:
     # https://github.com/Homebrew/homebrew/issues/20415
@@ -127,7 +142,8 @@ class Subversion < Formula
 
     inreplace "Makefile" do |s|
       s.change_make_var! "SWIG_PL_INCLUDES",
-        "$(SWIG_INCLUDES) -arch #{MacOS.preferred_arch} -g -pipe -fno-common -DPERL_DARWIN -fno-strict-aliasing -I#{HOMEBREW_PREFIX}/include -I#{perl_core}"
+        "$(SWIG_INCLUDES) -arch #{MacOS.preferred_arch} -g -pipe -fno-common " \
+        "-DPERL_DARWIN -fno-strict-aliasing -I#{HOMEBREW_PREFIX}/include -I#{perl_core}"
     end
     system "make", "swig-pl"
     system "make", "install-swig-pl"
@@ -146,10 +162,6 @@ class Subversion < Formula
 
       The perl bindings are located in various subdirectories of:
         #{opt_lib}/perl5
-
-      If you wish to use the Ruby bindings you may need to add:
-        #{HOMEBREW_PREFIX}/lib/ruby
-      to your RUBYLIB.
 
       You may need to link the Java bindings into the Java Extensions folder:
         sudo mkdir -p /Library/Java/Extensions

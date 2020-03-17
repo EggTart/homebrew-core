@@ -5,22 +5,22 @@ class Ooniprobe < Formula
   homepage "https://ooni.torproject.org/"
   url "https://files.pythonhosted.org/packages/d8/c0/b4a2ae442dd95160a75251110313d1f9b22834a76ef9bd8f70603b4a867a/ooniprobe-2.3.0.tar.gz"
   sha256 "b4c4a5665d37123b1a30f26ffb37b8c06bc722f7b829cf83f6c3300774b7acb6"
+  revision 3
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "5190bd77c40eecf39da965167329fc552690965ec9d7930352c2828814e35d0d" => :mojave
-    sha256 "32e3e7e10bfd2105caafb57a2c91d23eb1077c6508e155766ae618ed20e66a3c" => :high_sierra
-    sha256 "1482b823d3d9ee2fa338fc9b08cf30de5d29f770a1aedf339115283d1c07465e" => :sierra
-    sha256 "38b51f8ef56029ca251c100887a1b66df0dfdd099f582913ca020027b3010f83" => :el_capitan
+    sha256 "9a5d8c8b6bda3609642113631ba7c39b2cbf4fc27b09bd4b2fccc832befdd3e5" => :catalina
+    sha256 "e8e120b4342f22d48efbcfa45cde2faa28c9edd045121373f3b2ba8349e1d6fc" => :mojave
+    sha256 "3e13549c0175e9f3167f24526ed0c45bd7096b84c0360042654be9b4dff980f7" => :high_sierra
   end
 
   depends_on "geoip"
   depends_on "libdnet"
   depends_on "libyaml"
-  depends_on "openssl"
-  depends_on "python@2"
+  depends_on "openssl@1.1"
   depends_on "tor"
+  # Does not support python 3, will be replaced by https://github.com/ooni/probe-cli once out of pre-release
+  uses_from_macos "python@2"
 
   # these 4 need to come first or else cryptography will let setuptools
   # easy_install them (which is bad)
@@ -51,8 +51,8 @@ class Ooniprobe < Formula
   end
 
   resource "asn1crypto" do
-    url "https://files.pythonhosted.org/packages/ce/39/17e90c2efacc4060915f7d1f9b8d2a5b20e54e46233bdf3092e68193407d/asn1crypto-0.21.1.tar.gz"
-    sha256 "4e6d7b22814d680114a439faafeccb9402a78095fb23bf0b25f9404c6938a017"
+    url "https://files.pythonhosted.org/packages/c1/a9/86bfedaf41ca590747b4c9075bc470d0b2ec44fb5db5d378bc61447b3b6b/asn1crypto-1.2.0.tar.gz"
+    sha256 "87620880a477123e01177a1f73d0f327210b43a3cdbd714efcd2fa49a8d7b384"
   end
 
   resource "attrs" do
@@ -76,8 +76,8 @@ class Ooniprobe < Formula
   end
 
   resource "cryptography" do
-    url "https://files.pythonhosted.org/packages/ec/5f/d5bc241d06665eed93cd8d3aa7198024ce7833af7a67f6dc92df94e00588/cryptography-1.8.1.tar.gz"
-    sha256 "323524312bb467565ebca7e50c8ae5e9674e544951d28a2904a50012a8828190"
+    url "https://files.pythonhosted.org/packages/c2/95/f43d02315f4ec074219c6e3124a87eba1d2d12196c2767fadfdc07a83884/cryptography-2.7.tar.gz"
+    sha256 "e6347742ac8f35ded4a46ff835c60e68c22a536a8ae5c4422966d06946b6d4c6"
   end
 
   resource "GeoIP" do
@@ -210,9 +210,7 @@ class Ooniprobe < Formula
       etc = #{etc}/ooni
     EOS
 
-    if MacOS.sdk_path_if_needed
-      ENV.append "CPPFLAGS", "-I#{MacOS.sdk_path}/usr/include/ffi"
-    end
+    ENV.append "CPPFLAGS", "-I#{MacOS.sdk_path}/usr/include/ffi" if MacOS.sdk_path_if_needed
 
     virtualenv_install_with_resources
 
@@ -227,9 +225,10 @@ class Ooniprobe < Formula
     ln_s pkgshare/"decks/web.yaml", pkgshare/"current.deck"
   end
 
-  def caveats; <<~EOS
-    Decks are installed to #{opt_pkgshare}/decks.
-  EOS
+  def caveats
+    <<~EOS
+      Decks are installed to #{opt_pkgshare}/decks.
+    EOS
   end
 
   plist_options :startup => "true", :manual => "ooniprobe -i #{HOMEBREW_PREFIX}/share/ooniprobe/current.deck"

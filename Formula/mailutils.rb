@@ -1,14 +1,14 @@
 class Mailutils < Formula
   desc "Swiss Army knife of email handling"
   homepage "https://mailutils.org/"
-  url "https://ftp.gnu.org/gnu/mailutils/mailutils-3.5.tar.gz"
-  mirror "https://ftpmirror.gnu.org/mailutils/mailutils-3.5.tar.gz"
-  sha256 "c01ba9d05bf1ce7352373a529a7e7c7efc6ad9006c85651ffbc941dd03403af6"
+  url "https://ftp.gnu.org/gnu/mailutils/mailutils-3.8.tar.gz"
+  mirror "https://ftpmirror.gnu.org/mailutils/mailutils-3.8.tar.gz"
+  sha256 "ffe91d5f54f58e78ec65a566475d6890ec23f634ce970c6d28ceb60d2578b71f"
 
   bottle do
-    sha256 "086213ef133468e2b97c4d0cd65b919751127b86bac79633de0f4134b2393d53" => :mojave
-    sha256 "9025ac552ffa4ec245af7d6db38a95eadb3876ff28146ba8dea4a954648d9798" => :high_sierra
-    sha256 "b7447a61f03f813b4b862c7b0d7bc51007ff0e514107036f0dbdc2b67b852bcb" => :sierra
+    sha256 "d5f8c24411a2dd107635a254fc423fba9aa201ee73c561b8f76b86378abf46a8" => :catalina
+    sha256 "799f5be301b6796eac5c33ce501c8045e80e06c875e9d1a5ea4fa1322ead199d" => :mojave
+    sha256 "3b7858b384fc0c1a6c97cb1026b45deadd150c9df76011f0c47637241743d34c" => :high_sierra
   end
 
   depends_on "gnutls"
@@ -19,6 +19,8 @@ class Mailutils < Formula
   def install
     system "./configure", "--disable-mh",
                           "--prefix=#{prefix}",
+                          "--without-fribidi",
+                          "--without-gdbm",
                           "--without-guile",
                           "--without-tokyocabinet"
     system "make", "PYTHON_LIBS=-undefined dynamic_lookup", "install"

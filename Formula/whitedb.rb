@@ -1,11 +1,12 @@
 class Whitedb < Formula
   desc "Lightweight in-memory NoSQL database library"
-  homepage "http://whitedb.org/"
-  url "http://whitedb.org/whitedb-0.7.3.tar.gz"
+  homepage "https://www.whitedb.org/"
+  url "https://www.whitedb.org/whitedb-0.7.3.tar.gz"
   sha256 "10c4ccd754ed2d53dbdef9ec16c88c732aa73d923fc0ee114e7e3a78a812849d"
 
   bottle do
     cellar :any
+    sha256 "9ec140c350c8233dcbd67def0607eb1cdb764fd3f14ac57ac3901eeeda554e0f" => :catalina
     sha256 "05673924ef2226616618002bcbcee6241db8f1ce34339ff38785fd4fe82cda43" => :mojave
     sha256 "3dc724386650bbbf608c4742d954c338e1927427e4c4f1a9c0d6255cc8deee5d" => :high_sierra
     sha256 "44639bc83668def2e81b68318dbdb5347f9262937ddb6cfdfd7303aae1ce05a6" => :sierra

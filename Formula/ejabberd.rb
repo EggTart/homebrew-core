@@ -1,14 +1,14 @@
 class Ejabberd < Formula
   desc "XMPP application server"
   homepage "https://www.ejabberd.im"
-  url "https://www.process-one.net/downloads/ejabberd/19.02/ejabberd-19.02.tgz"
-  sha256 "fb72871a28fb0951e6b1553125c30ce6015a3527a61e9c22e522c24af841eaa1"
+  url "https://www.process-one.net/downloads/ejabberd/20.02/ejabberd-20.02.tgz"
+  sha256 "70d3f1f11ee1d68de7944b879fd502595a4b64e379073986ae5613f774a9d0b9"
 
   bottle do
     cellar :any
-    sha256 "49749d922507aefb319a633c91303c0b92548d6e728ffcdf5ee212878b9d5be7" => :mojave
-    sha256 "04721a9380e6b9d02003e930d90a873632a5d1571efd4d79d97958155166f119" => :high_sierra
-    sha256 "be68699ba5c08b3570082b72e94c144c23e415e04b5f4f76899ccfc245f1ae46" => :sierra
+    sha256 "aa28c86c26a48f1e5bf1138add19cdbb8b6b07a5fab9e3d35beda6969aa9b020" => :catalina
+    sha256 "d5dd3cd458519ee5f531c5000e308112f5ad1366fc7c250260db5c3628393c8f" => :mojave
+    sha256 "68e0a18b7a0cb4a3a9952f1698f91cd071ebca3660f8c62c42b3b81750be7501" => :high_sierra
   end
 
   head do
@@ -21,7 +21,7 @@ class Ejabberd < Formula
   depends_on "erlang"
   depends_on "gd"
   depends_on "libyaml"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     ENV["TARGET_DIR"] = ENV["DESTDIR"] = "#{lib}/ejabberd/erlang/lib/ejabberd-#{version}"
@@ -54,39 +54,41 @@ class Ejabberd < Formula
     (var/"spool/ejabberd").mkpath
   end
 
-  def caveats; <<~EOS
-    If you face nodedown problems, concat your machine name to:
-      /private/etc/hosts
-    after 'localhost'.
-  EOS
+  def caveats
+    <<~EOS
+      If you face nodedown problems, concat your machine name to:
+        /private/etc/hosts
+      after 'localhost'.
+    EOS
   end
 
   plist_options :manual => "#{HOMEBREW_PREFIX}/sbin/ejabberdctl start"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>EnvironmentVariables</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
       <dict>
-        <key>HOME</key>
+        <key>EnvironmentVariables</key>
+        <dict>
+          <key>HOME</key>
+          <string>#{var}/lib/ejabberd</string>
+        </dict>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_sbin}/ejabberdctl</string>
+          <string>start</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>WorkingDirectory</key>
         <string>#{var}/lib/ejabberd</string>
       </dict>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_sbin}/ejabberdctl</string>
-        <string>start</string>
-      </array>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>WorkingDirectory</key>
-      <string>#{var}/lib/ejabberd</string>
-    </dict>
-    </plist>
-  EOS
+      </plist>
+    EOS
   end
 
   test do

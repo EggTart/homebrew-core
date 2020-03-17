@@ -1,15 +1,15 @@
 class Sk < Formula
   desc "Fuzzy Finder in rust!"
   homepage "https://github.com/lotabout/skim"
-  url "https://github.com/lotabout/skim/archive/v0.6.6.tar.gz"
-  sha256 "5975b21a7c3792e910ee9439b41b417e92f2fc7bc92d033e2d4c6d6c48a469c8"
+  url "https://github.com/lotabout/skim/archive/v0.8.0.tar.gz"
+  sha256 "42ac516aba6c9116fe96ff9dc5ac22fc7b14f809fbcdb5aaf93b9b36955da4dc"
   head "https://github.com/lotabout/skim.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2181bedc3675e45f36e0e81d0af742cb0a298358d16d308032a583f4a0471991" => :mojave
-    sha256 "225b8c28c12cf38ae37086707019e9828eb18472f39a28e0e93c984d6d8dcd82" => :high_sierra
-    sha256 "757c865a849246a6a75776071053ef629698505adca904e432a0bc634c978e98" => :sierra
+    sha256 "d5327be32f3c6e14fc62bfc22429a4bdd00c341fc413ccbe638d316f7fe4600b" => :catalina
+    sha256 "b1fc07b28e1a55820121ec200ecece04a885746b8bbcd3f6401b6e1acbba0f12" => :mojave
+    sha256 "38aed0bf7bcb20fe579188c583100d5c6a4faef77f92fc808fb43b986dddf298" => :high_sierra
   end
 
   depends_on "rust" => :build
@@ -17,11 +17,12 @@ class Sk < Formula
   def install
     (buildpath/"src/github.com/lotabout").mkpath
     ln_s buildpath, buildpath/"src/github.com/lotabout/skim"
-    system "cargo", "install", "--root", prefix, "--path", "."
+    system "cargo", "install", "--locked", "--root", prefix, "--path", "."
 
     pkgshare.install "install"
     bash_completion.install "shell/key-bindings.bash"
     bash_completion.install "shell/completion.bash"
+    fish_completion.install "shell/key-bindings.fish" => "skim.fish"
     zsh_completion.install "shell/key-bindings.zsh"
     zsh_completion.install "shell/completion.zsh"
     man1.install "man/man1/sk.1", "man/man1/sk-tmux.1"

@@ -1,14 +1,14 @@
 class Weechat < Formula
   desc "Extensible IRC client"
   homepage "https://www.weechat.org"
-  url "https://weechat.org/files/src/weechat-2.4.tar.xz"
-  sha256 "86d626c58d666ca58ef4762ff60c24c89f4632d95ed401773d5584043d865c73"
+  url "https://weechat.org/files/src/weechat-2.7.1.tar.xz"
+  sha256 "9d752fecb86a54470a19d8c977bc1baa01ac58625a4722e42199b85a06035c41"
   head "https://github.com/weechat/weechat.git"
 
   bottle do
-    sha256 "17f0b92a8889d6716b8e568cb03cbf1df17eac761f42333b912bbb9dfca08291" => :mojave
-    sha256 "feea73ff988119f26b99ccec16307d0da2a0a66ef18d7d1135c457d98a63c119" => :high_sierra
-    sha256 "915e1455d6e6f20e1d8a5b32fe7f28651189a389131a229d94050bd5b6c2e7b5" => :sierra
+    sha256 "223ad4e5391ad24e5023d8bc606884b1fa6010378c9d13c6eea921dbba26a506" => :catalina
+    sha256 "fc01a3d05a0c8de64f7a5739f6328c1767639dc2886a6f77bb8f7e36e1b049b9" => :mojave
+    sha256 "99d03a315581d96b6e5eb50656573cc6f39cad40c55ad9566e45b22f654b23f6" => :high_sierra
   end
 
   depends_on "asciidoctor" => :build
@@ -18,11 +18,15 @@ class Weechat < Formula
   depends_on "gettext"
   depends_on "gnutls"
   depends_on "libgcrypt"
+  depends_on "libiconv"
   depends_on "lua"
   depends_on "ncurses"
   depends_on "perl"
-  depends_on "python@2"
-  depends_on "ruby" if MacOS.version <= :sierra
+  depends_on "python"
+  depends_on "ruby"
+
+  uses_from_macos "curl"
+  uses_from_macos "tcl-tk"
 
   def install
     args = std_cmake_args + %W[
@@ -30,11 +34,11 @@ class Weechat < Formula
       -DENABLE_GUILE=OFF
       -DCA_FILE=#{etc}/openssl/cert.pem
       -DENABLE_JAVASCRIPT=OFF
+      -DENABLE_PHP=OFF
     ]
 
-    if MacOS.version >= :sierra
-      args << "-DRUBY_EXECUTABLE=/usr/bin/ruby"
-      args << "-DRUBY_LIB=/usr/lib/libruby.dylib"
+    if MacOS.version >= :mojave && MacOS::CLT.installed?
+      ENV["SDKROOT"] = ENV["HOMEBREW_SDKROOT"] = MacOS::CLT.sdk_path(MacOS.version)
     end
 
     mkdir "build" do

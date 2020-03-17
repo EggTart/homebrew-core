@@ -3,13 +3,13 @@ class CucumberCpp < Formula
   homepage "https://cucumber.io"
   url "https://github.com/cucumber/cucumber-cpp/archive/v0.5.tar.gz"
   sha256 "9e1b5546187290b265e43f47f67d4ce7bf817ae86ee2bc5fb338115b533f8438"
-  revision 2
+  revision 5
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "f51698030d9e59f888059a33fbf05aab2a14efa479cdc6167a7be9eed4963017" => :mojave
-    sha256 "f4daf096bb414f9af8a3109bd699f97ae3ecf4e177d1f8f3bce01f3e5b8f4d26" => :high_sierra
-    sha256 "b1049586b1ab62851e67629481bef7cdc596073fcb13124d127de402c029bdc7" => :sierra
+    sha256 "647928a1ca3316d5d7c46f1022b616f88c21fa9fab3ca147e8944a92377e2d67" => :catalina
+    sha256 "1913b19a2c3c876ae0ec6cf46bed0ea144cb97ab025b769472d9371c267e3764" => :mojave
+    sha256 "8d325d95cdd4a3dabcee3f9fe3184585dc5ddbae623033d157847a4ceca2bd45" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -17,11 +17,13 @@ class CucumberCpp < Formula
   depends_on "boost"
 
   def install
-    args = std_cmake_args
-    args << "-DCUKE_DISABLE_GTEST=on"
-    args << "-DCUKE_DISABLE_CPPSPEC=on"
-    args << "-DCUKE_DISABLE_FUNCTIONAL=on"
-    args << "-DCUKE_DISABLE_BOOST_TEST=on"
+    args = std_cmake_args + %w[
+      -DCUKE_DISABLE_GTEST=on
+      -DCUKE_DISABLE_CPPSPEC=on
+      -DCUKE_DISABLE_FUNCTIONAL=on
+      -DCUKE_DISABLE_BOOST_TEST=on
+    ]
+
     system "cmake", ".", *args
     system "cmake", "--build", "."
     system "make", "install"
@@ -30,7 +32,10 @@ class CucumberCpp < Formula
   test do
     ENV["GEM_HOME"] = testpath
     ENV["BUNDLE_PATH"] = testpath
-    if MacOS.version == :high_sierra
+    if MacOS.version >= :mojave && MacOS::CLT.installed?
+      ENV.delete("CPATH")
+      ENV["SDKROOT"] = MacOS::CLT.sdk_path(MacOS.version)
+    elsif MacOS.version == :high_sierra
       ENV.delete("CPATH")
       ENV.delete("SDKROOT")
     end

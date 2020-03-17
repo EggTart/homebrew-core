@@ -3,13 +3,12 @@ class FfmpegAT28 < Formula
   homepage "https://ffmpeg.org/"
   url "https://ffmpeg.org/releases/ffmpeg-2.8.15.tar.bz2"
   sha256 "35647f6c1f6d4a1719bc20b76bf4c26e4ccd665f46b5676c0e91c5a04622ee21"
-  revision 4
+  revision 9
 
   bottle do
-    rebuild 1
-    sha256 "5d98294c8ba9abc1050279d483cd5732322eea149b55bb91cc5ea1004315c39e" => :mojave
-    sha256 "37b37ddee29f08d13d01d0f22a595897848be7f3910ec98f10e273e73bd816e1" => :high_sierra
-    sha256 "770fb7817b355d58757e899413ad5f0f24cf255a69e707959225a4ffb52b8b7f" => :sierra
+    sha256 "74a510628d121c10ebd22f3a65cbd74eb28f46464d6d985bcb162e21760af452" => :catalina
+    sha256 "b4f820fce31600bcf3f863918204962f20756406dc568df3f87edda82527ee4d" => :mojave
+    sha256 "703e6862dff3b5a48fd18dad1d8d3015098028d70a5c28a31d60ca638ccb9565" => :high_sierra
   end
 
   keg_only :versioned_formula
@@ -82,19 +81,17 @@ class FfmpegAT28 < Formula
     # prevents GCC from building VDA support. GCC has no problems on
     # 10.9 and earlier.
     # See: https://github.com/Homebrew/homebrew/issues/33741
-    if MacOS.version < :yosemite || ENV.compiler == :clang
-      args << "--enable-vda"
+    args << if MacOS.version < :yosemite || ENV.compiler == :clang
+      "--enable-vda"
     else
-      args << "--disable-vda"
+      "--disable-vda"
     end
 
     system "./configure", *args
 
     inreplace "config.mak" do |s|
       shflags = s.get_make_var "SHFLAGS"
-      if shflags.gsub!(" -Wl,-read_only_relocs,suppress", "")
-        s.change_make_var! "SHFLAGS", shflags
-      end
+      s.change_make_var! "SHFLAGS", shflags if shflags.gsub!(" -Wl,-read_only_relocs,suppress", "")
     end
 
     system "make", "install"

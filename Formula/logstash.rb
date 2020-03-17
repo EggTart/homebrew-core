@@ -1,8 +1,8 @@
 class Logstash < Formula
   desc "Tool for managing events and logs"
   homepage "https://www.elastic.co/products/logstash"
-  url "https://artifacts.elastic.co/downloads/logstash/logstash-oss-7.0.1.tar.gz"
-  sha256 "31e95a35877c4142a35aa102e1741d26e047d1af6ac53d3a9af2ee539875f5d6"
+  url "https://artifacts.elastic.co/downloads/logstash/logstash-oss-7.6.1.tar.gz"
+  sha256 "1dca0e4b302ce12690bf5068e3daad38fba64b5090bf652dca3a5912a1b87e31"
   head "https://github.com/elastic/logstash.git"
 
   bottle :unneeded
@@ -43,9 +43,10 @@ class Logstash < Formula
     ln_s etc/"logstash", libexec/"config"
   end
 
-  def caveats; <<~EOS
-    Configuration files are located in #{etc}/logstash/
-  EOS
+  def caveats
+    <<~EOS
+      Configuration files are located in #{etc}/logstash/
+    EOS
   end
 
   plist_options :manual => "logstash"

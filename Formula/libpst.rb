@@ -1,15 +1,14 @@
 class Libpst < Formula
   desc "Utilities for the PST file format"
   homepage "https://www.five-ten-sg.com/libpst/"
-  url "https://www.five-ten-sg.com/libpst/packages/libpst-0.6.72.tar.gz"
-  sha256 "8a19d891eb077091c507d98ed8e2d24b7f48b3e82743bcce2b00a12040f5d507"
-  revision 2
+  url "https://www.five-ten-sg.com/libpst/packages/libpst-0.6.74.tar.gz"
+  sha256 "f787dadce74a9578939ab54babb3f3f0086808cdee2370d7faac9e1fad44fd37"
 
   bottle do
     cellar :any
-    sha256 "382d2a508b95f2b391141c778ef6a9629efa85bf4bed34d843b550b3b2729db0" => :mojave
-    sha256 "3d8f0a101e022d7061e7765c7a07033e84d4685648bd3256a832db0937fe7333" => :high_sierra
-    sha256 "8b65a4b37e63351f5991a8a6582aaaf93d26c81b820096da06a98da2b7a43394" => :sierra
+    sha256 "657dbfcf79cde274330de9a5a9b70d4dff2ca4ead724af25e9f65026e5ed2e82" => :catalina
+    sha256 "6e61e40011baa8eec269d3e3c08d30f060cc318a3c2bbeaae87a27b5e21e5c23" => :mojave
+    sha256 "0bd786dea8fbf1773041100b9ce5cbfc06b170a3fa18728f66420b22abe88550" => :high_sierra
   end
 
   depends_on "pkg-config" => :build

@@ -1,14 +1,14 @@
 class Modules < Formula
   desc "Dynamic modification of a user's environment via modulefiles"
   homepage "https://modules.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/modules/Modules/modules-4.2.3/modules-4.2.3.tar.bz2"
-  sha256 "83a4afdd3784278cb86aa3fbf82bcda8fea46b12fae616d865cfe7e8d357e4ac"
+  url "https://downloads.sourceforge.net/project/modules/Modules/modules-4.4.1/modules-4.4.1.tar.bz2"
+  sha256 "f4dc6b7055897382d6b655506c1a74d9ff33e9831d64082d03acdff4ba8521fa"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "6704ca06536aaa7b15d6f4b7a44a697e5e264585d0725f9a7a2add96699e420e" => :mojave
-    sha256 "d3f08b74c54724430e0bf0b9bbbff9c1eeb1c22b98b14c9d4d3221c8ae2d4161" => :high_sierra
-    sha256 "6c639f39e28ad98625f59540125fda9e86f4241ecdaa1d957b5f2ec413d014b0" => :sierra
+    cellar :any
+    sha256 "0c7b11dae0311e6f6f4f97981f01baf80086d1ec1101a045ae834b8410002038" => :catalina
+    sha256 "300b211f01eb7db1ae80bd74f5de3711ac4b856159dacb1de2758ea6f831710f" => :mojave
+    sha256 "86e28621fc7fb9b35fb9b4f82616ec31190ba7bbbb0a096d288ae79cd485c01c" => :high_sierra
   end
 
   def install
@@ -23,12 +23,13 @@ class Modules < Formula
     system "make", "install"
   end
 
-  def caveats; <<~EOS
-    To activate modules, add the following at the end of your .zshrc:
-      source #{opt_prefix}/init/zsh
-    You will also need to reload your .zshrc:
-      source ~/.zshrc
-  EOS
+  def caveats
+    <<~EOS
+      To activate modules, add the following at the end of your .zshrc:
+        source #{opt_prefix}/init/zsh
+      You will also need to reload your .zshrc:
+        source ~/.zshrc
+    EOS
   end
 
   test do

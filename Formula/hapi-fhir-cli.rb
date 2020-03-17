@@ -1,15 +1,15 @@
 class HapiFhirCli < Formula
   desc "Command-line interface for the HAPI FHIR library"
-  homepage "http://hapifhir.io/doc_cli.html"
-  url "https://github.com/jamesagnew/hapi-fhir/releases/download/v3.7.0/hapi-fhir-3.7.0-cli.zip"
-  sha256 "600ae4857b59176981d7d37e9affc2f2e8eecdb30b6b886b0bac1a1b5ee30156"
+  homepage "https://hapifhir.io/hapi-fhir/docs/tools/hapi_fhir_cli.html"
+  url "https://github.com/jamesagnew/hapi-fhir/releases/download/v4.2.0/hapi-fhir-4.2.0-cli.zip"
+  sha256 "ea2817f668bac2f2a41c9a6d37cefcf0945289d35784eafcbaa73b6d07654c3a"
 
   bottle :unneeded
 
-  depends_on :java => "1.8+"
+  depends_on "openjdk"
 
   resource "test_resource" do
-    url "https://github.com/jamesagnew/hapi-fhir/raw/v3.6.0/hapi-fhir-structures-dstu3/src/test/resources/specimen-example.json"
+    url "https://github.com/jamesagnew/hapi-fhir/raw/v4.1.0/hapi-fhir-structures-dstu3/src/test/resources/specimen-example.json"
     sha256 "4eacf47eccec800ffd2ca23b704c70d71bc840aeb755912ffb8596562a0a0f5e"
   end
 
@@ -17,6 +17,7 @@ class HapiFhirCli < Formula
     inreplace "hapi-fhir-cli", /SCRIPTDIR=(.*)/, "SCRIPTDIR=#{libexec}"
     libexec.install "hapi-fhir-cli.jar"
     bin.install "hapi-fhir-cli"
+    bin.env_script_all_files libexec/"bin", :JAVA_HOME => Formula["openjdk"].opt_prefix
   end
 
   test do

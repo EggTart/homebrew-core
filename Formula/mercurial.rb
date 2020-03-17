@@ -3,26 +3,26 @@
 class Mercurial < Formula
   desc "Scalable distributed version control system"
   homepage "https://mercurial-scm.org/"
-  url "https://www.mercurial-scm.org/release/mercurial-5.0.tar.gz"
-  sha256 "54ec76a0138d9b883873cfb2c651380659cd24aa99d92f8816982c6d0edd712a"
+  url "https://www.mercurial-scm.org/release/mercurial-5.3.1.tar.gz"
+  sha256 "f7c1f96de2199d6b38593ea865f08c0521fbd8e2fd52bd332414bf9fe5bf72d9"
 
   bottle do
-    sha256 "55b76ff626dfe5ade3443228f1d8e0b99af1faabd259b3b0662c1e1e8ec136c4" => :mojave
-    sha256 "4c9c17027c7a4a108aa45979089f846cb9837a9eab295412381e621097aa7a1b" => :high_sierra
-    sha256 "7814440ff9d6797431274a076a99dab0d43fc98c7ece276511cda6c19a672097" => :sierra
+    sha256 "84f3d1b2e5d2352627ac1a8c4c533f5f9f0f31cc5001e997440d123e7e43ae72" => :catalina
+    sha256 "e6eaf18db8088bece897fbf8232e1b712137831b2f5a961d81fe3476d1960bb9" => :mojave
+    sha256 "25bce8f7d2f222f755901293e22aada1f8b4a7b8a3ecfe31c2455033da4d277e" => :high_sierra
   end
 
-  depends_on "python@2" # does not support Python 3
+  depends_on "python"
 
   def install
-    ENV.prepend_path "PATH", Formula["python@2"].opt_libexec/"bin"
+    ENV["HGPYTHON3"] = "1"
 
-    system "make", "PREFIX=#{prefix}", "install-bin"
+    system "make", "PREFIX=#{prefix}", "PYTHON=python3", "install-bin"
 
     # Install chg (see https://www.mercurial-scm.org/wiki/CHg)
     cd "contrib/chg" do
-      system "make", "PREFIX=#{prefix}", "HGPATH=#{bin}/hg", \
-             "HG=#{bin}/hg"
+      system "make", "PREFIX=#{prefix}", "PYTHON=python3", "HGPATH=#{bin}/hg",
+                     "HG=#{bin}/hg"
       bin.install "chg"
     end
 

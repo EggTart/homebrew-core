@@ -1,15 +1,14 @@
 class Log4cplus < Formula
   desc "Logging Framework for C++"
   homepage "https://sourceforge.net/p/log4cplus/wiki/Home/"
-  url "https://downloads.sourceforge.net/project/log4cplus/log4cplus-stable/2.0.2/log4cplus-2.0.2.tar.xz"
-  sha256 "8ff4055be749f17f3648694bd5778bfd86d33158cceaa616a50c0299d6035b41"
+  url "https://downloads.sourceforge.net/project/log4cplus/log4cplus-stable/2.0.5/log4cplus-2.0.5.tar.xz"
+  sha256 "6046f0867ce4734f298418c7b7db0d35c27403090bb751d98e6e76aa4935f1af"
 
   bottle do
     cellar :any
-    sha256 "05ce5c61a86267690e5cf4944f4e9d55f1f568b44b4a4f0e6d0730c2c387b2c2" => :mojave
-    sha256 "7f166f2c75fb63279d4e41d41c81d0f4aaea13f403662e52f032af5d551d308f" => :high_sierra
-    sha256 "ce5afae2358928cb515d77e3c13288ec60c3859519253ef0d14ce792c88153a3" => :sierra
-    sha256 "3a3f4952bf0064e0cd81b0e8c538ca7f49434cfb387a4f9e8441f7dbddeb6d33" => :el_capitan
+    sha256 "1559e20cf8d6a6cbf66545ef391ab2979bbebd2cafdf4b71ab547d8daa472e01" => :catalina
+    sha256 "1b671e5605cdee4defa7f6e5693ddf1e6d902710e8fecdd541429a8444df5e15" => :mojave
+    sha256 "aaa4f419cf19b836d767066d505a7b4ca9addaa6392231b8f3dfd5ea2b103517" => :high_sierra
   end
 
   def install

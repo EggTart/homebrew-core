@@ -1,13 +1,13 @@
 class GstPluginsBase < Formula
   desc "GStreamer plugins (well-supported, basic set)"
   homepage "https://gstreamer.freedesktop.org/"
-  url "https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.16.0.tar.xz"
-  sha256 "4093aa7b51e28fb24dfd603893fead8d1b7782f088b05ed0f22a21ef176fb5ae"
+  url "https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.16.2.tar.xz"
+  sha256 "b13e73e2fe74a4166552f9577c3dcb24bed077021b9c7fa600d910ec6987816a"
 
   bottle do
-    sha256 "68c2133ee6fbc1cf02b6cbe2cf2196c0fe0945809101a03d92b4402745ab4306" => :mojave
-    sha256 "4e61e9185d605eea6fb7457467a9843d6585b47845ef1ee8e0b1a7b22bdaec20" => :high_sierra
-    sha256 "e6ce6564ba2d19701e8fde02be409a67cd91bef2cc3c85f4ca39d379aa36c73a" => :sierra
+    sha256 "64e4395ec1d40677cfc8b21eaf6815296f44660aab0b4a125735f266552dad95" => :catalina
+    sha256 "5a4245b5251ec3c8ef12a8278101c84c4db8a8892114a53e6a3304569571caba" => :mojave
+    sha256 "d9144e2a0c20e479c341167a8aa9ecc87e65a9c7c9515a62a855785cb1d42252" => :high_sierra
   end
 
   head do

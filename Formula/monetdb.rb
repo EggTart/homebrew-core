@@ -1,13 +1,13 @@
 class Monetdb < Formula
   desc "Column-store database"
   homepage "https://www.monetdb.org/"
-  url "https://www.monetdb.org/downloads/sources/Aug2018-SP2/MonetDB-11.31.13.tar.xz"
-  sha256 "f9fbf63ed7e6c306868b289c3fda8c3a8b6d3fc6bef589418940b2a21fd7c283"
+  url "https://www.monetdb.org/downloads/sources/Nov2019-SP3/MonetDB-11.35.19.tar.xz"
+  sha256 "eaca588936532f189e6d3d0be4079f195ee5be20e2f8c5738566b75aa86c8f75"
 
   bottle do
-    sha256 "c289a7faa889c3adf228d183a5310ef7187d679f93fde340d263f4ce3fb835d6" => :mojave
-    sha256 "16557092c3c437c8b2cb316c692a1e52b21db6370caf03af060a364b6550184b" => :high_sierra
-    sha256 "309eadb339243a3c262115df347685a4111fac62963fea437676db78d4f4d978" => :sierra
+    sha256 "cae9fb599fc184c773d9b14f25f2e914ea41693562f1ec394e8f764fce425010" => :catalina
+    sha256 "6468a9874db95f65c7f607281c9494c5a184fe8d79382e9c4f4f6b4bce353e4a" => :mojave
+    sha256 "007f74508914b133980a4eef667ef15e12d6be2245ea028f217431da86ebd5df" => :high_sierra
   end
 
   head do
@@ -15,13 +15,14 @@ class Monetdb < Formula
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
+    depends_on "bison" => :build
     depends_on "gettext" => :build
     depends_on "libtool" => :build
   end
 
   depends_on "libatomic_ops" => :build
   depends_on "pkg-config" => :build
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
   depends_on "readline" # Compilation fails with libedit
 
@@ -36,6 +37,11 @@ class Monetdb < Formula
                           "--enable-testing=no",
                           "--with-readline=#{Formula["readline"].opt_prefix}",
                           "--disable-rintegration"
+    system "make"
     system "make", "install"
+  end
+
+  test do
+    assert_match "Usage", shell_output("#{bin}/mclient --help 2>&1")
   end
 end

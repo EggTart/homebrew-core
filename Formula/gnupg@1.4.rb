@@ -7,6 +7,7 @@ class GnupgAT14 < Formula
   revision 1
 
   bottle do
+    sha256 "3796803df0956a54dfc5ed26f17a92791622c4ddc6b0dfa6b8fabc0f65afdd0d" => :catalina
     sha256 "32f23f8ceec79b8073f8b69a2c7f1278adf9020c00d78d2cd9d07c1e5f3bdb89" => :mojave
     sha256 "dbd43b52f11e65c2bb6dadf3adbf8ccf7f740af33b56e4d8c8b037611840f127" => :high_sierra
     sha256 "abc1e142397fbe833f2f7c5f71409d925ce690506d77296f7f3d41656a0791f2" => :sierra
@@ -51,22 +52,23 @@ class GnupgAT14 < Formula
     end
   end
 
-  def caveats; <<~EOS
-    This formula does not install either `gpg` or `gpgv` executables into
-    the PATH.
+  def caveats
+    <<~EOS
+      This formula does not install either `gpg` or `gpgv` executables into
+      the PATH.
 
-    If you simply require `gpg` and `gpgv` executables without explicitly
-    needing GnuPG 1.x we recommend:
-      brew install gnupg
+      If you simply require `gpg` and `gpgv` executables without explicitly
+      needing GnuPG 1.x we recommend:
+        brew install gnupg
 
-    If you really need to use these tools without the "1" suffix you can
-    add a "gpgbin" directory to your PATH from your #{shell_profile} like:
+      If you really need to use these tools without the "1" suffix you can
+      add a "gpgbin" directory to your PATH from your #{shell_profile} like:
 
-        PATH="#{opt_libexec}/gpgbin:$PATH"
+          PATH="#{opt_libexec}/gpgbin:$PATH"
 
-    Note that doing so may interfere with GPG-using formulae installed via
-    Homebrew.
-  EOS
+      Note that doing so may interfere with GPG-using formulae installed via
+      Homebrew.
+    EOS
   end
 
   test do

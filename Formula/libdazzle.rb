@@ -1,15 +1,14 @@
 class Libdazzle < Formula
   desc "GNOME companion library to GObject and Gtk+"
   homepage "https://gitlab.gnome.org/GNOME/libdazzle"
-  url "https://download.gnome.org/sources/libdazzle/3.32/libdazzle-3.32.2.tar.xz"
-  sha256 "413f8dfb8706760e0c649e2994bd10524ac0736601dd03ad2036293bed3bf141"
-  revision 1
+  url "https://download.gnome.org/sources/libdazzle/3.36/libdazzle-3.36.0.tar.xz"
+  sha256 "82b31bbf550fc62970c78bf7f9d55e5fae5b8ea13b24fe2d13c8c6039409d958"
 
   bottle do
     cellar :any
-    sha256 "30e5efefdbbbd26b794913130e6d7910ce020bff2614d727e18158f00242bbdb" => :mojave
-    sha256 "65a5cafcabcab53ce25786443921ac9f359a1e5e346fed99cb702d72dc805b80" => :high_sierra
-    sha256 "76662dd3e9127abd6986c812edf3b92472ea382fd58ac03dad4dd925ba34c64d" => :sierra
+    sha256 "2bfc647ec712a7b949e5356bc9a1d13f28154ca71ca89e5dd020ddb8d2de3182" => :catalina
+    sha256 "c00b9764eaa408bbc4881ff581225cc8a15f51ac568e057c2228315df9c89f00" => :mojave
+    sha256 "f9cbbdc898a2ad09a14664cfddb0775b44fabdc88a06d967a6481a1f27421f41" => :high_sierra
   end
 
   depends_on "gobject-introspection" => :build

@@ -1,20 +1,18 @@
 class GitLfs < Formula
   desc "Git extension for versioning large files"
   homepage "https://github.com/git-lfs/git-lfs"
-  url "https://github.com/git-lfs/git-lfs/releases/download/v2.7.2/git-lfs-v2.7.2.tar.gz"
-  sha256 "1e0a11e16051ea32127787a9197edd02564a5e4452f0e99d0d0b62ccfe22fc22"
+  url "https://github.com/git-lfs/git-lfs/releases/download/v2.10.0/git-lfs-v2.10.0.tar.gz"
+  sha256 "07fd5c57a1039d5717dc192affbe3268ec2fd03accdca462cb504c0b4194cd23"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "09295508b7b63f1c80eecd2071a5a807ff57cbc93e8d0b020922c730df256769" => :mojave
-    sha256 "21446c7c0e4fbcfb4584b77c900dd51796251d2490561150f34aec6a03c54926" => :high_sierra
-    sha256 "ceddf136bec1c839e0fdaedf72d9791cef3eaf94302bd9df24277d158e3271ca" => :sierra
+    sha256 "8fec7d8b8ad7c3332bfa1862dd8615712dab8315a9128ed8b5609fa1659431e7" => :catalina
+    sha256 "3c5bcef656ca742c6697b952c9f7c483c1fad046f52136dbe9ee0f16f44835c4" => :mojave
+    sha256 "ed0d8f1271d9d81a2c22622023c260ef040f2172e75357893ef54134bc6eedff" => :high_sierra
   end
 
   depends_on "go" => :build
-
-  # System Ruby uses old TLS versions no longer supported by RubyGems.
-  depends_on "ruby" => :build if MacOS.version <= :sierra
+  depends_on "ruby" => :build
 
   def install
     ENV["GIT_LFS_SHA"] = ""
@@ -36,15 +34,16 @@ class GitLfs < Formula
     end
   end
 
-  def caveats; <<~EOS
-    Update your git config to finish installation:
+  def caveats
+    <<~EOS
+      Update your git config to finish installation:
 
-      # Update global git config
-      $ git lfs install
+        # Update global git config
+        $ git lfs install
 
-      # Update system git config
-      $ git lfs install --system
-  EOS
+        # Update system git config
+        $ git lfs install --system
+    EOS
   end
 
   test do

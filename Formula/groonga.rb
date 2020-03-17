@@ -1,13 +1,13 @@
 class Groonga < Formula
   desc "Fulltext search engine and column store"
-  homepage "http://groonga.org/"
-  url "https://packages.groonga.org/source/groonga/groonga-9.0.1.tar.gz"
-  sha256 "f1b14f0fd62ca7da550c11e164edcbcac7d83de75474cc4d3a6574adf2733507"
+  homepage "https://groonga.org/"
+  url "https://packages.groonga.org/source/groonga/groonga-9.1.2.tar.gz"
+  sha256 "efcc4da99c5d37e6b2e33e28b60a01af5f6922a1fc96130c339dbcb962fe497e"
 
   bottle do
-    sha256 "d06113460207d261b1c6c77cc12ba7b529105c5a99ba9f38cea72457d25be114" => :mojave
-    sha256 "20657333b9417de0c301ce9f32c22bcd52ec52a97254e3cede37981e7275f86b" => :high_sierra
-    sha256 "32042baca858b0a712c102233a85591e2e585dceb82b286aed56209ae671f51f" => :sierra
+    sha256 "17e2e6407f06f290c184b26adb72a0eddccec95da99ca60e4706edf25cad38ac" => :catalina
+    sha256 "42ea775611a44e237c71b746b51b0bea4d66a54f04e91902e9cfce7932f5f838" => :mojave
+    sha256 "fbc42125cf805368d6de3f6e8ea8504811703f5ac6376529fa982d173774afea" => :high_sierra
   end
 
   head do
@@ -21,7 +21,7 @@ class Groonga < Formula
   depends_on "mecab"
   depends_on "mecab-ipadic"
   depends_on "msgpack"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
 
   link_overwrite "lib/groonga/plugins/normalizers/"

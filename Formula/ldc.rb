@@ -1,14 +1,14 @@
 class Ldc < Formula
   desc "Portable D programming language compiler"
   homepage "https://wiki.dlang.org/LDC"
-  url "https://github.com/ldc-developers/ldc/releases/download/v1.15.0/ldc-1.15.0-src.tar.gz"
-  sha256 "d7e0e0cf332542c42e3b6570d391b0f05d5a81a812297efcdadccf8fb0f0cee2"
+  url "https://github.com/ldc-developers/ldc/releases/download/v1.20.1/ldc-1.20.1-src.tar.gz"
+  sha256 "2b21dfffb6efd2c2158bc83422765335aae34b709ebdc406bb026c21967a1aaf"
   head "https://github.com/ldc-developers/ldc.git", :shallow => false
 
   bottle do
-    sha256 "6bc71f5b6f5e3c2d5b3ad60ab26aaeef04650de55d1c6993ab7d3cfbb2ec06aa" => :mojave
-    sha256 "11a25fb3aa6eb44e0d120e1b777141f0095a811b15042bae41621123800fce52" => :high_sierra
-    sha256 "ec4cc70ece5daaad1992b5dbe0f8b06a5762bc959fc726960e1225e355c775fd" => :sierra
+    sha256 "122d9a37cccbd671d223a2ce683ad141489633d2f11fa8f662635f6ba4a49027" => :catalina
+    sha256 "67f9bdd412e9ee9e6864f52ae5b52358a01b93de359fe8aad4b9d7bed73a572a" => :mojave
+    sha256 "7945dba30bfac0ced442b69a46a477593ee04e3b3f28cc6fdb56b94f58e94706" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -16,9 +16,9 @@ class Ldc < Formula
   depends_on "llvm"
 
   resource "ldc-bootstrap" do
-    url "https://github.com/ldc-developers/ldc/releases/download/v1.12.0/ldc2-1.12.0-osx-x86_64.tar.xz"
-    version "1.12.0"
-    sha256 "a946e658aaff1eed80bffeb4d69b572f259368fac44673731781f6d487dea3cd"
+    url "https://github.com/ldc-developers/ldc/releases/download/v1.20.1/ldc2-1.20.1-osx-x86_64.tar.xz"
+    version "1.20.1"
+    sha256 "b0e711b97d7993ca77fed0f49a7d2cf279249406d46e9cf005dd77d5a4e23956"
   end
 
   def install
@@ -30,11 +30,7 @@ class Ldc < Formula
         -DLLVM_ROOT_DIR=#{Formula["llvm"].opt_prefix}
         -DINCLUDE_INSTALL_DIR=#{include}/dlang/ldc
         -DD_COMPILER=#{buildpath}/ldc-bootstrap/bin/ldmd2
-        -DLDC_WITH_LLD=OFF
-        -DRT_ARCHIVE_WITH_LDC=OFF
       ]
-      # LDC_WITH_LLD see https://github.com/ldc-developers/ldc/releases/tag/v1.4.0 Known issues
-      # RT_ARCHIVE_WITH_LDC see https://github.com/ldc-developers/ldc/issues/2350
 
       system "cmake", "..", *args
       system "make"

@@ -1,15 +1,15 @@
 class Wartremover < Formula
   desc "Flexible Scala code linting tool"
   homepage "https://github.com/wartremover/wartremover"
-  url "https://github.com/wartremover/wartremover/archive/v2.4.2.tar.gz"
-  sha256 "95ba5b55b405e5ec24c673f3a8d149e5474b702d8ba7cefdf301511b9a06aa80"
+  url "https://github.com/wartremover/wartremover/archive/v2.4.5.tar.gz"
+  sha256 "83f86654e245f10b0d2666675250559cfb3ef9a98b09a11739334762d7b889f4"
   head "https://github.com/wartremover/wartremover.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "129e8479886e23a867cb81ff13bbc37da2850f1750a37efb0bfd34a9e1152452" => :mojave
-    sha256 "1f6fde47f4028917eaf79eae19d419c8f94c3d660d639ae126d1ad2584c04e02" => :high_sierra
-    sha256 "6c81aa47115c200dd87ddf84c2412513c945129830acfe9cacff26efd9882d6c" => :sierra
+    sha256 "ac3bc25e5234c527c546bfab1fc29df52da43952204c7fae60ed6dec0321d8ba" => :catalina
+    sha256 "56ecdad938589a0664837a7dc48b6d90adc5e24c4481ee1046b22c384bab013b" => :mojave
+    sha256 "bb2a05744eaea5b65952c50f1e7fed70c9755ed268fe07618aa842e16e61aac7" => :high_sierra
   end
 
   depends_on "sbt" => :build

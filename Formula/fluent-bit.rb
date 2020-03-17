@@ -1,18 +1,20 @@
 class FluentBit < Formula
   desc "Data Collector for IoT"
   homepage "https://github.com/fluent/fluent-bit"
-  url "https://github.com/fluent/fluent-bit/archive/v0.14.9.tar.gz"
-  sha256 "dad69d3b1ecb9577880b65ffc40fcaed44ab4875bd2d179641098e2778744a04"
+  url "https://github.com/fluent/fluent-bit/archive/v1.3.10.tar.gz"
+  sha256 "38b614a8e4cc9b4cc0fc06766fe6c0d815918fe23b0cc02dda31a38910abf184"
   head "https://github.com/fluent/fluent-bit.git"
 
   bottle do
     cellar :any
-    sha256 "2507e5a3b0f30eaf44f6acf6ab659d3003ff5822d0e279fc1712830af77e8cb4" => :mojave
-    sha256 "45f89286b8aa1d5946bec8f5d6ddc9ddfd44cf1be795816f6c7b6e3d018a6055" => :high_sierra
-    sha256 "d0136990b48d1fe3f5ac0e7e55b41ac0925404349730605d1f1b38f551cd5b03" => :sierra
+    sha256 "0dd791b074a5b9806dfe863fc6a117a8631bb2053af7b3011f94b5fa10298032" => :catalina
+    sha256 "ffa38513e557430010ceaaa2d868e9aeec1a1e35844dcd30a8d5b9ca4410c8e1" => :mojave
+    sha256 "06d4d5ddf1d7f87f5765f77a0bf803fd1a0bd522d26b0b4e30644268f0f1a264" => :high_sierra
   end
 
+  depends_on "bison" => :build
   depends_on "cmake" => :build
+  depends_on "flex" => :build
 
   conflicts_with "mbedtls", :because => "fluent-bit includes mbedtls libraries."
   conflicts_with "msgpack", :because => "fluent-bit includes msgpack libraries."

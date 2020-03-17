@@ -1,16 +1,16 @@
 class Mpd < Formula
   desc "Music Player Daemon"
   homepage "https://www.musicpd.org/"
-  url "https://www.musicpd.org/download/mpd/0.21/mpd-0.21.7.tar.xz"
-  sha256 "512062bc529bee04d4ccfaa2c6e720afc85bb071e49850a096b5ed518b3b412c"
+  url "https://www.musicpd.org/download/mpd/0.21/mpd-0.21.20.tar.xz"
+  sha256 "422ef0a996d961f3ebc6856395f3a855b45fa0059910e878fb98281007e510e1"
   revision 1
   head "https://github.com/MusicPlayerDaemon/MPD.git"
 
   bottle do
     cellar :any
-    sha256 "e1814d5b120bd4ea5e1e8527822cb209597aca1fc6cf0664c68829e4ef2032a0" => :mojave
-    sha256 "d3fad4a4ecfdf1737ffcaf939249f61d0dae9ad692cecc659b596f2a35f50d61" => :high_sierra
-    sha256 "108282ab78e05ea808b14c9f3f6b6630d1b17cc99892ad8011c387724d2df709" => :sierra
+    sha256 "ba2b061e452d78cd78b6a6c2800cb402c5023923a972dea5798e5c5ce00dbdeb" => :catalina
+    sha256 "cce9b243179b0b6e0ce7093596744343540200007ef3b3018782fb4b8c6322f3" => :mojave
+    sha256 "84969afcc6c31b7dcb4a4f0244060fd17b3e806fb479673f32a5e5fe56b1471c" => :high_sierra
   end
 
   depends_on "boost" => :build
@@ -67,40 +67,42 @@ class Mpd < Formula
     (etc/"mpd").install "doc/mpdconf.example" => "mpd.conf"
   end
 
-  def caveats; <<~EOS
-    MPD requires a config file to start.
-    Please copy it from #{etc}/mpd/mpd.conf into one of these paths:
-      - ~/.mpd/mpd.conf
-      - ~/.mpdconf
-    and tailor it to your needs.
-  EOS
+  def caveats
+    <<~EOS
+      MPD requires a config file to start.
+      Please copy it from #{etc}/mpd/mpd.conf into one of these paths:
+        - ~/.mpd/mpd.conf
+        - ~/.mpdconf
+      and tailor it to your needs.
+    EOS
   end
 
   plist_options :manual => "mpd"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>WorkingDirectory</key>
-        <string>#{HOMEBREW_PREFIX}</string>
-        <key>ProgramArguments</key>
-        <array>
-            <string>#{opt_bin}/mpd</string>
-            <string>--no-daemon</string>
-        </array>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>KeepAlive</key>
-        <true/>
-        <key>ProcessType</key>
-        <string>Interactive</string>
-    </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>WorkingDirectory</key>
+          <string>#{HOMEBREW_PREFIX}</string>
+          <key>ProgramArguments</key>
+          <array>
+              <string>#{opt_bin}/mpd</string>
+              <string>--no-daemon</string>
+          </array>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>KeepAlive</key>
+          <true/>
+          <key>ProcessType</key>
+          <string>Interactive</string>
+      </dict>
+      </plist>
+    EOS
   end
 
   test do

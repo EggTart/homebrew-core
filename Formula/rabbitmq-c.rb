@@ -1,21 +1,20 @@
 class RabbitmqC < Formula
   desc "RabbitMQ C client"
   homepage "https://github.com/alanxz/rabbitmq-c"
-  url "https://github.com/alanxz/rabbitmq-c/archive/v0.9.0.tar.gz"
-  sha256 "316c0d156452b488124806911a62e0c2aa8a546d38fc8324719cd29aaa493024"
+  url "https://github.com/alanxz/rabbitmq-c/archive/v0.10.0.tar.gz"
+  sha256 "6455efbaebad8891c59f274a852b75b5cc51f4d669dfc78d2ae7e6cc97fcd8c0"
   head "https://github.com/alanxz/rabbitmq-c.git"
 
   bottle do
     cellar :any
-    sha256 "2d3955f945f55d8627d0e7107cd5e0d64e6f67f1385f56be7c5c65e9fc15e0dc" => :mojave
-    sha256 "d95c6f2c892a815ac20fe9a57fac961c73390182abb748d95d5901a3cb45d7ab" => :high_sierra
-    sha256 "b2c77dd791f014dfd33983394a369f97e23e0c4519d451b552322df9dced4081" => :sierra
-    sha256 "892c266e4c6086c65b3e4cee8cf5116f59d682b178540ee3f78efeff1e9d912a" => :el_capitan
+    sha256 "6434a9100eeadfcd57d35fd31d1863d75b71ec163a3a1be29076c217712bda55" => :catalina
+    sha256 "5f99c633ece8efad2ef2085955b22d0558d8fc2dedcac67b3ba8b58a2640c2c3" => :mojave
+    sha256 "53d883744a185e5daab18c8bd18fd70fed56dd009cc507356f128663947c2453" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "popt"
 
   def install

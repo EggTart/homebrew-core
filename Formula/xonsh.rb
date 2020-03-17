@@ -3,30 +3,31 @@ class Xonsh < Formula
 
   desc "Python-ish, BASHwards-compatible shell language and command prompt"
   homepage "https://xon.sh/"
-  url "https://github.com/xonsh/xonsh/archive/0.8.12.tar.gz"
-  sha256 "7c51ce752f86e9eaae786a4886a6328ba66e16d91d2b7ba696baa6560a4de4ec"
+  url "https://github.com/xonsh/xonsh/archive/0.9.14.tar.gz"
+  sha256 "98936fb7ea3cf6b2b720dd1ae98f081f4bdfb472ebc02a41eae7eac61dece5ef"
+  revision 1
   head "https://github.com/xonsh/xonsh.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "0946b4172b6c6f927f17d9bd12ecb2fdf18f8f086abe0e7841c9dcb3b4c634dc" => :mojave
-    sha256 "19efaf5ee095bdbfd58e8b32b3629e3f5bd58f3dc3d310e382520554873bfaf6" => :high_sierra
-    sha256 "188f0659e92c741173d0d9fd14ecfd050abdbc7d82a350cb5e38faf931a65d35" => :sierra
+    sha256 "7402482d0b7ff76ae36abb9335bd485395df4669d5db608d18c397be02e89dc2" => :catalina
+    sha256 "3f26068cef87a0ef23c3f181efb50c521b690366dfde198519a88a4fecd7bce5" => :mojave
+    sha256 "077dd4221373e8adb5b6039a2aa4ce1935f34dbc7543ba551ef06dd7a45b5001" => :high_sierra
   end
 
-  depends_on "python"
+  depends_on "python@3.8"
 
   # Resources based on `pip3 install xonsh[ptk,pygments,proctitle]`
   # See https://xon.sh/osx.html#dependencies
 
   resource "prompt_toolkit" do
-    url "https://files.pythonhosted.org/packages/d9/a5/4b2dd1a05403e34c3ba0d9c00f237c01967c0a4f59a427c9b241129cdfe4/prompt_toolkit-2.0.7.tar.gz"
-    sha256 "fd17048d8335c1e6d5ee403c3569953ba3eb8555d710bfc548faf0712666ea39"
+    url "https://files.pythonhosted.org/packages/0c/37/7ad3bf3c6dbe96facf9927ddf066fdafa0f86766237cff32c3c7355d3b7c/prompt_toolkit-2.0.10.tar.gz"
+    sha256 "f15af68f66e664eaa559d4ac8a928111eebd5feda0c11738b5998045224829db"
   end
 
   resource "Pygments" do
-    url "https://files.pythonhosted.org/packages/64/69/413708eaf3a64a6abb8972644e0f20891a55e621c6759e2c3f3891e05d63/Pygments-2.3.1.tar.gz"
-    sha256 "5ffada19f6203563680669ee7f53b64dabbeb100eb51b61996085e99c03b284a"
+    url "https://files.pythonhosted.org/packages/7e/ae/26808275fc76bf2832deb10d3a3ed3107bc4de01b85dcccbe525f2cd6d1e/Pygments-2.4.2.tar.gz"
+    sha256 "881c4c157e45f30af185c1ffe8d549d48ac9127433f2c380c24b84572ad66297"
   end
 
   resource "setproctitle" do

@@ -7,6 +7,7 @@ class LincityNg < Formula
   head "https://github.com/lincity-ng/lincity-ng.git"
 
   bottle do
+    sha256 "4ea8b0d4afe937e6ffdd5ff7c92fd84fdfb23c35f5dd8a0bdcb015f79a7ba5b7" => :catalina
     sha256 "5909e4a6c9cfe47aafd4fb4c5dd26016cbe096945faa485d377fe2c423b3caca" => :mojave
     sha256 "bdfe153ca219084bf621c031612c8b86b02911e64d6fa154422812aee7de8d76" => :high_sierra
     sha256 "cae5f270842c10affb29d6f9c592a96913d9ca630c49d22afa03cba6d3a6121c" => :sierra
@@ -37,10 +38,11 @@ class LincityNg < Formula
     rm_rf ["#{pkgshare}/applications", "#{pkgshare}/pixmaps"]
   end
 
-  def caveats; <<~EOS
-    If you have problem with fullscreen, try running in windowed mode:
-      lincity-ng -w
-  EOS
+  def caveats
+    <<~EOS
+      If you have problem with fullscreen, try running in windowed mode:
+        lincity-ng -w
+    EOS
   end
 
   test do

@@ -1,20 +1,23 @@
 class GetIplayer < Formula
   desc "Utility for downloading TV and radio programmes from BBC iPlayer"
   homepage "https://github.com/get-iplayer/get_iplayer"
-  url "https://github.com/get-iplayer/get_iplayer/archive/v3.20.tar.gz"
-  sha256 "296d1c6bd6f237d8c65ca3dffd6a28e70451552c302f31ac231d609cceeb355d"
+  url "https://github.com/get-iplayer/get_iplayer/archive/v3.25.tar.gz"
+  sha256 "2ae278a812494d6289224e6d347c8761ec815ad84f4daf41fd0a4f62832b7d63"
   head "https://github.com/get-iplayer/get_iplayer.git", :branch => "develop"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e846d2ede69a1e10cde71ca185ae90d8bcd8f7d1d440441419e7fe0a4847d2f5" => :mojave
-    sha256 "0a24107a3f1c0e92a7783f7a158a07347131228861c39ad2241d61a05ef109f5" => :high_sierra
-    sha256 "4ff0d85034c39258acbe3427725a1cf0fd5e54d2715628780a7532ff46cb5a76" => :sierra
+    sha256 "039b49cd5c543dfa6d6a72ca1102aad3b1524b8d4a48cba0253c513bddbc1129" => :catalina
+    sha256 "4f46d21efe29329f06b853e744609a45acb64074376777ba5661ef4f925c95f5" => :mojave
+    sha256 "447f3960eb18c8b0779d98c93e187b3e9009995466b0c228ef6157a45115bdaf" => :high_sierra
   end
 
   depends_on "atomicparsley"
   depends_on "ffmpeg"
   depends_on :macos => :yosemite
+
+  uses_from_macos "libxml2"
+  uses_from_macos "perl"
 
   resource "IO::Socket::IP" do
     url "https://cpan.metacpan.org/authors/id/P/PE/PEVANS/IO-Socket-IP-0.39.tar.gz"
@@ -58,7 +61,7 @@ class GetIplayer < Formula
   end
 
   test do
-    output = shell_output("\"#{bin}/get_iplayer\" --refresh --refresh-include=\"BBC None\" --quiet dontshowanymatches 2>&1")
+    output = shell_output("\"#{bin}/get_iplayer\" -f --refresh-include=\"BBC None\" -q dontshowanymatches 2>&1")
     assert_match "get_iplayer #{pkg_version}-homebrew", output, "Unexpected version"
     assert_match "INFO: 0 matching programmes", output, "Unexpected output"
     assert_match "INFO: Indexing tv programmes (concurrent)", output,

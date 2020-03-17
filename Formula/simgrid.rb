@@ -1,14 +1,13 @@
 class Simgrid < Formula
   desc "Studies behavior of large-scale distributed systems"
   homepage "https://simgrid.org/"
-  url "https://gforge.inria.fr/frs/download.php/file/37602/SimGrid-3.20.tar.gz"
-  sha256 "4d4757eb45d87cf18d990d589c31d223b0ea8cf6fcd8c94fca4d38162193cef6"
+  url "https://framagit.org/simgrid/simgrid/uploads/0365f13697fb26eae8c20fc234c5af0e/SimGrid-3.25.tar.gz"
+  sha256 "0b5dcdde64f1246f3daa7673eb1b5bd87663c0a37a2c5dcd43f976885c6d0b46"
 
   bottle do
-    sha256 "a9c5cb5da50ab2b224e5d1882834d1e7c4428393e05bec3731823597a2da30e9" => :mojave
-    sha256 "75ce382a395f963425946d7f53361fa1143a2b6ca9292c63193e76139bcef91e" => :high_sierra
-    sha256 "58895cb0aed9235972377d2460a18c8bc03203212ae8246450c429e837a01bcf" => :sierra
-    sha256 "c0a6cf0fba37da1c281cac508bdde38aa4145fe7c50bcc9f466f5521cf95d722" => :el_capitan
+    sha256 "ad770f08175c732a0d41fb8ce9cd0c5522d3276b8f062560cfe2b638529481da" => :catalina
+    sha256 "198a2b92621a35673354f863488168d7daae940f200f319a3565d1b37d021c50" => :mojave
+    sha256 "d458ff1173916ee455577e3873cb46a5c5d2d4194d7146ef945cf5e28908a23f" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -22,6 +21,8 @@ class Simgrid < Formula
     system "cmake", ".",
                     "-Denable_debug=on",
                     "-Denable_compile_optimizations=off",
+                    "-DCMAKE_C_COMPILER=clang",
+                    "-DCMAKE_CXX_COMPILER=clang++",
                     *std_cmake_args
     system "make", "install"
   end
@@ -30,10 +31,10 @@ class Simgrid < Formula
     (testpath/"test.c").write <<~EOS
       #include <stdio.h>
       #include <stdlib.h>
-      #include <simgrid/msg.h>
+      #include <simgrid/engine.h>
 
       int main(int argc, char* argv[]) {
-        printf("%f", MSG_get_clock());
+        printf("%f", simgrid_get_clock());
         return 0;
       }
     EOS

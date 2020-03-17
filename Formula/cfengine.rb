@@ -1,22 +1,22 @@
 class Cfengine < Formula
   desc "Help manage and understand IT infrastructure"
   homepage "https://cfengine.com/"
-  url "https://cfengine-package-repos.s3.amazonaws.com/tarballs/cfengine-3.12.2.tar.gz"
-  sha256 "0285e039f576b4cf2c8a2f795fdb1687b7637e932bb1d963093546f2abee11b0"
+  url "https://cfengine-package-repos.s3.amazonaws.com/tarballs/cfengine-3.15.0.tar.gz"
+  sha256 "fa53e137f850eb268a8e7ae4578b5db5dc383656341f5053dc1a353ed0288265"
 
   bottle do
-    sha256 "71f81ecc7298760f4505feeb0da87c3e590a43fbd01d1c96694f8b84cd8f8e44" => :mojave
-    sha256 "a25aa80684bac6366073d28d80c79be68b01b7c6aa1658a74ae63c56c5e2828e" => :high_sierra
-    sha256 "1d241c37a4371db065ef43c47d4b9d9ad8e94622c4912be8d06391a565293745" => :sierra
+    sha256 "ef667d58ff32efffd138990854dfaaa9a85fb8eb2542a19b9179041def1fa774" => :catalina
+    sha256 "f83a9a2297adaad480425fd77f48c5c1ecabfa5d140c1217353d9f4c8e6e399d" => :mojave
+    sha256 "54b6be6b949cee268524b61ca0e72b687a6823058e9e9a8849c90ee98d75ecf9" => :high_sierra
   end
 
   depends_on "lmdb"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
 
   resource "masterfiles" do
-    url "https://cfengine-package-repos.s3.amazonaws.com/tarballs/cfengine-masterfiles-3.12.2.tar.gz"
-    sha256 "4abeeb23f6c5c50bed6ece5e2ba09d3d485ccccfff88852bf8d2668c73ef2caa"
+    url "https://cfengine-package-repos.s3.amazonaws.com/tarballs/cfengine-masterfiles-3.15.0.tar.gz"
+    sha256 "4a071c0c4ba7df9bad93144cff5fbc0566e5172afd66201072e3193b76c55a38"
   end
 
   def install

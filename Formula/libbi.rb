@@ -1,16 +1,16 @@
 class Libbi < Formula
   desc "Bayesian state-space modelling on parallel computer hardware"
   homepage "https://libbi.org/"
-  url "https://github.com/lawmurray/LibBi/archive/1.4.4.tar.gz"
-  sha256 "37bf4d3a9686000442494204972d09504f27a8a840174c0f116b0cf2ff7713fd"
-  revision 3
+  url "https://github.com/lawmurray/LibBi/archive/1.4.5.tar.gz"
+  sha256 "af2b6d30e1502f99a3950d63ceaf7d7275a236f4d81eff337121c24fbb802fbe"
+  revision 2
   head "https://github.com/lawmurray/LibBi.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2e53c92aaa7dc0446b22a305130ae8d7e3deaf3d370116fae8b1b7ef60a6820e" => :mojave
-    sha256 "b0888c11a7fde4aceea78f281593b2dee115521bec9cfa9aaa0b29109881cf51" => :high_sierra
-    sha256 "dc6d58a9f2b19b86d64097ecee68e40f1f060020b17590d08c759b199b740924" => :sierra
+    sha256 "8a5e07818b7ab072b4ce227a8e9c6fbfe0a944376fe0e7ae718757f552daf6cb" => :catalina
+    sha256 "1ccf102c4139efb50411136b936637ca4f353c64660f945044c4056dfaabec5e" => :mojave
+    sha256 "b0336adbd5aa3122599d729ad9472ec368d74d2a891ce0aee0348e4c5768c162" => :high_sierra
   end
 
   depends_on "automake"
@@ -18,6 +18,8 @@ class Libbi < Formula
   depends_on "gsl"
   depends_on "netcdf"
   depends_on "qrupdate"
+
+  uses_from_macos "perl"
 
   resource "Test::Simple" do
     url "https://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test-Simple-1.302133.tar.gz"
@@ -137,7 +139,7 @@ class Libbi < Formula
 
   test do
     cp Dir[pkgshare/"Test.bi", pkgshare/"test.conf"], testpath
-    system "#{bin}/libbi", "sample", "@test.conf", "--disable-openmp"
+    system "#{bin}/libbi", "sample", "@test.conf"
     assert_predicate testpath/"test.nc", :exist?
   end
 end

@@ -2,28 +2,21 @@ class Fluxctl < Formula
   desc "Command-line tool to access Weave Flux, the Kubernetes GitOps operator"
   homepage "https://github.com/weaveworks/flux"
   url "https://github.com/weaveworks/flux.git",
-      :tag      => "1.12.3",
-      :revision => "5668c02251eb148b1cbc643946ce13e73b8dcb50"
+      :tag      => "1.18.0",
+      :revision => "32a60f735385d570243f8c15f5b2b5ff460845fa"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "79f9657453f9dd81b483ace06cad364fce20a52e10c081b2758126bb51656ad8" => :mojave
-    sha256 "e2d047c737c5fb6426160612a36293c8abe30a37c7361a6fdc16f612bb250b34" => :high_sierra
-    sha256 "f203463fd088bc6b52788659cdab61970a70cab37869eb394365a7d192aab5f1" => :sierra
+    sha256 "c5ad883cfc41d1e6a4c92f89856ada73a1cf0fb20a1f5a54f6d5bdc151d10e23" => :catalina
+    sha256 "8c4dcb4cd50455cc9928f13fe9151df3daafe631c80d2ab843f3cc3080060532" => :mojave
+    sha256 "163c3fbf008299ca24c3997c3c7e5499faf1d580b4db0e555bccbcb9d86d18e6" => :high_sierra
   end
 
-  depends_on "dep" => :build
   depends_on "go" => :build
 
   def install
-    ENV["GOPATH"] = buildpath
-    dir = buildpath/"src/github.com/weaveworks/flux"
-    dir.install buildpath.children - [buildpath/".brew_home"]
-
-    cd dir do
-      system "dep", "ensure", "-vendor-only"
-      system "make", "release-bins"
-      bin.install "build/fluxctl_darwin_amd64" => "fluxctl"
+    cd buildpath/"cmd/fluxctl" do
+      system "go", "build", "-ldflags", "-s -w -X main.version=#{version}", "-trimpath", "-o", bin/"fluxctl"
       prefix.install_metafiles
     end
   end
@@ -43,7 +36,7 @@ class Fluxctl < Formula
     r, _w, pid = PTY.spawn("#{bin}/fluxctl sync", :err=>:out)
     begin
       Timeout.timeout(5) do
-        assert_match r.gets.chomp, "Error: Could not load kubernetes configuration file: invalid configuration: no configuration has been provided"
+        assert_match "Error: Could not load kubernetes configuration file", r.gets.chomp
         Process.wait pid
         assert_equal 1, $CHILD_STATUS.exitstatus
       end

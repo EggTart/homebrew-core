@@ -1,14 +1,15 @@
 class Itk < Formula
   desc "Insight Toolkit is a toolkit for performing registration and segmentation"
-  homepage "https://www.itk.org/"
-  url "https://downloads.sourceforge.net/project/itk/itk/4.13/InsightToolkit-4.13.2.tar.gz"
-  sha256 "d8760b279de20497c432e7cdf97ed349277da1ae435be1f6f0f00fbe8d4938c1"
-  head "https://itk.org/ITK.git"
+  homepage "https://itk.org"
+  url "https://github.com/InsightSoftwareConsortium/ITK/releases/download/v5.0.1/InsightToolkit-5.0.1.tar.gz"
+  sha256 "613b125cbf58481e8d1e36bdeacf7e21aba4b129b4e524b112f70c4d4e6d15a6"
+  revision 1
+  head "https://github.com/InsightSoftwareConsortium/ITK.git"
 
   bottle do
-    sha256 "6069552ee5bb62a741001cfee2ce34db7e9a570f2b6ad889e8dac0d419f64b1c" => :mojave
-    sha256 "57d4e9d5a539f13d7d20ccef575cc2b0fd661d554ef0c8fe0abeaec6c716f874" => :high_sierra
-    sha256 "f529daedd5321cd722b400203cb6eaa7bf9b43cf2cbe74eac258414c9e97f349" => :sierra
+    sha256 "2baca856421c5089926dc09a573743e101fabd11cae5ac611e26d0609bb5f6a6" => :catalina
+    sha256 "85695ce0ee0cbf98a77acb458ae3d6f0bc90c86a3126a90abe9ecbdc0b72e8eb" => :mojave
+    sha256 "d8122820121a4ab59c76276eb8acfda4483c80fb767857d0ec7d77120ec1ef7b" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -19,13 +20,6 @@ class Itk < Formula
   depends_on "libpng"
   depends_on "libtiff"
   depends_on "vtk"
-
-  # Patch needed to install MINC's cmake files into #{lib}/cmake not #{lib}
-  # PR Submitted to ITK upstream: https://github.com/InsightSoftwareConsortium/ITK/pull/754
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/master/itk/4.13.2-MINC-cmake-files-location.patch"
-    sha256 "7ec6a55e83109332d636298e7339793ec338969211533467ff0fbfb7c1c27883"
-  end
 
   def install
     args = std_cmake_args + %W[
@@ -75,9 +69,9 @@ class Itk < Formula
 
     v = version.to_s.split(".")[0..1].join(".")
     # Build step
-    system ENV.cxx, "-isystem", "#{include}/ITK-#{v}", "-o", "test.cxx.o", "-c", "test.cxx"
+    system ENV.cxx, "-std=c++11", "-isystem", "#{include}/ITK-#{v}", "-o", "test.cxx.o", "-c", "test.cxx"
     # Linking step
-    system ENV.cxx, "test.cxx.o", "-o", "test",
+    system ENV.cxx, "-std=c++11", "test.cxx.o", "-o", "test",
                     "#{lib}/libITKCommon-#{v}.1.dylib",
                     "#{lib}/libITKVNLInstantiation-#{v}.1.dylib",
                     "#{lib}/libitkvnl_algo-#{v}.1.dylib",

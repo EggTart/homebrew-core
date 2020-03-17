@@ -1,14 +1,14 @@
 class Bindfs < Formula
   desc "FUSE file system for mounting to another location"
   homepage "https://bindfs.org/"
-  url "https://bindfs.org/downloads/bindfs-1.13.10.tar.gz"
-  sha256 "92b8c1c124f1629fe1a8aca4a1268a4bc67b26496e6e8ceb0d0e54c99ab88e93"
+  url "https://bindfs.org/downloads/bindfs-1.14.3.tar.gz"
+  sha256 "7c87d4b80936282e78dc3840c64d3afaf1f0d7a486b29efc43699b9b178a9a25"
 
   bottle do
     cellar :any
-    sha256 "bfc478e1a13f48bec26016b9dca00d912a4df9dd60e1a80779c063f76e507e50" => :mojave
-    sha256 "f50a091ab3c3e15e104093b02eb8278f54f9feecb49424cda90c011b0d942b94" => :high_sierra
-    sha256 "53cba0d94703c47503e276b7116a77d45c6a1a51976d97bcfb12ae8722a473b5" => :sierra
+    sha256 "31afc14d75ff131ffad66b27964fca8e2418083643551b3c807a114e0160aaad" => :catalina
+    sha256 "eeb5bd2a82f3b341cc2d48041eb1fe8f7d6b1e6c3680c3b379d5410153bff81b" => :mojave
+    sha256 "3abc77e861ed4733449cb4999befe2619239bb15d0562b5c288ab7894849ca3e" => :high_sierra
   end
 
   head do

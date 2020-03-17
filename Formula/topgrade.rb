@@ -1,23 +1,35 @@
 class Topgrade < Formula
   desc "Upgrade all the things"
   homepage "https://github.com/r-darwish/topgrade"
-  url "https://github.com/r-darwish/topgrade/archive/v2.0.0.tar.gz"
-  sha256 "34f4f5a037b54470da5067bb7be085f042fc1987d196f40faf8707fc2d4f8051"
+  url "https://github.com/r-darwish/topgrade/archive/v4.2.0.tar.gz"
+  sha256 "4f58bd5f72a17f63cf833d6bf30830116c31cb502f264ad3d22e1f2bd646597d"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "fc2c823897ad0d8b1e8f0e8fa601df10d9f9694102c1955338c24b58d2c6e478" => :mojave
-    sha256 "baa4b766fd436837473cac4d14fad3a1015fdf9648cd154c6e4a34155bff216c" => :high_sierra
-    sha256 "dd538ed9507c5f1a2373b28a259d2a8006929724e4c3a0829c62df263df28f2e" => :sierra
+    sha256 "f991565e63fe2c1bf0e549175f6db56d865744e63311c156663e518555b64f61" => :catalina
+    sha256 "4a7175636bfc857225ff4a3b80962c5bf5676b9cfb9513df0057bc6408d9fc3b" => :mojave
+    sha256 "af4196b694d2fa53a213331f117175bc046a17435f297e4b874066598eee467a" => :high_sierra
   end
 
   depends_on "rust" => :build
 
   def install
-    system "cargo", "install", "--root", prefix, "--path", "."
+    system "cargo", "install", "--locked", "--root", prefix, "--path", "."
   end
 
   test do
+    # Configuraton path details: https://github.com/r-darwish/topgrade/blob/master/README.md#configuration-path
+    # Sample config file: https://github.com/r-darwish/topgrade/blob/master/config.example.toml
+    (testpath/"Library/Preferences/topgrade.toml").write <<~EOS
+      # Additional git repositories to pull
+      #git_repos = [
+      #    "~/src/*/",
+      #    "~/.config/something"
+      #]
+    EOS
+
+    assert_match version.to_s, shell_output("#{bin}/topgrade --version")
+
     output = shell_output("#{bin}/topgrade -n")
     assert_match "Dry running: #{HOMEBREW_PREFIX}/bin/brew upgrade", output
     assert_not_match /\sSelf update\s/, output

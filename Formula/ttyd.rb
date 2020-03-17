@@ -1,26 +1,31 @@
 class Ttyd < Formula
   desc "Command-line tool for sharing terminal over the web"
-  homepage "https://github.com/tsl0922/ttyd"
-  url "https://github.com/tsl0922/ttyd/archive/1.4.4.tar.gz"
-  sha256 "b910a33ddaa474c369991ba345187a8a2f4aa420389083671ba3a6c305a491d6"
+  homepage "https://tsl0922.github.io/ttyd/"
+  url "https://github.com/tsl0922/ttyd/archive/1.6.0.tar.gz"
+  sha256 "d14740bc82be0d0760dd0a3c97acbcbde490412a4edc61edabe46d311b068f83"
+  revision 1
   head "https://github.com/tsl0922/ttyd.git"
 
   bottle do
     cellar :any
-    sha256 "a4ff4b3815cfbeb102e2d072722a5283095b1b5387e76524bfcaf5e8827ad753" => :mojave
-    sha256 "80feb44a31199cc5fc0508f27d629a91fc6d07fecb01405c2ba7cfea1f5cb094" => :high_sierra
-    sha256 "c911748d585c7acb50e28d3e7ccb7f300f7bfb9e6c70471f7579d4fa40828458" => :sierra
+    sha256 "200057b5acc12cc45115145e56a074f4d7b47d5ad886ecc5a9cb36e7fa66344d" => :catalina
+    sha256 "2622c50c776719257ec250d25c4d4837f3cbebdf025372fa023ade0ea9f5bc46" => :mojave
+    sha256 "44820b071a3e4ab8e2a4bf3dea4be710ea348bd8e50149576e971630d0bd63d9" => :high_sierra
   end
 
   depends_on "cmake" => :build
-  depends_on "pkg-config" => :build
   depends_on "json-c"
+  depends_on "libevent"
+  depends_on "libuv"
   depends_on "libwebsockets"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
+
+  uses_from_macos "vim"
 
   def install
-    cmake_args = std_cmake_args + ["-DOPENSSL_ROOT_DIR=#{Formula["openssl"].opt_prefix}"]
-    system "cmake", ".", *cmake_args
+    system "cmake", ".",
+                    *std_cmake_args,
+                    "-DOPENSSL_ROOT_DIR=#{Formula["openssl@1.1"].opt_prefix}"
     system "make", "install"
   end
 

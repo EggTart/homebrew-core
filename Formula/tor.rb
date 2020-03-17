@@ -1,20 +1,22 @@
 class Tor < Formula
   desc "Anonymizing overlay network for TCP"
   homepage "https://www.torproject.org/"
-  url "https://www.torproject.org/dist/tor-0.4.0.5.tar.gz"
-  mirror "https://www.torservers.net/mirrors/torproject.org/dist/tor-0.4.0.5.tar.gz"
-  sha256 "b5a2cbf0dcd3f1df2675dbd5ec10bbe6f8ae995c41b68cebe2bc95bffc90696e"
+  url "https://www.torproject.org/dist/tor-0.4.2.6.tar.gz"
+  mirror "https://www.torservers.net/mirrors/torproject.org/dist/tor-0.4.2.6.tar.gz"
+  sha256 "0500102433849bbe3231c590973d126c2d2d6b3943b4b9f9962bdb108436e6c4"
 
   bottle do
-    sha256 "b48b0db02211c743921d73017107ec254d2a2814f35a413462f1f97c7d89f6a0" => :mojave
-    sha256 "84abc429dd05a6957c4d1a3937762fce8c0b4a464462569b4f796cc2540b3cc2" => :high_sierra
-    sha256 "c4693bce8195e5c2fef75777010bf872bb8bd93cfac8dd00b5218d4612aa82c2" => :sierra
+    sha256 "de7823c452fb173472993e6307995d2f22040d065d2cd52fb8fd1a781f2853d8" => :catalina
+    sha256 "cf063382b289a6310c3c82e1c4bfdffc30eaa8f125b5d967632b0dc4f64b521f" => :mojave
+    sha256 "0e8a6f45490c1e617dc0809493fb3cf0e31f12b2f5d96dff364cc6c0b94cd87e" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "libevent"
   depends_on "libscrypt"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
+
+  uses_from_macos "zlib"
 
   def install
     args = %W[
@@ -23,7 +25,7 @@ class Tor < Formula
       --prefix=#{prefix}
       --sysconfdir=#{etc}
       --localstatedir=#{var}
-      --with-openssl-dir=#{Formula["openssl"].opt_prefix}
+      --with-openssl-dir=#{Formula["openssl@1.1"].opt_prefix}
     ]
 
     system "./configure", *args
@@ -32,30 +34,31 @@ class Tor < Formula
 
   plist_options :manual => "tor"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>KeepAlive</key>
-        <true/>
-        <key>ProgramArguments</key>
-        <array>
-            <string>#{opt_bin}/tor</string>
-        </array>
-        <key>WorkingDirectory</key>
-        <string>#{HOMEBREW_PREFIX}</string>
-        <key>StandardErrorPath</key>
-        <string>#{var}/log/tor.log</string>
-        <key>StandardOutPath</key>
-        <string>#{var}/log/tor.log</string>
-      </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+        <dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>KeepAlive</key>
+          <true/>
+          <key>ProgramArguments</key>
+          <array>
+              <string>#{opt_bin}/tor</string>
+          </array>
+          <key>WorkingDirectory</key>
+          <string>#{HOMEBREW_PREFIX}</string>
+          <key>StandardErrorPath</key>
+          <string>#{var}/log/tor.log</string>
+          <key>StandardOutPath</key>
+          <string>#{var}/log/tor.log</string>
+        </dict>
+      </plist>
+    EOS
   end
 
   test do

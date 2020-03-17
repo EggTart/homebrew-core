@@ -1,20 +1,28 @@
 class Libarchive < Formula
   desc "Multi-format archive and compression library"
   homepage "https://www.libarchive.org"
-  url "https://www.libarchive.org/downloads/libarchive-3.3.3.tar.gz"
-  sha256 "ba7eb1781c9fbbae178c4c6bad1c6eb08edab9a1496c64833d1715d022b30e2e"
+  url "https://www.libarchive.org/downloads/libarchive-3.4.2.tar.xz"
+  sha256 "d8e10494b4d3a15ae9d67a130d3ab869200cfd60b2ab533b391b0a0d5500ada1"
+  revision 1
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "0a789c0f212b5e1d06acc213bda685bf97e3036f89d8f4d2580b29bac32b3d3d" => :mojave
-    sha256 "078eed374d5df2b561c6d36fe7284946f0556ba450e86fb048ca443cd4e3d894" => :high_sierra
-    sha256 "fc7b2124e4d4bdb8df5e41e9b5992d151e7505e71e790f9e53ac8a7cdd55490d" => :sierra
+    sha256 "fea6de0e1c64faa83966a1bb23dc15275766940d9d25057bfd2d5bb9993792f3" => :catalina
+    sha256 "ba1e2a44af82b21ad9ddcc906bb9b6f0073797b79a1a2d41758d253609c95628" => :mojave
+    sha256 "b881cb42a16895795baea1137e3313de8ed632d8db241e0e4d2c361fbc5fc8bd" => :high_sierra
   end
 
   keg_only :provided_by_macos
 
+  depends_on "libb2"
+  depends_on "lz4"
   depends_on "xz"
+  depends_on "zstd"
+
+  uses_from_macos "bzip2"
+  uses_from_macos "expat"
+  uses_from_macos "iconv"
+  uses_from_macos "zlib"
 
   def install
     system "./configure",

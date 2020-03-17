@@ -1,14 +1,15 @@
 class YelpTools < Formula
   desc "Tools that help create and edit Mallard or DocBook documentation"
   homepage "https://github.com/GNOME/yelp-tools"
-  url "https://download.gnome.org/sources/yelp-tools/3.32/yelp-tools-3.32.1.tar.xz"
-  sha256 "99a7c312a5fcb427870dc198af02801eb0f8ea63317e20110fc0303eb44636e3"
+  url "https://download.gnome.org/sources/yelp-tools/3.32/yelp-tools-3.32.2.tar.xz"
+  sha256 "183856b5ed0b0bb2c05dd1204af023946ed436943e35e789afb0295e5e71e8f9"
+  revision 2
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2ac8c83a70c72d104f3b6ce093ccd989dacaa1ab4de9b895adeebdffa50b6663" => :mojave
-    sha256 "2ac8c83a70c72d104f3b6ce093ccd989dacaa1ab4de9b895adeebdffa50b6663" => :high_sierra
-    sha256 "2c11165b029ef8e8aa56ff802ccbf8d6cc1409187b42bee33a4e972bd60094f0" => :sierra
+    sha256 "fd04fbc43832ca6a6e75ffcd928794c866153c7cf04d4f366e79d15a14a317b6" => :catalina
+    sha256 "fd04fbc43832ca6a6e75ffcd928794c866153c7cf04d4f366e79d15a14a317b6" => :mojave
+    sha256 "fd04fbc43832ca6a6e75ffcd928794c866153c7cf04d4f366e79d15a14a317b6" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -23,12 +24,13 @@ class YelpTools < Formula
   depends_on "gtk+3"
 
   resource "yelp-xsl" do
-    url "https://download.gnome.org/sources/yelp-xsl/3.32/yelp-xsl-3.32.1.tar.xz"
-    sha256 "cac31bc150545d6aa0de15dce04560cbf591008d17a783a1d1d9cdd47b147f04"
+    url "https://download.gnome.org/sources/yelp-xsl/3.34/yelp-xsl-3.34.2.tar.xz"
+    sha256 "0c3fe6146113df26fb1295901b1c7baed9f0fe67a87f4345e11543aefe7cb7ad"
   end
 
   def install
     resource("yelp-xsl").stage do
+      system "autoreconf", "-fi"
       system "./configure", "--disable-debug",
                             "--disable-dependency-tracking",
                             "--disable-silent-rules",

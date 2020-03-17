@@ -1,18 +1,18 @@
 class Openldap < Formula
   desc "Open source suite of directory software"
   homepage "https://www.openldap.org/software/"
-  url "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-2.4.47.tgz"
-  sha256 "f54c5877865233d9ada77c60c0f69b3e0bfd8b1b55889504c650047cc305520b"
+  url "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-2.4.49.tgz"
+  sha256 "e3b117944b4180f23befe87d0dcf47f29de775befbc469dcf4ac3dab3311e56e"
 
   bottle do
-    sha256 "07e1f0e3ec1a02340a82259e1ace713cfb362126404575032713174935f4140e" => :mojave
-    sha256 "8901626fc45d76940dec5e516b23d81c9970f4a4a94650bdad60228d604c1b4a" => :high_sierra
-    sha256 "6dc84ff9e088116201a47adc5c3a2aab28ffd10dbab9d677d49ad7eef1ccc349" => :sierra
+    sha256 "26efb37f53ae1a3815213adf9ab815c66b7197a3d212f994dd4e5b4140cf3e4e" => :catalina
+    sha256 "b1572831c24149585e73eaafbc08dc66d9edfca69f72cdeaaabf1e9c4b2ddda1" => :mojave
+    sha256 "eb9c40191d88785247026a699bd6fe0e2e9e669395d814d7d1be430843a92b05" => :high_sierra
   end
 
   keg_only :provided_by_macos
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     args = %W[

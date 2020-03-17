@@ -1,35 +1,24 @@
 class Pygobject3 < Formula
   desc "GNOME Python bindings (based on GObject Introspection)"
   homepage "https://wiki.gnome.org/Projects/PyGObject"
-  url "https://download.gnome.org/sources/pygobject/3.32/pygobject-3.32.1.tar.xz"
-  sha256 "32c99def94b8dea5ce9e4bc99576ef87591ea779b4db77cfdca7af81b76d04d8"
+  url "https://download.gnome.org/sources/pygobject/3.36/pygobject-3.36.0.tar.xz"
+  sha256 "8683d2dfb5baa9e501a9a64eeba5c2c1117eadb781ab1cd7a9d255834af6daef"
 
   bottle do
     cellar :any
-    sha256 "cf2738f0f61ac488ac4b2a67f10c2740b3249728e807b5169c531d14357f08de" => :mojave
-    sha256 "ab1cde8cc940917da59401934c8f3a0b3f65c41efc8fdb02816a9bc3f668b91a" => :high_sierra
-    sha256 "7b8c52ed0c05cefe12583337129192fa21aba265ad88bc16c8ef4316655cf713" => :sierra
+    sha256 "63c1f6a01fd1d27a252cdeabdd0e084598ec9b79eb05a523e48f7f13c4f05746" => :catalina
+    sha256 "9b3863938691e7992ed55d37837a30f6bc851f0af1444d4eb32b735f4a1b10c8" => :mojave
+    sha256 "f2cdd475ed9816f815bb1d6874780df09b82d3f925b2571a4567ee90ab89a073" => :high_sierra
   end
 
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "gobject-introspection"
-  depends_on "py2cairo"
   depends_on "py3cairo"
   depends_on "python"
-  depends_on "python@2"
 
   def install
-    mkdir "buildpy2" do
-      system "meson", "--prefix=#{prefix}",
-                      "-Dpycairo=true",
-                      "-Dpython=python2.7",
-                      ".."
-      system "ninja", "-v"
-      system "ninja", "install", "-v"
-    end
-
     mkdir "buildpy3" do
       system "meson", "--prefix=#{prefix}",
                       "-Dpycairo=true",
@@ -48,14 +37,9 @@ class Pygobject3 < Formula
       from gi.repository import GLib
       assert(31 == GLib.Date.get_days_in_month(GLib.DateMonth.JANUARY, 2000))
     EOS
-    pythons = [
-      Formula["python@2"].opt_bin/"python2",
-      Formula["python"].opt_bin/"python3",
-    ]
-    pythons.each do |python|
-      pyversion = Language::Python.major_minor_version(python)
-      ENV.prepend_path "PYTHONPATH", lib/"python#{pyversion}/site-packages"
-      system python, "test.py"
-    end
+
+    pyversion = Language::Python.major_minor_version "python3"
+    ENV.prepend_path "PYTHONPATH", lib/"python#{pyversion}/site-packages"
+    system "python3", "test.py"
   end
 end

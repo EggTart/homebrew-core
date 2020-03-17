@@ -1,14 +1,14 @@
 class GnuGetopt < Formula
   desc "Command-line option parsing utility"
   homepage "https://github.com/karelzak/util-linux"
-  url "https://www.kernel.org/pub/linux/utils/util-linux/v2.33/util-linux-2.33.2.tar.xz"
-  sha256 "631be8eac6cf6230ba478de211941d526808dba3cd436380793334496013ce97"
+  url "https://www.kernel.org/pub/linux/utils/util-linux/v2.35/util-linux-2.35.1.tar.xz"
+  sha256 "d9de3edd287366cd908e77677514b9387b22bc7b88f45b83e1922c3597f1d7f9"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d6405423e6ba2ef844512f647a2a930ab6174b23d6b942a9b05e59ced88ed196" => :mojave
-    sha256 "c968853e7b57cd0affcd0e02ae574a340ef9f1c9847feae498964e2e7e2c0ded" => :high_sierra
-    sha256 "af870c9c13126e70d368a0506b52509cc9c7bbd82d4ebd3bcdbd068bf45864f6" => :sierra
+    sha256 "057a54871793ac9c455872ea65f5dc4a4391d842a0b887f7761c17aa62f3e9b2" => :catalina
+    sha256 "af7e6ff9fce7d0286ca4cb0c0ce01d385ba3ea4cfc6735f97165272f97f18a81" => :mojave
+    sha256 "3114f75086a792b8a40259056a95875f77fefae73e43d8fd39d7818436f6b8bf" => :high_sierra
   end
 
   keg_only :provided_by_macos

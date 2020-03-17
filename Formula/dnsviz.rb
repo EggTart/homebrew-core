@@ -3,22 +3,24 @@ class Dnsviz < Formula
 
   desc "Tools for analyzing and visualizing DNS and DNSSEC behavior"
   homepage "https://github.com/dnsviz/dnsviz/"
-  url "https://github.com/dnsviz/dnsviz/releases/download/v0.8.2/dnsviz-0.8.2.tar.gz"
+  url "https://files.pythonhosted.org/packages/25/d2/0ebfe23440a1adfdca403d7773570d3c05a3a8c5bcbaa0c091b5114d0224/dnsviz-0.8.2.tar.gz"
   sha256 "a81ff254c23718cd6f364b03bf6e9c80468fa4663fd5be66043de7b0bece1cab"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "f55b130eee33b503ea3b4c88ba34c952ae58a070c632fdac326962199c9ef5b6" => :mojave
-    sha256 "6324be158374f9b93e287ada9dfe33c2aef01b05a4bacc78fea47719f69d2db9" => :high_sierra
-    sha256 "08325b100e560aad351b72002e7828b713f3f39e003e2a3eaa2a6cc7d4797e62" => :sierra
+    sha256 "cde386e003eb2d8112ef2e8e947b2c9919c275a3cc193315df1a7e0043a3402c" => :catalina
+    sha256 "4eca36bda18ba3969581ddc2cac1c15e33177afded24f12e8b46c89cfc5df2b2" => :mojave
+    sha256 "8ecd24e5b812a8945a182c255de5c50fcba01adfc23ec0dcb8ad2d3e166101f1" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "swig" => :build
   depends_on "bind" => :test
   depends_on "graphviz"
   depends_on "libsodium"
-  depends_on "openssl"
-  depends_on "python@2"
+  depends_on "openssl@1.1"
+  depends_on "python"
 
   resource "dnspython" do
     url "https://files.pythonhosted.org/packages/ec/c5/14bcd63cb6d06092a004793399ec395405edf97c2301dfdc146dfbd5beed/dnspython-1.16.0.zip"
@@ -30,24 +32,23 @@ class Dnsviz < Formula
     sha256 "50a829a305dc5a0fd1f9590748b19fece756093b581ac91e00c2c27c651d319d"
   end
 
-  resource "m2crypto" do
-    url "https://files.pythonhosted.org/packages/17/2b/f551dbff0f7b70746568c6546efccca128fe8651be7ad915b99e1bae15cf/M2Crypto-0.32.0.tar.gz"
-    sha256 "29c9c6fa6abdeb4156b8e0342c30028c5ee68055b60aa21c88abfb1d85fea325"
+  resource "M2crypto" do
+    url "https://files.pythonhosted.org/packages/74/18/3beedd4ac48b52d1a4d12f2a8c5cf0ae342ce974859fba838cbbc1580249/M2Crypto-0.35.2.tar.gz"
+    sha256 "4c6ad45ffb88670c590233683074f2440d96aaccb05b831371869fc387cbd127"
   end
 
   resource "typing" do
-    url "https://files.pythonhosted.org/packages/bf/9b/2bf84e841575b633d8d91ad923e198a415e3901f228715524689495b4317/typing-3.6.6.tar.gz"
-    sha256 "4027c5f6127a6267a435201981ba156de91ad0d1d98e9ddc2aa173453453492d"
+    url "https://files.pythonhosted.org/packages/67/b0/b2ea2bd67bfb80ea5d12a5baa1d12bda002cab3b6c9b48f7708cd40c34bf/typing-3.7.4.1.tar.gz"
+    sha256 "91dfe6f3f706ee8cc32d38edbbf304e9b7583fb37108fef38229617f8b3eba23"
   end
 
   def install
-    venv = virtualenv_create(libexec)
-    resource("m2crypto").stage do
-      system libexec/"bin/python", "setup.py", "build_ext", "--openssl=#{Formula["openssl"].opt_prefix}", "install"
-    end
-    venv.pip_install resources.reject { |r| r.name == "m2crypto" }
-    system libexec/"bin/python", "setup.py", "build"
-    system libexec/"bin/python", "setup.py", "install", "--prefix=#{libexec}", "--install-data=#{prefix}", "--install-scripts=#{bin}"
+    ENV["SWIG_FEATURES"]="-I#{Formula["openssl@1.1"].opt_include}"
+
+    # Fix building of M2Crypto on High Sierra https://github.com/Homebrew/homebrew-core/pull/45895#issuecomment-557200007
+    ENV.delete("HOMEBREW_SDKROOT") if MacOS.version == :high_sierra
+
+    virtualenv_install_with_resources
   end
 
   test do

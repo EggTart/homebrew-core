@@ -1,14 +1,14 @@
 class Highlight < Formula
   desc "Convert source code to formatted text with syntax highlighting"
   homepage "http://www.andre-simon.de/doku/highlight/en/highlight.php"
-  url "http://www.andre-simon.de/zip/highlight-3.51.tar.bz2"
-  sha256 "69ba1ebcfd3364227df03e5ad91078264757aaf6719c7844f727c38548a9a497"
+  url "http://www.andre-simon.de/zip/highlight-3.55.tar.bz2"
+  sha256 "1df2dcf909af03291b3696ddc66219ef22559d4a1db0fd26400e2fa2a795bcfc"
   head "https://gitlab.com/saalen/highlight.git"
 
   bottle do
-    sha256 "0ead27ee04c5119c117b418fdaaa611df8406e056648f6e544560cc4909a60ac" => :mojave
-    sha256 "522793101a59250cb1d809c26b8f135984a3922fb27bdda7c1fd9954c20c7137" => :high_sierra
-    sha256 "2619e61a294c034c811d9dc1d24de7b443d8060787dde36da9be998562e8124b" => :sierra
+    sha256 "a7f3adf340f793ce34105d4f98fb886560602ac226e4a1e374397f3dbecc2a0f" => :catalina
+    sha256 "0a952aee823daa9d57984aaf6ba64eeeda353664c1d494b366ebf4b7d576766b" => :mojave
+    sha256 "e56c173c28ae2f1312405fc6c190a200712e2b5a0a0a8c0a7e8578a54004e599" => :high_sierra
   end
 
   depends_on "boost" => :build

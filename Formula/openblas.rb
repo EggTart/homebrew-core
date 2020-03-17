@@ -1,16 +1,15 @@
 class Openblas < Formula
   desc "Optimized BLAS library"
   homepage "https://www.openblas.net/"
-  url "https://github.com/xianyi/OpenBLAS/archive/v0.3.6.tar.gz"
-  sha256 "e64c8fe083832ffbc1459ab6c72f71d53afd3b36e8497c922a15a06b72e9002f"
-  revision 1
+  url "https://github.com/xianyi/OpenBLAS/archive/v0.3.9.tar.gz"
+  sha256 "17d4677264dfbc4433e97076220adc79b050e4f8a083ea3f853a53af253bc380"
   head "https://github.com/xianyi/OpenBLAS.git", :branch => "develop"
 
   bottle do
     cellar :any
-    sha256 "ce1788eedcf1776fcad04ae78cb81e7141e7db07762dafb44118c9cfb7748de0" => :mojave
-    sha256 "50d5f9b0eae2a5b3c97c4a5adb23cd9d7a8e78c2dee9b7a8ea789185aed64b1e" => :high_sierra
-    sha256 "54d4bd0bd7115090d40200f59ff71d36e60dc3a03bc4538a01050891137c7e7f" => :sierra
+    sha256 "7f61aa85ee83058e3ac4898f74b6721009f83d09caca7f6c772a3aa4874a1248" => :catalina
+    sha256 "15116c0a8d1f359f83761de72835021cbad6a814cf7fd53cc93428b522f06dda" => :mojave
+    sha256 "b92397b5ddaefbba91b6a40bce8a5afd55529e25f711abc5ed6c3fb501484b50" => :high_sierra
   end
 
   keg_only :provided_by_macos,

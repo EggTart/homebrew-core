@@ -1,13 +1,13 @@
 class Mono < Formula
   desc "Cross platform, open source .NET development framework"
   homepage "https://www.mono-project.com/"
-  url "https://download.mono-project.com/sources/mono/mono-5.20.1.19.tar.bz2"
-  sha256 "0574b61efb9bfc3364211d03d87a12c91dc7b03e8d6242cd4d8d953ef145d468"
+  url "https://download.mono-project.com/sources/mono/mono-6.8.0.105.tar.xz"
+  sha256 "578799c44c3c86a9eb5daf6dec6c60a24341940fd376371956d4a46cf8612178"
 
   bottle do
-    sha256 "08e012d25c888d0b0f40ef7757ba929ad48421c8ba5c8f4f66dc7d0d15c6f49d" => :mojave
-    sha256 "da81cb09be8a4b53c9b9e297ae23836c7818feb9ba919dbc02e333e820ea85bc" => :high_sierra
-    sha256 "bbacf1812a2f1d55ab6c15784c813554882af83d0a95211c4a4cbf948f7d0541" => :sierra
+    sha256 "b60510ffecafb1ccd127a8179324a631bfcd23f4e6bbb6aa3ebd94c908ea4c37" => :catalina
+    sha256 "406fa52ae8748b58cfecefccc180b1227e98e16de28f7e2442898a6d9d256195" => :mojave
+    sha256 "f7c961d63e628703c661ac3cd2922c1e92c7d78941221acd51439a7fc0d9c331" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -36,15 +36,13 @@ class Mono < Formula
   # https://github.com/mono/mono/blob/mono-#{version}/packaging/MacSDK/msbuild.py
   resource "msbuild" do
     url "https://github.com/mono/msbuild.git",
-        :revision => "804bde742bdf9d65c7ceb672a3d5400c0c22e628"
+        :revision => "ad9c9926a76e3db0d2b878a24d44446d73640d19"
   end
 
   def install
     system "./configure", "--prefix=#{prefix}",
-                          "--disable-dependency-tracking",
                           "--disable-silent-rules",
-                          "--enable-nls=no",
-                          "--build=x86_64-apple-darwin"
+                          "--enable-nls=no"
     system "make"
     system "make", "install"
     # mono-gdb.py and mono-sgen-gdb.py are meant to be loaded by gdb, not to be
@@ -56,7 +54,8 @@ class Mono < Formula
 
     # Next build msbuild
     resource("msbuild").stage do
-      system "./build.sh", "-hostType", "mono", "-configuration", "Release", "-skipTests"
+      system "./eng/cibuild_bootstrapped_msbuild.sh", "--host_type", "mono",
+             "--configuration", "Release", "--skip_tests"
       system "./artifacts/mono-msbuild/msbuild", "mono/build/install.proj",
              "/p:MonoInstallPrefix=#{prefix}", "/p:Configuration=Release-MONO",
              "/p:IgnoreDiffFailure=true"
@@ -70,10 +69,11 @@ class Mono < Formula
     end
   end
 
-  def caveats; <<~EOS
-    To use the assemblies from other formulae you need to set:
-      export MONO_GAC_PREFIX="#{HOMEBREW_PREFIX}"
-  EOS
+  def caveats
+    <<~EOS
+      To use the assemblies from other formulae you need to set:
+        export MONO_GAC_PREFIX="#{HOMEBREW_PREFIX}"
+    EOS
   end
 
   test do

@@ -3,18 +3,18 @@ class Osquery < Formula
   homepage "https://osquery.io"
   url "https://github.com/facebook/osquery/archive/3.3.2.tar.gz"
   sha256 "74280181f45046209053a3e15114d93adc80929a91570cc4497931cfb87679e4"
-  revision 3
+  revision 14
 
   bottle do
     cellar :any
-    sha256 "e12388da9af7bc357ff010af29f8df3e8548100abb68d62d97d8d52a067e47b8" => :mojave
-    sha256 "caec08004cb4d498397d0be6d5b4c030ef8f8243cedcddc174843432567c722d" => :high_sierra
-    sha256 "6eb1c72f50dc260aa2a7909ad0b76fe8b536e881b5195a6310002bcb5b16766f" => :sierra
+    sha256 "088c0133a9f626d090c150470f344c0632989a78ba678980f19c3db8d61fc960" => :catalina
+    sha256 "ab9c4d4717c644576dd2cba7eaf7069c47a097df5d006a1a1c8c6b67cb9b6035" => :mojave
+    sha256 "ec2bff59402ca551884124b70cbd2718989daccade3f788a4cd038d83cccaa9b" => :high_sierra
   end
 
   depends_on "bison" => :build
   depends_on "cmake" => :build
-  depends_on "python@2" => :build
+  depends_on "python" => :build
   depends_on "augeas"
   depends_on "boost"
   depends_on "gflags"
@@ -25,7 +25,7 @@ class Osquery < Formula
   depends_on "lldpd"
   # osquery only supports macOS 10.12 and above. Do not remove this.
   depends_on :macos => :sierra
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "rapidjson"
   depends_on "rocksdb"
   depends_on "sleuthkit"
@@ -34,8 +34,6 @@ class Osquery < Formula
   depends_on "xz"
   depends_on "yara"
   depends_on "zstd"
-
-  fails_with :gcc => "6"
 
   resource "MarkupSafe" do
     url "https://files.pythonhosted.org/packages/c0/41/bae1254e0396c0cc8cf1751cb7d9afc90a602353695af5952530482c963f/MarkupSafe-0.23.tar.gz"
@@ -62,6 +60,13 @@ class Osquery < Formula
   patch do
     url "https://github.com/facebook/osquery/commit/130b3b3324e2.diff?full_index=1"
     sha256 "46bce0c62f1a8f0df506855049991e6fceb6d1cc4e1113a2f657e76b5c5bdd14"
+  end
+
+  # Patch for compatibility with OpenSSL 1.1
+  # submitted upstream: https://github.com/osquery/osquery/issues/5755
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/85fa66a9/osquery/openssl-1.1.diff"
+    sha256 "18ace03c11e06b0728060382284a8da115bd6e14247db20ac0188246e5ff8af4"
   end
 
   def install
@@ -99,15 +104,16 @@ class Osquery < Formula
     # Set the version
     ENV["OSQUERY_BUILD_VERSION"] = version
 
-    ENV.prepend_create_path "PYTHONPATH", buildpath/"third-party/python/lib/python2.7/site-packages"
+    xy = Language::Python.major_minor_version "python3"
+    ENV.prepend_create_path "PYTHONPATH", buildpath/"third-party/python/lib/python#{xy}/site-packages"
 
     res = resources.map(&:name).to_set - %w[aws-sdk-cpp third-party]
     res.each do |r|
       resource(r).stage do
-        system "python", "setup.py", "install",
-                                 "--prefix=#{buildpath}/third-party/python/",
-                                 "--single-version-externally-managed",
-                                 "--record=installed.txt"
+        system "python3", "setup.py", "install",
+                          "--prefix=#{buildpath}/third-party/python/",
+                          "--single-version-externally-managed",
+                          "--record=installed.txt"
       end
     end
 

@@ -1,26 +1,28 @@
 class Libtcod < Formula
   desc "API for roguelike developers"
   homepage "https://github.com/libtcod/libtcod"
-  url "https://bitbucket.org/libtcod/libtcod/get/1.8.2.tar.bz2"
-  sha256 "a33aa463e78b6df327d2aceae875edad8dba7a9e5ea0f1299c486b99f4bed31c"
+  url "https://github.com/libtcod/libtcod/archive/1.15.1.tar.gz"
+  sha256 "2713d8719be53db7a529cbf53064e5bc9f3adf009db339d3a81b50d471bc306f"
 
   bottle do
     cellar :any
-    sha256 "6376b266e1523c732e6465d50b988c8d7964e567f8ba27eeedb585217c1f1d87" => :mojave
-    sha256 "40ec101abf6440dfcea154c4c57af89a0ec813cf99f810156e6bb53e27d22d14" => :high_sierra
-    sha256 "ee03cac48e6b29dcf7c84860436ee61105fad31888d81791f4f519773e0d73b9" => :sierra
+    sha256 "48c1dc06ec54ec78c8f4cda6c7fd15792cf4a2ae6c9b65f015cc243c9cb47649" => :catalina
+    sha256 "29c26abf54281335e0b06960fb8a9c1f99c86f9f1e0a95ef323e3767ecd44898" => :mojave
+    sha256 "8b92b6d780acbdf957141cc30f76f967949bd15519b060a163133a55888c20f1" => :high_sierra
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
+  depends_on "python" => :build
   depends_on "sdl2"
 
-  conflicts_with "libzip", :because => "both install `zip.h` header"
+  conflicts_with "libzip", "minizip2",
+    :because => "libtcod, libzip and minizip2 install a `zip.h` header"
 
   def install
-    cd "build/autotools" do
+    cd "buildsys/autotools" do
       system "autoreconf", "-fiv"
       system "./configure"
       system "make"

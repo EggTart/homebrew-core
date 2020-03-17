@@ -1,13 +1,13 @@
 class Libgweather < Formula
   desc "GNOME library for weather, locations and timezones"
   homepage "https://wiki.gnome.org/Projects/LibGWeather"
-  url "https://download.gnome.org/sources/libgweather/3.32/libgweather-3.32.1.tar.xz"
-  sha256 "1c2218ed71230dd2c550ca4fd3dab53e2f2831d38982c213575f34e48d68e980"
+  url "https://download.gnome.org/sources/libgweather/3.36/libgweather-3.36.0.tar.xz"
+  sha256 "d2ffeec01788d03d1bbf35113fc2f054c6c3600721088f827bcc31e5c603a32d"
 
   bottle do
-    sha256 "1f63c8bc5337d9980092cea606643de4a6eb5a83c66f42a6a4024993708f280f" => :mojave
-    sha256 "b18ba359bd311435ac620e6324c9346c7321d43845682a7f36e51727184de253" => :high_sierra
-    sha256 "dc4eb632ae023cded082d2fd53108100b2730c7eb2ff8e351de3545e0423e3d6" => :sierra
+    sha256 "f0cf67eaf633582b06a77d8b4eec9585e8fc1ff21184758e7cdc32d3b71d4624" => :catalina
+    sha256 "db45248a2908b284632be61536786c8b6cf39f2def6cc3dca5f743be8175c312" => :mojave
+    sha256 "f97455b51d97f86f3db35647f74bec32041346daed6b49c73b78463641160086" => :high_sierra
   end
 
   depends_on "gobject-introspection" => :build
@@ -51,6 +51,7 @@ class Libgweather < Formula
     gettext = Formula["gettext"]
     glib = Formula["glib"]
     gtkx3 = Formula["gtk+3"]
+    harfbuzz = Formula["harfbuzz"]
     libepoxy = Formula["libepoxy"]
     libpng = Formula["libpng"]
     libsoup = Formula["libsoup"]
@@ -67,6 +68,7 @@ class Libgweather < Formula
       -I#{glib.opt_include}/glib-2.0
       -I#{glib.opt_lib}/glib-2.0/include
       -I#{gtkx3.opt_include}/gtk-3.0
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}/libgweather-3.0
       -I#{libepoxy.opt_include}
       -I#{libpng.opt_include}/libpng16

@@ -1,29 +1,28 @@
 class Rdesktop < Formula
   desc "UNIX client for connecting to Windows Remote Desktop Services"
   homepage "https://www.rdesktop.org/"
-  url "https://github.com/rdesktop/rdesktop/releases/download/v1.8.5/rdesktop-1.8.5.tar.gz"
-  sha256 "f0211077c3685ff79ba0396d31d5cd3587c6dd0febcbb20be364b7890f6eca95"
+  url "https://github.com/rdesktop/rdesktop/releases/download/v1.9.0/rdesktop-1.9.0.tar.gz"
+  sha256 "473c2f312391379960efe41caad37852c59312bc8f100f9b5f26609ab5704288"
 
   bottle do
-    sha256 "8fae9c9a25c022dc0d6c492cc7bbfa3c8c18995a44444a00403d51e3d9c17091" => :mojave
-    sha256 "f933732e9aef0271521e58660517761b7e779d57778d6f7c08650b442ad6696c" => :high_sierra
-    sha256 "08fdffc987de78fdd690ed72669754088bf9a1e25ffb919c1cdbb48e9b486d8f" => :sierra
+    sha256 "7c9514c2ed77ff7d2289b1f464ce187b3882cff9c7a0f3fbeb3473d085f7525c" => :catalina
+    sha256 "38d60f4a835c4090ba1528f19cc7b47122ff22f1f85b1be69ae00bedb18da03b" => :mojave
+    sha256 "4f20968750adad4b1d743ff3ee96262a0cb834b8a6ff9c41486479f71542b2e7" => :high_sierra
   end
 
-  depends_on "openssl"
+  depends_on "pkg-config" => :build
+  depends_on "gnutls"
+  depends_on "libao"
+  depends_on "libtasn1"
+  depends_on "nettle"
   depends_on :x11
-
-  # Note: The patch below is meant to remove the reference to the
-  # undefined symbol SCARD_CTL_CODE.
-  # upstream bug report: https://sourceforge.net/p/rdesktop/bugs/352/
-  patch :DATA
 
   def install
     args = %W[
       --prefix=#{prefix}
       --disable-credssp
       --enable-smartcard
-      --with-openssl=#{Formula["openssl"].opt_prefix}
+      --with-sound=libao
       --x-includes=#{MacOS::X11.include}
       --x-libraries=#{MacOS::X11.lib}
     ]
@@ -36,26 +35,3 @@ class Rdesktop < Formula
     assert_match version.to_s, shell_output("#{bin}/rdesktop -help 2>&1", 64)
   end
 end
-
-__END__
-diff --git a/scard.c b/scard.c
-index caa0745..5521ee9 100644
---- a/scard.c
-+++ b/scard.c
-@@ -2152,7 +2152,6 @@ TS_SCardControl(STREAM in, STREAM out)
-	{
-		/* Translate to local encoding */
-		dwControlCode = (dwControlCode & 0x3ffc) >> 2;
--		dwControlCode = SCARD_CTL_CODE(dwControlCode);
-	}
-	else
-	{
-@@ -2198,7 +2197,7 @@ TS_SCardControl(STREAM in, STREAM out)
-	}
-
- #ifdef PCSCLITE_VERSION_NUMBER
--	if (dwControlCode == SCARD_CTL_CODE(3400))
-+	if (0)
-	{
-		int i;
-		SERVER_DWORD cc;

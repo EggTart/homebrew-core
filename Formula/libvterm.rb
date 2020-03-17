@@ -1,14 +1,15 @@
 class Libvterm < Formula
   desc "C99 library which implements a VT220 or xterm terminal emulator"
   homepage "http://www.leonerd.org.uk/code/libvterm/"
-  url "http://www.leonerd.org.uk/code/libvterm/libvterm-0+bzr726.tar.gz"
-  sha256 "6344eca01c02e2270348b79e033c1e0957028dbcd76bc784e8106bea9ec3029d"
+  url "http://www.leonerd.org.uk/code/libvterm/libvterm-0.1.3.tar.gz"
+  sha256 "e41724466a4658e0f095e8fc5aeae26026c0726dce98ee71d6920d06f7d78e2b"
+  version_scheme 1
 
   bottle do
     cellar :any
-    sha256 "1498cd7e2569ad6fae59210a748c6ff099e2414bf526f2928273dd6ba3fe9651" => :mojave
-    sha256 "2bab7bdb6033188210ab47cd7802f7617b8dc93f84b776ef1627360dde3d8884" => :high_sierra
-    sha256 "80c31b8a19c9fba971a64f3a5058d4db2bcfc12508c296058546d088182347b5" => :sierra
+    sha256 "74c971c0a3157f7b34c69360c7b76611dcbb949e50ba255603a70f3d643e7cca" => :catalina
+    sha256 "da5f5c504963d145c7a5e2ac9fd0fc0d9008251f98b11fbc6f818da59057c128" => :mojave
+    sha256 "3362cf826401b4c9d4012de2777eecd90b3b168b723f51371adb5eb18e22fbc9" => :high_sierra
   end
 
   depends_on "libtool" => :build

@@ -1,14 +1,14 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-3/R-3.6.0.tar.gz"
-  sha256 "36fcac3e452666158e62459c6fc810adc247c7109ed71c5b6c3ad5fc2bf57509"
-  revision 2
+  url "https://cran.r-project.org/src/base/R-3/R-3.6.3.tar.gz"
+  sha256 "89302990d8e8add536e12125ec591d6951022cf8475861b3690bc8bf1cefaa8f"
+  revision 1
 
   bottle do
-    sha256 "97a94e973e7e47203e0892f175c6da61e4ec210e17472458067c04a0f605c59b" => :mojave
-    sha256 "e214d025cc499062c8f7eafdcb8cd82b75dcef7aa2b3d181bf0d87f7eb506bde" => :high_sierra
-    sha256 "345978973e9d942bfd23d1ba583ced2cfde65aff52fc8a400ea74b278aa5ca58" => :sierra
+    sha256 "87a9a56265163f342725418365989afbdab02abc997df0304e403034094f1117" => :catalina
+    sha256 "fc155a762bf9ba5aef95c50960c69635044eecc55b5cdb95d8974cc15854ba5a" => :mojave
+    sha256 "c272ce6cc5502843f31457c465804b70f990a26ef393b5c62b71cba82dfc7364" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
@@ -25,9 +25,9 @@ class R < Formula
   skip_clean "lib/R/bin"
 
   resource "gss" do
-    url "https://cloud.r-project.org/src/contrib/gss_2.1-9.tar.gz", :using => :nounzip
-    mirror "https://mirror.las.iastate.edu/CRAN/src/contrib/gss_2.1-9.tar.gz"
-    sha256 "2961fe61c1d3bb3fe7b8e1070d6fb1dfc5d71e0c6e8a6b7c46ff6b42867c4cf3"
+    url "https://cloud.r-project.org/src/contrib/gss_2.1-12.tar.gz", :using => :nounzip
+    mirror "https://mirror.las.iastate.edu/CRAN/src/contrib/gss_2.1-12.tar.gz"
+    sha256 "bcc92bb621671dbf94684e11a0b1c2b6c423f57d7d4ed8c7eeba4f4e51ef170b"
   end
 
   def install

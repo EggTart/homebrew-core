@@ -1,14 +1,14 @@
 class Dartsim < Formula
   desc "Dynamic Animation and Robotics Toolkit"
   homepage "https://dartsim.github.io/"
-  url "https://github.com/dartsim/dart/archive/v6.8.1.tar.gz"
-  sha256 "2e2e263b05e5f551c1a85e6fc5e1f14eab4e742478cd2b0edd57ab17895c2c8c"
-  revision 1
+  url "https://github.com/dartsim/dart/archive/v6.9.2.tar.gz"
+  sha256 "7d46d23c04d74d3b78331f9fa7deb5ab32fd4b0c03b93548cd84a2d67771d816"
+  revision 5
 
   bottle do
-    sha256 "863d050a31aa011c648f4ae04e39ec261f5086ed6d99a408f50d5773e7e9cfec" => :mojave
-    sha256 "3110c47576b9bbde2b50d72cd8325697763cd8ba08e82b86366ff663b0ed80bb" => :high_sierra
-    sha256 "38f55a29c44f8b80301f772abdc0093a71af28c3b69394328c143acc9b4a4fae" => :sierra
+    sha256 "ee3c0dbaa4cb4d94e471c0cd22e14a896461a36b8c9b64a04feaaef48d96e9c9" => :catalina
+    sha256 "e398796449d4ee45200a8c39a0a23bcf4d026eead21aa2641360b81c9d4b7fe0" => :mojave
+    sha256 "70f764a63ed36e19410527e9e2cc3d3ba30245bc2e5434a9ed64f29e0ba21515" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -19,6 +19,7 @@ class Dartsim < Formula
   depends_on "eigen"
   depends_on "fcl"
   depends_on "flann"
+  depends_on "ipopt"
   depends_on "libccd"
   depends_on "nlopt"
   depends_on "ode"
@@ -48,7 +49,7 @@ class Dartsim < Formula
                     "-I#{include}", "-L#{lib}", "-ldart",
                     "-L#{Formula["assimp"].opt_lib}", "-lassimp",
                     "-L#{Formula["boost"].opt_lib}", "-lboost_system",
-                    "-std=c++11", "-o", "test"
+                    "-std=c++14", "-o", "test"
     system "./test"
   end
 end

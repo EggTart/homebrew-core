@@ -1,7 +1,7 @@
 class Upscaledb < Formula
   desc "Database for embedded devices"
   homepage "https://upscaledb.com/"
-  revision 11
+  revision 14
 
   stable do
     url "http://files.upscaledb.com/dl/upscaledb-2.2.0.tar.gz"
@@ -18,9 +18,9 @@ class Upscaledb < Formula
 
   bottle do
     cellar :any
-    sha256 "cc371a6e14c48cb0cc2a51e1a3dadcb201c3179789d742e29299e6e8cedec918" => :mojave
-    sha256 "28c6eafdac4a4ea8a90698a31298f6debfff2503ffffe6a264a4feb1b85725e7" => :high_sierra
-    sha256 "4b4f24812463d787b9f6d53e13318af49283f4a8230baa9ebfeac3083d352b7b" => :sierra
+    sha256 "16803511bcf21348ddd6c71d76367fef5961188d2b0f467a3ec05b044db5b3f7" => :catalina
+    sha256 "b07269e80731ac5700a84b05f1725a49d59e40191bbab4661750b204f14ba9b3" => :mojave
+    sha256 "003ac2a786a136acf66f8de4a25a0d72950c21dbb4e4b70afad486bba01319d7" => :high_sierra
   end
 
   head do
@@ -33,13 +33,20 @@ class Upscaledb < Formula
 
   depends_on "boost"
   depends_on "gnutls"
-  depends_on :java
-  depends_on "openssl"
+  depends_on "openjdk"
+  depends_on "openssl@1.1"
   depends_on "protobuf"
 
   resource "libuv" do
     url "https://github.com/libuv/libuv/archive/v0.10.37.tar.gz"
     sha256 "4c12bed4936dc16a20117adfc5bc18889fa73be8b6b083993862628469a1e931"
+  end
+
+  # Patch for compatibility with OpenSSL 1.1
+  # https://github.com/cruppstahl/upscaledb/issues/124
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/a7095c61/upscaledb/openssl-1.1.diff"
+    sha256 "c388613c88e856ee64be2b4a72b64a1b998f1f8b835122579e2049e9f01a0f58"
   end
 
   def install
@@ -64,7 +71,7 @@ class Upscaledb < Formula
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
-                          "JDK=#{ENV["JAVA_HOME"]}"
+                          "JDK=#{Formula["openjdk"].opt_prefix}"
     system "make", "install"
 
     pkgshare.install "samples"

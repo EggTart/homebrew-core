@@ -2,16 +2,16 @@ class Wolfssl < Formula
   desc "Embedded SSL Library written in C"
   homepage "https://www.wolfssl.com/wolfSSL/Home.html"
   url "https://github.com/wolfSSL/wolfssl.git",
-      :tag      => "v4.0.0-stable",
-      :revision => "21f2beca9f320199fcea4a96df3e19967804144b"
+      :tag      => "v4.3.0-stable",
+      :revision => "3f13b49fa318fbd3216d7da36d942e7c276d3413"
   sha256 "4e15f494604e41725499f8b708798f8ddc2fcaa8f39b4369bcd000b3cab482d8"
   head "https://github.com/wolfSSL/wolfssl.git"
 
   bottle do
     cellar :any
-    sha256 "d8d5b004351316943191ffd8af180828775304bc623974fc3f37bc697ff34364" => :mojave
-    sha256 "f86e6a7d5695ea4f4e4ac93aa4c885142b6adb58b42819c60143806f33c00acf" => :high_sierra
-    sha256 "a2ed01a72536b98855568d255f1acb351ddab05343adfd88af6c3a1da9cb68f1" => :sierra
+    sha256 "640adc750bb5f9bbb83c4750255a8451f3800911feb29f4b40bc9c05d6496a87" => :catalina
+    sha256 "45cb9c47a12a04ba87b263063b0c9d5ef41df63c23b9e0c2c71fefdc6419ce67" => :mojave
+    sha256 "d517858cb06ac4acfb74cf89957a51f3bfc80ffa49eba97406e81b7030f3190e" => :high_sierra
   end
 
   depends_on "autoconf" => :build

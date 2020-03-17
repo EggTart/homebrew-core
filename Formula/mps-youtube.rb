@@ -5,26 +5,26 @@ class MpsYoutube < Formula
   homepage "https://github.com/mps-youtube/mps-youtube"
   url "https://github.com/mps-youtube/mps-youtube/archive/v0.2.8.tar.gz"
   sha256 "d5f2c4bc1f57f0566242c4a0a721a5ceaa6d6d407f9d6dd29009a714a0abec74"
-  revision 8
+  revision 9
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "b56f49aefecf4225eda480219282235aa452247037ea5d4cbc54f51eec14e2af" => :mojave
-    sha256 "9f648ee048f0e967eabb2b1135f74c5ccc22869c038d395661170fdbea656a76" => :high_sierra
-    sha256 "121a21ce674c3a21e7d2ecd3a98c6f91cf26ebe8be3ce7ac81199991bcafa28e" => :sierra
+    sha256 "4bd9882d37990b6248a1c66e2a5a811ec56623137bce402349f6d3f0b26b266e" => :catalina
+    sha256 "010336617d49531753133de6b438ff69d3e34d49b72caaa356e9c7e5260db814" => :mojave
+    sha256 "bbb8c699b6bab92ac2cef47608a8d5dc5bd110a04e842d5720620b0c9793c060" => :high_sierra
   end
 
-  depends_on "mpv"
+  depends_on "mplayer"
   depends_on "python"
 
   resource "pafy" do
-    url "https://files.pythonhosted.org/packages/41/cb/ec840c79942fb0788982963b61a361ecd10e4e58ad3dcaef4f0e809ce2fe/pafy-0.5.4.tar.gz"
-    sha256 "e842dc589a339a870b5869cc3802f2e95824edf347f65128223cd5ebdff21024"
+    url "https://files.pythonhosted.org/packages/7e/02/b70f4d2ad64bbc7d2a00018c6545d9b9039208553358534e73e6dd5bbaf6/pafy-0.5.5.tar.gz"
+    sha256 "364f1d1312c89582d97dc7225cf6858cde27cb11dfd64a9c2bab1a2f32133b1e"
   end
 
   resource "youtube_dl" do
-    url "https://files.pythonhosted.org/packages/9c/ef/5cd4138e4b9c04f1c7875d3b64edcddb9355e488019a32df629f9f0dfcec/youtube_dl-2019.4.24.tar.gz"
-    sha256 "b20d110e1bed8d16f5771bb938ab6e5da67f08af62b599af65301cca290f2e15"
+    url "https://files.pythonhosted.org/packages/1e/c7/8f0b6cb38fd9c44adb7c612c2f83bb0a53f04a82a29165f19c320ff4c243/youtube_dl-2020.1.24.tar.gz"
+    sha256 "82189f971fbe3f4b2e66a9aba7fb5bdd1b4b8c0876d7cd55382045f5555a5e44"
   end
 
   def install
@@ -35,6 +35,13 @@ class MpsYoutube < Formula
     end
 
     venv.pip_install_and_link buildpath
+  end
+
+  def caveats
+    <<~EOS
+      Install the optional mpv app with Homebrew Cask:
+        brew cask install mpv
+    EOS
   end
 
   test do

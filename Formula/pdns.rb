@@ -1,13 +1,13 @@
 class Pdns < Formula
   desc "Authoritative nameserver"
   homepage "https://www.powerdns.com"
-  url "https://downloads.powerdns.com/releases/pdns-4.1.8.tar.bz2"
-  sha256 "94561132f46c08f646399511b680ce8cda150fd2b8e3d38c0b90b4187163e617"
+  url "https://downloads.powerdns.com/releases/pdns-4.2.1.tar.bz2"
+  sha256 "f65019986b8fcbb1c6fffebcded04b2b397b84395830f4c63e8d119bcfa1aa28"
 
   bottle do
-    sha256 "44cef8a6fdbb901422ff37309f5080bbeda9eeafc7297cfe241c5b7e6daea09b" => :mojave
-    sha256 "3f1dc45321b7c14074baec9a9a53d7fb3cd5ca069ccca589f70fa15ff83e446d" => :high_sierra
-    sha256 "4196afa3c93a17356a69d96458e2792c5636c9005363892add5a9a9311c0f8f3" => :sierra
+    sha256 "f14eb64110b61db1e93716eab2a7bdb22bf77221dc5e07aed6e19cb5c8415fa7" => :catalina
+    sha256 "cf298ee7822ff4a58356693622b4f2ce998b3d144e70c64c6805aa3fcc28fd1f" => :mojave
+    sha256 "f6e5655f7d5a31caa53887b030937cd36d56a2d542357eb2753f674a42e40289" => :high_sierra
   end
 
   head do
@@ -22,8 +22,10 @@ class Pdns < Formula
   depends_on "pkg-config" => :build
   depends_on "boost"
   depends_on "lua"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "sqlite"
+
+  uses_from_macos "curl"
 
   def install
     # Fix "configure: error: cannot find boost/program_options.hpp"
@@ -33,7 +35,7 @@ class Pdns < Formula
       --prefix=#{prefix}
       --sysconfdir=#{etc}/powerdns
       --with-lua
-      --with-openssl=#{Formula["openssl"].opt_prefix}
+      --with-libcrypto=#{Formula["openssl@1.1"].opt_prefix}
       --with-sqlite3
       --with-modules=gsqlite3
     ]
@@ -45,27 +47,28 @@ class Pdns < Formula
 
   plist_options :manual => "pdns_server start"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>KeepAlive</key>
-      <true/>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_bin}/pdns_server</string>
-      </array>
-      <key>EnvironmentVariables</key>
-      <key>KeepAlive</key>
-      <true/>
-      <key>SHAuthorizationRight</key>
-      <string>system.preferences</string>
-    </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_bin}/pdns_server</string>
+        </array>
+        <key>EnvironmentVariables</key>
+        <key>KeepAlive</key>
+        <true/>
+        <key>SHAuthorizationRight</key>
+        <string>system.preferences</string>
+      </dict>
+      </plist>
+    EOS
   end
 
   test do

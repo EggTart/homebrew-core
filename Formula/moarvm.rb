@@ -1,13 +1,13 @@
 class Moarvm < Formula
   desc "Virtual machine for NQP and Rakudo Perl 6"
   homepage "https://moarvm.org"
-  url "https://moarvm.org/releases/MoarVM-2019.03.tar.gz"
-  sha256 "24b00e5228894fa6f70e9caa73114e5c6ec3686b6305e6e463807a93f70ffc04"
+  url "https://github.com/MoarVM/MoarVM/releases/download/2020.02.1/MoarVM-2020.02.1.tar.gz"
+  sha256 "82cb80b29ad7aebb0c0b42449d371eafa8935b07884526345f9788c8bcf4d632"
 
   bottle do
-    sha256 "704a22721fb2a0d96d90903cdd4a6dd9c6da63ed1be33f466d26ffe5380d4024" => :mojave
-    sha256 "c2f02994cca5fd03fc1a4a294dad62369c7169795cf197d780c4f8b0f2f683cc" => :high_sierra
-    sha256 "516d7401ebabc18938e221c2e272b8a1435938f304846ed364c18d3c6464634c" => :sierra
+    sha256 "b56296c0681c26250f45e32a2a5bedbc63ca8a490b85d70636353868928a9399" => :catalina
+    sha256 "7ec0cad31f6766eaa4eed3d8392cc73208cd77772ba0cc24fa85501a630d075f" => :mojave
+    sha256 "fff9bc929390889d239bdb32f47adaaf9b5c006d83fc150fc6056e4ea5929d0c" => :high_sierra
   end
 
   depends_on "libatomic_ops"
@@ -15,9 +15,11 @@ class Moarvm < Formula
   depends_on "libtommath"
   depends_on "libuv"
 
-  resource("nqp-2019.03") do
-    url "https://github.com/perl6/nqp/archive/2019.03.tar.gz"
-    sha256 "5f226de8f0567f34797fd1d5eeed1ebf85bbd91f39608f917f48081dd3bf6863"
+  conflicts_with "rakudo-star", :because => "rakudo-star currently ships with moarvm included"
+
+  resource("nqp") do
+    url "https://github.com/perl6/nqp/releases/download/2020.02.1/nqp-2020.02.1.tar.gz"
+    sha256 "f2b5757231b006cfb440d511ccdcfc999bffabe05c51e0392696601ff779837f"
   end
 
   def install
@@ -38,7 +40,7 @@ class Moarvm < Formula
   end
 
   test do
-    testpath.install resource("nqp-2019.03")
+    testpath.install resource("nqp")
     out = Dir.chdir("src/vm/moar/stage0") do
       shell_output("#{bin}/moar nqp.moarvm -e 'for (0,1,2,3,4,5,6,7,8,9) { print($_) }'")
     end

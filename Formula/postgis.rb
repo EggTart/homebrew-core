@@ -1,19 +1,19 @@
 class Postgis < Formula
   desc "Adds support for geographic objects to PostgreSQL"
   homepage "https://postgis.net/"
-  url "https://download.osgeo.org/postgis/source/postgis-2.5.2.tar.gz"
-  sha256 "b6cb286c5016029d984f8c440947bf9178da72e1f6f840ed639270e1c451db5e"
-  revision 2
+  url "https://download.osgeo.org/postgis/source/postgis-3.0.1.tar.gz"
+  sha256 "5a5432f95150d9bae9215c6d1c7bb354e060482a7c379daa9b8384e1d03e6353"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "b4249fd625f68664b121d896f9ef069ad3bf4469bc6fa0173b9d7aa0524bf160" => :mojave
-    sha256 "c3e4f07c51d0b8409c2ff8eec5203de906d06360db15245f359622e6cde1c73b" => :high_sierra
-    sha256 "bc929fc49418613e0eb1a9dde940ffbe756a42baae69b40a6fcb6847fffdde29" => :sierra
+    sha256 "11c8c9774b309e7f6e05757fbfc725d8737ee65283b494e36e8ce27eae2813a5" => :catalina
+    sha256 "e5874c9d0410e21884d4eac22ff0339324a86614e1c556026c2d513895682799" => :mojave
+    sha256 "582878554a168453ab842d9cdccaebf2cd728fea901695709724459227574956" => :high_sierra
   end
 
   head do
-    url "https://svn.osgeo.org/postgis/trunk/"
+    url "https://git.osgeo.org/gitea/postgis/postgis.git"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build

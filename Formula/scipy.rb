@@ -1,21 +1,23 @@
 class Scipy < Formula
   desc "Software for mathematics, science, and engineering"
   homepage "https://www.scipy.org"
-  url "https://files.pythonhosted.org/packages/cb/97/361c8c6ceb3eb765371a702ea873ff2fe112fa40073e7d2b8199db8eb56e/scipy-1.3.0.tar.gz"
-  sha256 "c3bb4bd2aca82fb498247deeac12265921fe231502a6bc6edea3ee7fe6c40a7a"
+  url "https://files.pythonhosted.org/packages/04/ab/e2eb3e3f90b9363040a3d885ccc5c79fe20c5b8a3caa8fe3bf47ff653260/scipy-1.4.1.tar.gz"
+  sha256 "dee1bbf3a6c8f73b6b218cb28eed8dd13347ea2f87d572ce19b289d6fd3fbc59"
+  revision 1
   head "https://github.com/scipy/scipy.git"
 
   bottle do
     cellar :any
-    sha256 "6ba4af97b345fb1b95db42eafc9b5a89af45c2da60734b4d317daba2f93bd2f2" => :mojave
-    sha256 "02c6c92cb694c7c1c493e4c309043f104538366dc2813c180d4def06d28892c6" => :high_sierra
-    sha256 "9d3f6843a954b1b525af1deb5a0e66cd9b9e0ee377d4435ddd6bd602a68cb862" => :sierra
+    sha256 "d273e077bd3afeb31c8a8f1537171d45effd5cfbeace38fcddc3f6f48ef6abcc" => :catalina
+    sha256 "f8d80b91aece4696e4ef3d78c12518f76b04a480b1b7a926b92d04d9905b6012" => :mojave
+    sha256 "5cf8f476a5386c653fc2c933678eb588e044d7fe34bd4c6937a195516a4bb583" => :high_sierra
   end
 
   depends_on "swig" => :build
   depends_on "gcc" # for gfortran
   depends_on "numpy"
   depends_on "openblas"
+  depends_on "pybind11"
   depends_on "python"
 
   cxxstdlib_check :skip
@@ -48,18 +50,6 @@ class Scipy < Formula
   # see https://github.com/Homebrew/homebrew-python/issues/185#issuecomment-67534979
   def post_install
     rm_f Dir["#{HOMEBREW_PREFIX}/lib/python*.*/site-packages/scipy/**/*.pyc"]
-  end
-
-  def caveats
-    homebrew_site_packages = Language::Python.homebrew_site_packages
-    user_site_packages = Language::Python.user_site_packages "python"
-    <<~EOS
-      If you use system python (that comes - depending on the OS X version -
-      with older versions of numpy, scipy and matplotlib), you may need to
-      ensure that the brewed packages come earlier in Python's sys.path with:
-        mkdir -p #{user_site_packages}
-        echo 'import sys; sys.path.insert(1, "#{homebrew_site_packages}")' >> #{user_site_packages}/homebrew.pth
-    EOS
   end
 
   test do

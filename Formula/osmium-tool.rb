@@ -1,19 +1,21 @@
 class OsmiumTool < Formula
   desc "Libosmium-based command-line tool for processing OpenStreetMap data"
   homepage "https://osmcode.org/osmium-tool/"
-  url "https://github.com/osmcode/osmium-tool/archive/v1.10.0.tar.gz"
-  sha256 "f0a75ce39ac92c43a01d978c1ecae05d864930bf7d518ea059d7ba320735dd66"
+  url "https://github.com/osmcode/osmium-tool/archive/v1.11.1.tar.gz"
+  sha256 "ea47ca909d167951b975673b8a818600f988aeb35a5a911d4a3a0004bc76f04a"
 
   bottle do
     cellar :any
-    sha256 "48679a4c837f6a91fa3ee7a9c20b3abc7668aace97c3c2023b376f7e89095e9a" => :mojave
-    sha256 "5dc30f884e035bfaef59e3a818907e610de1810c4b93a8532fba67d35d298abe" => :high_sierra
-    sha256 "323eb5aeb1c7672d0574a5b5ab6f33240ac86c907eab3cd687f756996d87c6a9" => :sierra
+    sha256 "3a94cc46c4eded84287fee50fed5582f93ce29f158286018b322f9f98dc1a25f" => :catalina
+    sha256 "6c9706f35cafe0e4ca47f4001ef2a79464f012d2b067fca3e1f63a9624d576c8" => :mojave
+    sha256 "beda680852c644ddda11b7f4f13290efbc28630f36260a77bf1027c9e447345a" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "libosmium" => :build
   depends_on "boost"
+
+  uses_from_macos "expat"
 
   def install
     protozero = Formula["libosmium"].opt_libexec/"include"

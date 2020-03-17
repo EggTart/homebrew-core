@@ -2,38 +2,43 @@ class Mypy < Formula
   desc "Experimental optional static type checker for Python"
   homepage "http://www.mypy-lang.org/"
   url "https://github.com/python/mypy.git",
-      :tag      => "v0.701",
-      :revision => "7aaa435063f7bb81019740f0b56be359374b02fc"
+      :tag      => "v0.770",
+      :revision => "92e3f396b03c69c1d8abc249632bfd2db02350d0"
   head "https://github.com/python/mypy.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "fd31c472e936c229c76e270016fff0c0636af847bde90f20f4ab5c2f54d49796" => :mojave
-    sha256 "f9d71d7e5360a7dbe5947d0938035940976bb0e0c7330b8d2774b4b72812a4e0" => :high_sierra
-    sha256 "1d8cfeae606c3ae6548b45a43fbea0fc1e4b9068a028a7336c1a6322b686587a" => :sierra
+    sha256 "2d502856eccec41ab0698c8348b968d10c61fd22b96a3e19ae3b6e638c52e78f" => :catalina
+    sha256 "069e850aae44690f0e10d0e398dbcb20b0ea4e9dc889b265202d17210098c56a" => :mojave
+    sha256 "e181121af7456fba6b6f290e453297d383d77dc9f4da24bc6603565d3e8c79ce" => :high_sierra
   end
 
   depends_on "sphinx-doc" => :build
   depends_on "python"
 
   resource "psutil" do
-    url "https://files.pythonhosted.org/packages/51/9e/0f8f5423ce28c9109807024f7bdde776ed0b1161de20b408875de7e030c3/psutil-5.4.6.tar.gz"
-    sha256 "686e5a35fe4c0acc25f3466c32e716f2d498aaae7b7edc03e2305b682226bcf6"
+    url "https://files.pythonhosted.org/packages/73/93/4f8213fbe66fc20cb904f35e6e04e20b47b85bee39845cc66a0bcf5ccdcb/psutil-5.6.7.tar.gz"
+    sha256 "ffad8eb2ac614518bbe3c0b8eb9dffdb3a8d2e3a7d5da51c5b974fb723a5c5aa"
   end
 
   resource "sphinx_rtd_theme" do
-    url "https://files.pythonhosted.org/packages/1c/f2/a1361e5f399e0b4182d031065eececa63ddb8c19a0616b03f119c4d5b6b4/sphinx_rtd_theme-0.4.0.tar.gz"
-    sha256 "de88d637a60371d4f923e06b79c4ba260490c57d2ab5a8316942ab5d9a6ce1bf"
+    url "https://files.pythonhosted.org/packages/ed/73/7e550d6e4cf9f78a0e0b60b9d93dba295389c3d271c034bf2ea3463a79f9/sphinx_rtd_theme-0.4.3.tar.gz"
+    sha256 "728607e34d60456d736cc7991fd236afb828b21b82f956c5ea75f94c8414040a"
   end
 
   resource "typed-ast" do
-    url "https://files.pythonhosted.org/packages/a6/4e/ff9d7b7091e2308d2cdb04a1a317e13f293f4408990ee4a52b7028657917/typed-ast-1.3.4.tar.gz"
-    sha256 "68c362848d9fb71d3c3e5f43c09974a0ae319144634e7a47db62f0f2a54a7fa7"
+    url "https://files.pythonhosted.org/packages/34/de/d0cfe2ea7ddfd8b2b8374ed2e04eeb08b6ee6e1e84081d151341bba596e5/typed_ast-1.4.0.tar.gz"
+    sha256 "66480f95b8167c9c5c5c87f32cf437d585937970f3fc24386f313a4c97b44e34"
   end
 
   resource "mypy_extensions" do
-    url "https://files.pythonhosted.org/packages/c2/92/3cc05d1206237d54db7b2565a58080a909445330b4f90a6436302a49f0f8/mypy_extensions-0.4.1.tar.gz"
-    sha256 "37e0e956f41369209a3d5f34580150bcacfabaa57b33a15c0b25f4b5725e0812"
+    url "https://files.pythonhosted.org/packages/63/60/0582ce2eaced55f65a4406fc97beba256de4b7a95a0034c6576458c6519f/mypy_extensions-0.4.3.tar.gz"
+    sha256 "2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"
+  end
+
+  resource "typing_extensions" do
+    url "https://files.pythonhosted.org/packages/e7/dd/f1713bc6638cc3a6a23735eff6ee09393b44b96176d3296693ada272a80b/typing_extensions-3.7.4.1.tar.gz"
+    sha256 "091ecc894d5e908ac75209f10d5b4f118fbdb2eb1ede6a63544054bb1edb41f2"
   end
 
   def install
@@ -62,6 +67,7 @@ class Mypy < Formula
     end
 
     ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python#{xy}/site-packages"
+    ENV["MYPY_USE_MYPYC"] = "1"
     system "python3", *Language::Python.setup_install_args(libexec)
 
     bin.install Dir[libexec/"bin/*"]

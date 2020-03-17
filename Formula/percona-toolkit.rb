@@ -1,19 +1,22 @@
 class PerconaToolkit < Formula
   desc "Percona Toolkit for MySQL"
   homepage "https://www.percona.com/software/percona-toolkit/"
-  url "https://www.percona.com/downloads/percona-toolkit/3.0.13/source/tarball/percona-toolkit-3.0.13.tar.gz"
-  sha256 "21f68d1c5204a9cad7be716fd1e53f0fe6ff7d995292b56dbc7c55e3979432b1"
+  url "https://www.percona.com/downloads/percona-toolkit/3.1.0/source/tarball/percona-toolkit-3.1.0.tar.gz"
+  sha256 "722593773825efe7626ff0b74de6a2133483c9c89fd7812bfe440edaacaec9cc"
+  revision 1
   head "lp:percona-toolkit", :using => :bzr
 
   bottle do
     cellar :any
-    sha256 "d45ec073ce122e1907529323e0d1efb01b76a1dc8bbdf6d8cf9b9cb59afd8761" => :mojave
-    sha256 "c92ffd9b05232537d22150850394abd52cd349f5ee7240afa7a001b7aed421c4" => :high_sierra
-    sha256 "aa6bc63cdd8caa0c11aca6034aaf3e013432715923258cd4252d8794a03be951" => :sierra
+    sha256 "12db01f1fa8f1f2d9dbce405dcd84f61e94ec47466bb33a9b167e3f0c4ad2133" => :catalina
+    sha256 "aba147044860a0b45f6dcac78856942f1f633af6aa748f59f443678b566248c8" => :mojave
+    sha256 "ab0ad14f2a7b9acc5aa43e798ed1605381aad0a4ff87d02ca963403231ac1c12" => :high_sierra
   end
 
   depends_on "mysql-client"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
+
+  uses_from_macos "perl"
 
   # In Mojave, this is not part of the system Perl anymore
   if MacOS.version >= :mojave
@@ -35,6 +38,7 @@ class PerconaToolkit < Formula
 
   def install
     ENV.prepend_create_path "PERL5LIB", libexec/"lib/perl5"
+
     resources.each do |r|
       r.stage do
         system "perl", "Makefile.PL", "INSTALL_BASE=#{libexec}"
@@ -43,8 +47,17 @@ class PerconaToolkit < Formula
     end
 
     system "perl", "Makefile.PL", "INSTALL_BASE=#{prefix}"
-    system "make", "test", "install"
+    system "make", "install"
     share.install prefix/"man"
+
+    # Disable dynamic selection of perl which may cause segfault when an
+    # incompatible perl is picked up.
+    # https://github.com/Homebrew/homebrew-core/issues/4936
+    non_perl_files = %w[bin/pt-ioprofile bin/pt-mext bin/pt-mysql-summary
+                        bin/pt-pmp bin/pt-sift bin/pt-stalk bin/pt-summary]
+    perl_files = Dir["bin/*"] - non_perl_files
+    inreplace perl_files, "#!/usr/bin/env perl", "#!/usr/bin/perl"
+
     bin.env_script_all_files(libexec/"bin", :PERL5LIB => ENV["PERL5LIB"])
   end
 

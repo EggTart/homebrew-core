@@ -1,25 +1,29 @@
 class OperatorSdk < Formula
   desc "SDK for building Kubernetes applications"
   homepage "https://coreos.com/operators/"
-  url "https://github.com/operator-framework/operator-sdk.git", :tag => "v0.8.1"
+  url "https://github.com/operator-framework/operator-sdk.git",
+      :tag      => "v0.15.2",
+      :revision => "ffaf278993c8fcb00c6f527c9f20091eb8dd3352"
   head "https://github.com/operator-framework/operator-sdk.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "9f11a93f335489bd5ed27b3e296ea947e772efebfc434fa96af9fc567603277f" => :mojave
-    sha256 "11f706a313d0af27e25e816abd89e94fabc022f00f88f36c420d4d35829c3ecb" => :high_sierra
-    sha256 "13d461d6b758400847271eeeb681a61417dce9ac5734ac9fc90db41647c567f8" => :sierra
+    sha256 "74fc28d3b3bad299874ede029ff792cf26d16271759b8f9cfc8bcf5cd13c0db2" => :catalina
+    sha256 "c7279aa1f3abf765f478485ca898db236297141fc26d1981e47ea1c081dccbda" => :mojave
+    sha256 "24a6391a7c9f7b36224f85a30c35f14957b24eceffffd25220899e5f0677e906" => :high_sierra
   end
 
-  depends_on "dep"
   depends_on "go"
 
   def install
+    # TODO: Do not set GOROOT. This is a fix for failing tests when compiled with Go 1.13.
+    # See https://github.com/Homebrew/homebrew-core/pull/43820.
+    ENV["GOROOT"] = Formula["go"].opt_libexec
+
     ENV["GOPATH"] = buildpath
+
     dir = buildpath/"src/github.com/operator-framework/operator-sdk"
     dir.install buildpath.children - [buildpath/".brew_home"]
-
-    cd dir do
+    dir.cd do
       # Make binary
       system "make", "install"
       bin.install buildpath/"bin/operator-sdk"
@@ -37,14 +41,23 @@ class OperatorSdk < Formula
   end
 
   test do
-    ENV["GOPATH"] = testpath
-    ENV["GO111MODULE"] = "on"
-    dir = testpath/"src/example.com/test-operator"
-    dir.mkpath
+    # Use the offical golang module cache to prevent network flakes and allow
+    # this test to complete before timing out.
+    ENV["GOPROXY"] = "https://proxy.golang.org"
 
-    cd dir do
-      # Create a new, blank operator framework
-      system "#{bin}/operator-sdk", "new", "test"
+    if build.stable?
+      version_output = shell_output("#{bin}/operator-sdk version")
+      assert_match "version: \"v#{version}\"", version_output
+      assert_match stable.specs[:revision], version_output
+    end
+
+    # Create a new, blank operator
+    system "#{bin}/operator-sdk", "new", "test", "--repo=github.com/example-inc/app-operator"
+
+    cd "test" do
+      # Add an example API resource. This exercises most of the various pieces
+      # of generation logic.
+      system "#{bin}/operator-sdk", "add", "api", "--api-version=app.example.com/v1alpha1", "--kind=AppService"
     end
   end
 end

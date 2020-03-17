@@ -1,23 +1,25 @@
 class Bear < Formula
   desc "Generate compilation database for clang tooling"
   homepage "https://github.com/rizsotto/Bear"
-  url "https://github.com/rizsotto/Bear/archive/2.3.13.tar.gz"
-  sha256 "dc14c28bfbe0beef5ec93b4614a00bd419d5a793c8a678ba3b5544bd1dd580b6"
-  revision 1
+  url "https://github.com/rizsotto/Bear/archive/2.4.3.tar.gz"
+  sha256 "74057678642080d193a9f65a804612e1d5b87da5a1f82ee487bbc44eb34993f2"
   head "https://github.com/rizsotto/Bear.git"
 
   bottle do
     cellar :any
-    sha256 "cbfdbf9fcf3aa85a9609c75e27dc492edd669f8e7279af1cab1ab4c9a9860d42" => :mojave
-    sha256 "34ee3afc700759851c95bb9369c4df0f267e5d070266aa3021012c03af11b6ee" => :high_sierra
-    sha256 "00b4985c6da2a4f4167544ed0ee902d27ab7517a008d8467faf403224dc21929" => :sierra
+    sha256 "e25773345f9d8aa3c59c6960f0773de9fb2abd9681f0556a7f4618aaaaf71363" => :catalina
+    sha256 "3b418502dd23b131e1e9dfbe7dc3ea2c4f93fcc538f8dd3e286fcccae55d7f6d" => :mojave
+    sha256 "d7be3483e460d6b959060270c6de75d1fcc46cfcd0a02969dd94102679848e4a" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "python"
 
   def install
-    system "cmake", ".", *std_cmake_args
+    args = std_cmake_args + %W[
+      -DPYTHON_EXECUTABLE=#{Formula["python"].opt_bin}/python3
+    ]
+    system "cmake", ".", *args
     system "make", "install"
   end
 

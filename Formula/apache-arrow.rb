@@ -1,26 +1,29 @@
 class ApacheArrow < Formula
   desc "Columnar in-memory analytics layer designed to accelerate big data"
   homepage "https://arrow.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=arrow/arrow-0.13.0/apache-arrow-0.13.0.tar.gz"
-  sha256 "ac2a77dd9168e9892e432c474611e86ded0be6dfe15f689c948751d37f81391a"
-  revision 1
+  url "https://www.apache.org/dyn/closer.lua?path=arrow/arrow-0.16.0/apache-arrow-0.16.0.tar.gz"
+  mirror "https://archive.apache.org/dist/arrow/arrow-0.16.0/apache-arrow-0.16.0.tar.gz"
+  sha256 "261992de4029a1593195ff4000501503bd403146471b3168bd2cc414ad0fb7f5"
   head "https://github.com/apache/arrow.git"
 
   bottle do
     cellar :any
-    sha256 "6aa00e8691bb50792063fabf779654c84779191c61e535f673bdcce23f6ab5c9" => :mojave
-    sha256 "b1e94f45e5784bac3dd5d7e91cc9b528b327ef04414aee50e3e0e2f3a1a95cde" => :high_sierra
-    sha256 "edb8034cb655983af33466bf7b8347af2761e36be3ff9324c1f69b62ebea717b" => :sierra
+    sha256 "d523f37a5332bd67dfbb7517d30c5bcf762c96c0157425d966628616de961317" => :catalina
+    sha256 "9a1a351efcec6de325196c7692e03637efcd3557f8b0fc8847e0bb2af7b586c4" => :mojave
+    sha256 "b3b2e0681cff1188e6da5bc741a173740a218c1fde467379345a7dd6501b010c" => :high_sierra
   end
 
-  depends_on "autoconf" => :build
   depends_on "cmake" => :build
   depends_on "boost"
-  depends_on "flatbuffers"
+  depends_on "brotli"
+  depends_on "glog"
+  depends_on "grpc"
   depends_on "lz4"
   depends_on "numpy"
+  depends_on "openssl@1.1"
   depends_on "protobuf"
   depends_on "python"
+  depends_on "rapidjson"
   depends_on "snappy"
   depends_on "thrift"
   depends_on "zstd"
@@ -28,19 +31,21 @@ class ApacheArrow < Formula
   def install
     ENV.cxx11
     args = %W[
+      -DARROW_FLIGHT=ON
+      -DARROW_JEMALLOC=OFF
       -DARROW_ORC=ON
       -DARROW_PARQUET=ON
       -DARROW_PLASMA=ON
       -DARROW_PROTOBUF_USE_SHARED=ON
       -DARROW_PYTHON=ON
+      -DARROW_WITH_BZ2=ON
+      -DARROW_WITH_ZLIB=ON
+      -DARROW_WITH_ZSTD=ON
+      -DARROW_WITH_LZ4=ON
+      -DARROW_WITH_SNAPPY=ON
+      -DARROW_WITH_BROTLI=ON
       -DARROW_INSTALL_NAME_RPATH=OFF
-      -DFLATBUFFERS_HOME=#{Formula["flatbuffers"].prefix}
-      -DLZ4_HOME=#{Formula["lz4"].prefix}
-      -DPROTOBUF_HOME=#{Formula["protobuf"].prefix}
       -DPYTHON_EXECUTABLE=#{Formula["python"].bin/"python3"}
-      -DSNAPPY_HOME=#{Formula["snappy"].prefix}
-      -DTHRIFT_HOME=#{Formula["thrift"].prefix}
-      -DZSTD_HOME=#{Formula["zstd"].prefix}
     ]
 
     mkdir "build"

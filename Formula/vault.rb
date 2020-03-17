@@ -5,18 +5,18 @@ class Vault < Formula
   desc "Secures, stores, and tightly controls access to secrets"
   homepage "https://vaultproject.io/"
   url "https://github.com/hashicorp/vault.git",
-      :tag      => "v1.1.2",
-      :revision => "0082501623c0b704b87b1fbc84c2d725994bac54"
+      :tag      => "v1.3.3",
+      :revision => "8e872c4ad94cb1f193a0fb239ae856e1fdf4bdb0"
   head "https://github.com/hashicorp/vault.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "0af2c522d50ce18f7790326e53119dcafb032b004ef5ebc82e6dbefb599aaf1b" => :mojave
-    sha256 "330a2b27e434f093446e8ffca26566e71e28f73a5a705108808f604bf91c2eee" => :high_sierra
-    sha256 "97a509a2581c162cf2281e5be3507256c0508d36a2639cc1cfa677b3ed51e87b" => :sierra
+    sha256 "953502f351f9e6cd8418a39ba8e4dc0268e429e36147f7257f6bdde9af11f486" => :catalina
+    sha256 "f042d5041880d92b10cda1ea66a93261c656182e7f0962f7b682034cfa5dba39" => :mojave
+    sha256 "0eb9d16459cf780841572adb256ebb8ac27675b07c00143d297287e9358197f9" => :high_sierra
   end
 
-  depends_on "go" => :build
+  depends_on "go@1.12" => :build
   depends_on "gox" => :build
 
   def install
@@ -32,6 +32,40 @@ class Vault < Formula
       bin.install "bin/vault"
       prefix.install_metafiles
     end
+  end
+
+  plist_options :manual => "vault server -dev"
+
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+        <dict>
+          <key>KeepAlive</key>
+          <dict>
+            <key>SuccessfulExit</key>
+            <false/>
+          </dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>#{opt_bin}/vault</string>
+            <string>server</string>
+            <string>-dev</string>
+          </array>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>WorkingDirectory</key>
+          <string>#{var}</string>
+          <key>StandardErrorPath</key>
+          <string>#{var}/log/vault.log</string>
+          <key>StandardOutPath</key>
+          <string>#{var}/log/vault.log</string>
+        </dict>
+      </plist>
+    EOS
   end
 
   test do

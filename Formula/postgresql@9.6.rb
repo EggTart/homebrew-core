@@ -1,26 +1,29 @@
 class PostgresqlAT96 < Formula
   desc "Object-relational database system"
   homepage "https://www.postgresql.org/"
-  url "https://ftp.postgresql.org/pub/source/v9.6.13/postgresql-9.6.13.tar.bz2"
-  sha256 "ecbed20056296a65b6a4f5526c477e3ae5cc284cb01a15507785ddb23831e9a4"
+  url "https://ftp.postgresql.org/pub/source/v9.6.17/postgresql-9.6.17.tar.bz2"
+  sha256 "f6e1e32d32545f97c066f3c19f4d58dfab1205c01252cf85c5c92294ace1a0c2"
 
   bottle do
-    sha256 "365bd57f7a88eb8d4087df9a6b0f15c78671e8dfb62aec3045fdd022c45607f3" => :mojave
-    sha256 "e56aef2cdc0f8a1afd9bcb773024164a503700656be72622afb5b9dd9994425f" => :high_sierra
-    sha256 "83142a5831ba38939322a1e0d6b29a8f26b5c346a559d7a48969192fd7751766" => :sierra
+    sha256 "c658b98448c42f82cbd1f26346284b47f409c915390f8fcb1f64d396adceb4fe" => :catalina
+    sha256 "e64fabd620b8c5d16161d354e7e7bb61c4ebeb01c351455107e0dfd80cd2158b" => :mojave
+    sha256 "e4919bf898ffda6d92c3f0a486f9d314b2f8fa3edbad7d381fd38bf09b6da9c3" => :high_sierra
   end
 
   keg_only :versioned_formula
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "readline"
+
+  uses_from_macos "libxslt"
+  uses_from_macos "perl"
 
   def install
     # avoid adding the SDK library directory to the linker search path
     ENV["XML2_CONFIG"] = "xml2-config --exec-prefix=/usr"
 
-    ENV.prepend "LDFLAGS", "-L#{Formula["openssl"].opt_lib} -L#{Formula["readline"].opt_lib}"
-    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl"].opt_include} -I#{Formula["readline"].opt_include}"
+    ENV.prepend "LDFLAGS", "-L#{Formula["openssl@1.1"].opt_lib} -L#{Formula["readline"].opt_lib}"
+    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl@1.1"].opt_include} -I#{Formula["readline"].opt_include}"
 
     args = %W[
       --disable-debug
@@ -89,53 +92,53 @@ class PostgresqlAT96 < Formula
   def post_install
     (var/"log").mkpath
     (var/name).mkpath
-    unless File.exist? "#{var}/#{name}/PG_VERSION"
-      system "#{bin}/initdb", "#{var}/#{name}"
-    end
+    system "#{bin}/initdb", "#{var}/#{name}" unless File.exist? "#{var}/#{name}/PG_VERSION"
   end
 
-  def caveats; <<~EOS
-    If builds of PostgreSQL 9 are failing and you have version 8.x installed,
-    you may need to remove the previous version first. See:
-      https://github.com/Homebrew/legacy-homebrew/issues/2510
+  def caveats
+    <<~EOS
+      If builds of PostgreSQL 9 are failing and you have version 8.x installed,
+      you may need to remove the previous version first. See:
+        https://github.com/Homebrew/legacy-homebrew/issues/2510
 
-    To migrate existing data from a previous major version (pre-9.0) of PostgreSQL, see:
-      https://www.postgresql.org/docs/9.6/static/upgrading.html
+      To migrate existing data from a previous major version (pre-9.0) of PostgreSQL, see:
+        https://www.postgresql.org/docs/9.6/static/upgrading.html
 
-    To migrate existing data from a previous minor version (9.0-9.5) of PostgreSQL, see:
-      https://www.postgresql.org/docs/9.6/static/pgupgrade.html
+      To migrate existing data from a previous minor version (9.0-9.5) of PostgreSQL, see:
+        https://www.postgresql.org/docs/9.6/static/pgupgrade.html
 
-      You will need your previous PostgreSQL installation from brew to perform `pg_upgrade`.
-        Do not run `brew cleanup postgresql@9.6` until you have performed the migration.
-  EOS
+        You will need your previous PostgreSQL installation from brew to perform `pg_upgrade`.
+          Do not run `brew cleanup postgresql@9.6` until you have performed the migration.
+    EOS
   end
 
   plist_options :manual => "pg_ctl -D #{HOMEBREW_PREFIX}/var/postgresql@9.6 start"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>KeepAlive</key>
-      <true/>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_bin}/postgres</string>
-        <string>-D</string>
-        <string>#{var}/#{name}</string>
-      </array>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>WorkingDirectory</key>
-      <string>#{HOMEBREW_PREFIX}</string>
-      <key>StandardErrorPath</key>
-      <string>#{var}/log/#{name}.log</string>
-    </dict>
-    </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_bin}/postgres</string>
+          <string>-D</string>
+          <string>#{var}/#{name}</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>WorkingDirectory</key>
+        <string>#{HOMEBREW_PREFIX}</string>
+        <key>StandardErrorPath</key>
+        <string>#{var}/log/#{name}.log</string>
+      </dict>
+      </plist>
+    EOS
   end
 
   test do

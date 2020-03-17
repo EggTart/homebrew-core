@@ -1,14 +1,13 @@
 class Mkvtoolnix < Formula
   desc "Matroska media files manipulation tools"
   homepage "https://mkvtoolnix.download/"
-  url "https://mkvtoolnix.download/sources/mkvtoolnix-34.0.0.tar.xz"
-  sha256 "0098e40a9421edb6695b3411c642b47f076eb969b7c3a9fc0d0c92ef9903fb85"
+  url "https://mkvtoolnix.download/sources/mkvtoolnix-44.0.0.tar.xz"
+  sha256 "d93843ed669d837c67c2c929f4ac2bd1e848ea5db7586681226fa371e88c92cb"
 
   bottle do
     cellar :any
-    sha256 "b6f04227c520f7c10428f0d4ee86250fe5a9686f16c5143783617f94da8ed6fe" => :mojave
-    sha256 "49c551cef9f1a1f669d4d77675de608783d793a51556c6b134ba10ffacf01c3c" => :high_sierra
-    sha256 "cfda24c9d4ee82bdbc538ee087835f2913c85d8d0950f7045db7103a417ede9d" => :sierra
+    sha256 "8f0ec3669eeb8c5f5afe94a5756a1f2f0b5e803e14e0cca3e80145ab22e0985b" => :catalina
+    sha256 "ee8d3131cd6118fc693641729cf73145052635ed84cde52fd953e6ba707379d4" => :mojave
   end
 
   head do
@@ -30,6 +29,10 @@ class Mkvtoolnix < Formula
   depends_on "libmatroska"
   depends_on "libogg"
   depends_on "libvorbis"
+  depends_on :macos => :mojave # C++17
+
+  uses_from_macos "libxslt" => :build
+  uses_from_macos "ruby" => :build
 
   def install
     ENV.cxx11

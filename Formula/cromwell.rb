@@ -1,8 +1,8 @@
 class Cromwell < Formula
   desc "Workflow Execution Engine using Workflow Description Language"
   homepage "https://github.com/broadinstitute/cromwell"
-  url "https://github.com/broadinstitute/cromwell/releases/download/41/cromwell-41.jar"
-  sha256 "a4cade2008858e6d088f2123c2026f2cc90e02fffee12b36c40be8ace235776d"
+  url "https://github.com/broadinstitute/cromwell/releases/download/49/cromwell-49.jar"
+  sha256 "4ff4dbd4ebe128ea51d81ffeeb59fa547f436af775f984770c1dd98569e759c2"
 
   head do
     url "https://github.com/broadinstitute/cromwell.git"
@@ -11,26 +11,33 @@ class Cromwell < Formula
 
   bottle :unneeded
 
-  depends_on :java => "1.8+"
+  depends_on "openjdk"
 
   resource "womtool" do
-    url "https://github.com/broadinstitute/cromwell/releases/download/41/womtool-41.jar"
-    sha256 "d4c0f6130862fa57b0bc253772cfb9b59148d1e438c66ab6d9ce3773dd89d8ec"
+    url "https://github.com/broadinstitute/cromwell/releases/download/49/womtool-49.jar"
+    sha256 "7ccc29b6b089f9f4b0fbc252f732fd6e051cd530ca54a1fe0c641991bb92c98f"
   end
 
   def install
     if build.head?
       system "sbt", "assembly"
-      libexec.install Dir["server/target/scala-*/cromwell-*.jar"][0]
-      libexec.install Dir["womtool/target/scala-2.12/womtool-*.jar"][0]
+      libexec.install Dir["server/target/scala-*/cromwell-*.jar"][0] => "cromwell.jar"
+      libexec.install Dir["womtool/target/scala-*/womtool-*.jar"][0] => "womtool.jar"
     else
-      libexec.install Dir["cromwell-*.jar"][0]
+      libexec.install "cromwell-#{version}.jar" => "cromwell.jar"
       resource("womtool").stage do
-        libexec.install Dir["womtool-*.jar"][0]
+        libexec.install "womtool-#{version}.jar" => "womtool.jar"
       end
     end
-    bin.write_jar_script Dir[libexec/"cromwell-*.jar"][0], "cromwell", "$JAVA_OPTS"
-    bin.write_jar_script Dir[libexec/"womtool-*.jar"][0], "womtool"
+
+    (bin/"cromwell").write <<~EOS
+      #!/bin/bash
+      exec "#{Formula["openjdk"].opt_bin}/java" $JAVA_OPTS -jar "#{libexec}/cromwell.jar" "$@"
+    EOS
+    (bin/"womtool").write <<~EOS
+      #!/bin/bash
+      exec "#{Formula["openjdk"].opt_bin}/java" -jar "#{libexec}/womtool.jar" "$@"
+    EOS
   end
 
   test do

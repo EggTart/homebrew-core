@@ -1,13 +1,14 @@
 class Ccls < Formula
   desc "C/C++/ObjC language server"
   homepage "https://github.com/MaskRay/ccls"
-  url "https://github.com/MaskRay/ccls/archive/0.20190314.tar.gz"
-  sha256 "aaefa603a76325bb94e5222d144e19c432771346990c8b84165832bf37d15bb3"
+  url "https://github.com/MaskRay/ccls/archive/0.20190823.5.tar.gz"
+  sha256 "6f39fa5ce79c1682973811ce2409718710bfef6008f94f96277393e6846bd76c"
   head "https://github.com/MaskRay/ccls.git"
 
   bottle do
-    sha256 "d72512c7435985c15755c6a2dab68ce8032ca6e2372df722a3df38042b121323" => :mojave
-    sha256 "5868f7f9e0b17c9ea43ef4658053c8b4dec82442f7736114c8c4019ba168386c" => :high_sierra
+    sha256 "5f5f3e9a71c2b2ba7362ea9f6d725f0a86385ed76faefabe2ce1e8060f40d949" => :catalina
+    sha256 "cd9e2218ba5994b9c8d8a03f53f48e4060f5f521edd7c692ff07907deef6fec3" => :mojave
+    sha256 "5dfe79e4ec483f78779750ac47405d53e75215d60bb9b326ce0397e14723f048" => :high_sierra
   end
 
   depends_on "cmake" => :build

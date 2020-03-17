@@ -2,14 +2,14 @@ class ErlangAT20 < Formula
   desc "Programming language for highly scalable real-time systems"
   homepage "https://www.erlang.org/"
   # Download tarball from GitHub; it is served faster than the official tarball.
-  url "https://github.com/erlang/otp/archive/OTP-20.3.8.21.tar.gz"
-  sha256 "50413c5784aeb33368806593a258f18adfc4e62687a4928c12f2c1a9ca2259fd"
+  url "https://github.com/erlang/otp/archive/OTP-20.3.8.26.tar.gz"
+  sha256 "dce78b60938a48b887317e5222cff946fd4af36666153ab2f0f022aa91755813"
 
   bottle do
     cellar :any
-    sha256 "b196831d137c875796453cf9f163053b2361d5baa0fdfd9a26fc33ebdccbc22a" => :mojave
-    sha256 "b510b82b30bf89a81d214e02591f3a621579e85f58f4bb87bb9900489f5960cc" => :high_sierra
-    sha256 "9be2bb75ca91b960c45034792b8ae81496aabce4d83a2bf53db4e89dbeffd94e" => :sierra
+    sha256 "130019a8e459654a92e7267b60932867c8c27957d5bd5b791e358407e6d2755b" => :catalina
+    sha256 "5e1003bf97321f4cf5cd57b062b752c2d92bcbb457ab5e992309790b7827fd1f" => :mojave
+    sha256 "a401feb22927ecc0e649f3f2f7aeba331725b6390985f826ed5639d59732ee6a" => :high_sierra
   end
 
   keg_only :versioned_formula
@@ -17,8 +17,10 @@ class ErlangAT20 < Formula
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "wxmac"
+
+  uses_from_macos "m4" => :build
 
   resource "man" do
     url "https://www.erlang.org/download/otp_doc_man_20.3.tar.gz"
@@ -52,7 +54,7 @@ class ErlangAT20 < Formula
       --enable-smp-support
       --enable-threads
       --enable-wx
-      --with-ssl=#{Formula["openssl"].opt_prefix}
+      --with-ssl=#{Formula["openssl@1.1"].opt_prefix}
       --without-javac
       --enable-darwin-64bit
     ]
@@ -67,12 +69,13 @@ class ErlangAT20 < Formula
     doc.install resource("html")
   end
 
-  def caveats; <<~EOS
-    Man pages can be found in:
-      #{opt_lib}/erlang/man
+  def caveats
+    <<~EOS
+      Man pages can be found in:
+        #{opt_lib}/erlang/man
 
-    Access them with `erl -man`, or add this directory to MANPATH.
-  EOS
+      Access them with `erl -man`, or add this directory to MANPATH.
+    EOS
   end
 
   test do

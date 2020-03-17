@@ -3,15 +3,14 @@ class Docutils < Formula
 
   desc "Text processing system for reStructuredText"
   homepage "https://docutils.sourceforge.io"
-  url "https://downloads.sourceforge.net/project/docutils/docutils/0.14/docutils-0.14.tar.gz"
-  sha256 "51e64ef2ebfb29cae1faa133b3710143496eca21c530f3f71424d77687764274"
-  revision 1
+  url "https://downloads.sourceforge.net/project/docutils/docutils/0.16/docutils-0.16.tar.gz"
+  sha256 "7d4e999cca74a52611773a42912088078363a30912e8822f7a3d38043b767573"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "71bc62531fd234add02633a69b12c2f1f43d6799d5ab1615ab6c9b22064803cc" => :mojave
-    sha256 "5f317d1324dd57a4053c3feb518463ed6e67e13589f94f5738a528d63daa6770" => :high_sierra
-    sha256 "a91be71816c677dac34fe253695440bebaf54d634652622ca1e797f5cebecbee" => :sierra
+    sha256 "0ef5a1355a1eeb6d30a19ed818494363151bc05446dddeffed214c8d80e85832" => :catalina
+    sha256 "7d1bae12504b75f88a4a3ffe205aafb06ea2666266f8840089fff922b12288bc" => :mojave
+    sha256 "d81d6ad3f2d55b2e77639610b1865571decddf42b4f5f73de02edadc9b8b11df" => :high_sierra
   end
 
   depends_on "python"

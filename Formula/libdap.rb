@@ -1,13 +1,13 @@
 class Libdap < Formula
   desc "Framework for scientific data networking"
   homepage "https://www.opendap.org/"
-  url "https://www.opendap.org/pub/source/libdap-3.20.3.tar.gz"
-  sha256 "29961922b53f62e9d4eb34d1d50ddc23a24100664f97b71f42561fa5588ccc58"
+  url "https://www.opendap.org/pub/source/libdap-3.20.5.tar.gz"
+  sha256 "cb3a4eef221d644d1eb69dbdbeeaf68e99b308fe982ca722c147cb56b5d55e96"
 
   bottle do
-    sha256 "d2f5c13913633acafe8c090b9ff94ad3f9eae5d7699be4707da57f15524fc530" => :mojave
-    sha256 "15bf626100714d66c1691db44574295b5f257b1f0e3df025ac3f7c12c2526697" => :high_sierra
-    sha256 "ccb2d18958ed0115c1e1294e1c13d1c4afed8090a88efd0a6c6ff023bb697093" => :sierra
+    sha256 "41ca77910281671985b9e698d1f6be7fd4943e0b32bf889e39f16ccbb36ab6bc" => :catalina
+    sha256 "6aaeaf8fd4959e3cddbb1486d4f1787a6ad8870ad314850311a2c1acedb5382c" => :mojave
+    sha256 "7891d895c5a30518351651f6963a6996287c185703487ea6f1ad71de51eb383e" => :high_sierra
   end
 
   head do
@@ -21,7 +21,10 @@ class Libdap < Formula
   depends_on "bison" => :build
   depends_on "pkg-config" => :build
   depends_on "libxml2"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
+
+  uses_from_macos "flex" => :build
+  uses_from_macos "curl"
 
   def install
     args = %W[

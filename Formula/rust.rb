@@ -3,28 +3,21 @@ class Rust < Formula
   homepage "https://www.rust-lang.org/"
 
   stable do
-    url "https://static.rust-lang.org/dist/rustc-1.35.0-src.tar.gz"
-    sha256 "5a4d637a716bac18d085f44dd87ef48b32195f71b967d872d80280b38cff712d"
+    url "https://static.rust-lang.org/dist/rustc-1.41.1-src.tar.gz"
+    sha256 "38c93d016e6d3e083aa15e8f65511d3b4983072c0218a529f5ee94dd1de84573"
 
     resource "cargo" do
       url "https://github.com/rust-lang/cargo.git",
-          :tag      => "0.36.0",
-          :revision => "6f3e9c367abb497c64f360c3839dab5e74928d5c"
-    end
-
-    resource "racer" do
-      # Racer should stay < 2.1 for now as 2.1 needs the nightly build of rust
-      # See https://github.com/racer-rust/racer/tree/v2.1.2#installation
-      url "https://github.com/racer-rust/racer/archive/2.0.14.tar.gz"
-      sha256 "0442721c01ae4465843cb73b24f6caa0127c3308d72b944ad75736164756e522"
+          :tag      => "0.42.0",
+          :revision => "626f0f40efd32e6b3dbade50cd53fdfaa08446ba"
     end
   end
 
   bottle do
     cellar :any
-    sha256 "263d805d5220eb9f7c21ee0a737b933001e66ea9e2853eb0a20b05cc0b8f5547" => :mojave
-    sha256 "84b687f6229875ff5f917567e50969019fe725bc7e7b881849bed3e9fed9f4d4" => :high_sierra
-    sha256 "49f3e0adb8678b4ca434c6cd04f1bb92b3ef5b688209b5a24a1c30c1f9153ce0" => :sierra
+    sha256 "cb6f748139b5a6b36cb859840183bbe295734d11cdfa4bf91f2f4b213aa706cf" => :catalina
+    sha256 "8e02732d6b8337d03422c206c8644975ae3e31caa41686c1e298494d0e45ccc2" => :mojave
+    sha256 "0b7a0246cbb9364eae54df7e182bcfbb35542c3feb5f3c166ba1535ffcf58432" => :high_sierra
   end
 
   head do
@@ -33,31 +26,34 @@ class Rust < Formula
     resource "cargo" do
       url "https://github.com/rust-lang/cargo.git"
     end
-
-    resource "racer" do
-      url "https://github.com/racer-rust/racer.git"
-    end
   end
 
   depends_on "cmake" => :build
+  depends_on "python@3.8" => :build
   depends_on "libssh2"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pkg-config"
+
+  uses_from_macos "binutils"
+  uses_from_macos "curl"
+  uses_from_macos "zlib"
 
   resource "cargobootstrap" do
     # From https://github.com/rust-lang/rust/blob/#{version}/src/stage0.txt
-    url "https://static.rust-lang.org/dist/2019-05-14/cargo-0.35.0-x86_64-apple-darwin.tar.gz"
-    sha256 "e16d48fff7fc9907bb38f06b5cc496b7e3c3de803615604405591bdfbc4aec94"
+    url "https://static.rust-lang.org/dist/2019-12-19/cargo-0.41.0-x86_64-apple-darwin.tar.gz"
+    sha256 "1ef77a6be5e697bb7dde40854651fc67e91f119d5a9ddf747a25e30c1179fbe1"
   end
 
   def install
+    ENV.prepend_path "PATH", Formula["python@3.8"].opt_libexec/"bin"
+
     # Fix build failure for compiler_builtins "error: invalid deployment target
     # for -stdlib=libc++ (requires OS X 10.7 or later)"
     ENV["MACOSX_DEPLOYMENT_TARGET"] = MacOS.version
 
     # Ensure that the `openssl` crate picks up the intended library.
     # https://crates.io/crates/openssl#manual-configuration
-    ENV["OPENSSL_DIR"] = Formula["openssl"].opt_prefix
+    ENV["OPENSSL_DIR"] = Formula["openssl@1.1"].opt_prefix
 
     # Fix build failure for cmake v0.1.24 "error: internal compiler error:
     # src/librustc/ty/subst.rs:127: impossible case reached" on 10.11, and for
@@ -67,8 +63,8 @@ class Rust < Formula
     ENV["SDKROOT"] = MacOS.sdk_path
 
     args = ["--prefix=#{prefix}"]
-    args << "--disable-rpath" if build.head?
     if build.head?
+      args << "--disable-rpath"
       args << "--release-channel=nightly"
     else
       args << "--release-channel=stable"
@@ -86,19 +82,6 @@ class Rust < Formula
       ENV["RUSTC"] = bin/"rustc"
       system "cargo", "install", "--root", prefix, "--path", ".", "--features", "curl-sys/force-system-lib-on-osx"
     end
-
-    resource("racer").stage do
-      ENV.prepend_path "PATH", bin
-      cargo_home = buildpath/"cargo_home"
-      cargo_home.mkpath
-      ENV["CARGO_HOME"] = cargo_home
-      system "cargo", "install", "--root", libexec, "--path", "."
-      (bin/"racer").write_env_script(libexec/"bin/racer", :RUST_SRC_PATH => pkgshare/"rust_src")
-    end
-
-    # Remove any binary files; as Homebrew will run ranlib on them and barf.
-    rm_rf Dir["src/{llvm-project,llvm-emscripten,test,librustdoc,etc/snapshot.pyc}"]
-    (pkgshare/"rust_src").install Dir["src/*"]
 
     rm_rf prefix/"lib/rustlib/uninstall.sh"
     rm_rf prefix/"lib/rustlib/install.log"

@@ -1,13 +1,13 @@
 class Lighttpd < Formula
   desc "Small memory footprint, flexible web-server"
   homepage "https://www.lighttpd.net/"
-  url "https://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-1.4.53.tar.xz"
-  sha256 "3bdfce1cf3e9650a556a8c26fb15342c5717c63f530c54693db632b0371dcb78"
+  url "https://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-1.4.55.tar.xz"
+  sha256 "6a0b50e9c9d5cc3d9e48592315c25a2d645858f863e1ccd120507a30ce21e927"
 
   bottle do
-    sha256 "1278aa2ca117a24e1c39ce0e73d4b139904b1c4ef9545e25f780c6672a6a3020" => :mojave
-    sha256 "fa763b938617bef3b014deda1b8fc4cb75f4ed446a2317837546f7650a5e029b" => :high_sierra
-    sha256 "4adf53490186376154418caa61919560c825eae7dac6232586bf7438bba7378a" => :sierra
+    sha256 "7cb7b6026dbba9a3afde8a0e2e2740499564687fb61ee6c49d5cabc29f780a2d" => :catalina
+    sha256 "432da2049539f4416d952ecdfcfefc5b5230447edaebfd63b958a92581ae57ab" => :mojave
+    sha256 "c7e9b87c219d8bf64561c185c6fcc68c2caafded7a4e980d379fd4fbbe00bd1d" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -15,7 +15,7 @@ class Lighttpd < Formula
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "openldap"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
 
   # default max. file descriptors; this option will be ignored if the server is not started as root
@@ -88,53 +88,55 @@ class Lighttpd < Formula
     run_path.mkpath
   end
 
-  def caveats; <<~EOS
-    Docroot is: #{www_path}
+  def caveats
+    <<~EOS
+      Docroot is: #{www_path}
 
-    The default port has been set in #{config_path}/lighttpd.conf to 8080 so that
-    lighttpd can run without sudo.
-  EOS
+      The default port has been set in #{config_path}/lighttpd.conf to 8080 so that
+      lighttpd can run without sudo.
+    EOS
   end
 
   plist_options :manual => "lighttpd -f #{HOMEBREW_PREFIX}/etc/lighttpd/lighttpd.conf"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_bin}/lighttpd</string>
-        <string>-D</string>
-        <string>-f</string>
-        <string>#{config_path}/lighttpd.conf</string>
-      </array>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>KeepAlive</key>
-      <false/>
-      <key>WorkingDirectory</key>
-      <string>#{HOMEBREW_PREFIX}</string>
-      <key>StandardErrorPath</key>
-      <string>#{log_path}/output.log</string>
-      <key>StandardOutPath</key>
-      <string>#{log_path}/output.log</string>
-      <key>HardResourceLimits</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
       <dict>
-        <key>NumberOfFiles</key>
-        <integer>#{MAX_FDS}</integer>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_bin}/lighttpd</string>
+          <string>-D</string>
+          <string>-f</string>
+          <string>#{config_path}/lighttpd.conf</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>KeepAlive</key>
+        <false/>
+        <key>WorkingDirectory</key>
+        <string>#{HOMEBREW_PREFIX}</string>
+        <key>StandardErrorPath</key>
+        <string>#{log_path}/output.log</string>
+        <key>StandardOutPath</key>
+        <string>#{log_path}/output.log</string>
+        <key>HardResourceLimits</key>
+        <dict>
+          <key>NumberOfFiles</key>
+          <integer>#{MAX_FDS}</integer>
+        </dict>
+        <key>SoftResourceLimits</key>
+        <dict>
+          <key>NumberOfFiles</key>
+          <integer>#{MAX_FDS}</integer>
+        </dict>
       </dict>
-      <key>SoftResourceLimits</key>
-      <dict>
-        <key>NumberOfFiles</key>
-        <integer>#{MAX_FDS}</integer>
-      </dict>
-    </dict>
-    </plist>
-  EOS
+      </plist>
+    EOS
   end
 
   test do

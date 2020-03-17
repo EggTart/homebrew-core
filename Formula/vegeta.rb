@@ -2,28 +2,30 @@ class Vegeta < Formula
   desc "HTTP load testing tool and library"
   homepage "https://github.com/tsenart/vegeta"
   url "https://github.com/tsenart/vegeta.git",
-      :tag      => "cli/v12.5.1",
-      :revision => "0f5577eaf11a136541b8c667273b6bc5eba51a8b"
+      :tag      => "v12.8.0",
+      :revision => "7232e921ca2001e87fb39c3df6934e951faf59fa"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "448919322a1dd870003a3953eaaea42139534024f98755a29d602e537b58caf0" => :mojave
-    sha256 "398e443ae8f8d96d00315fd47888e59c1505820af33cc19e529d0f8f3918c026" => :high_sierra
-    sha256 "44e7a0ef3154894e7468a99a6f208b6cdb17b3adfadcace4aadd27d16ac956e5" => :sierra
+    sha256 "acf72b24bc38f36b494f348f519a9228f4c793d00af85760f3d28e67e1df6e67" => :catalina
+    sha256 "3ef18ccbcc6f813a9dcbc2ee34c0d04834719ee16e831135d0b0209146fa1bae" => :mojave
+    sha256 "75f3d6310b983c6529b7d80820c798a17214216af47be19a65e1753b5044f54c" => :high_sierra
   end
 
-  depends_on "dep" => :build
   depends_on "go" => :build
 
   def install
-    ENV["GOPATH"] = buildpath
-    src = buildpath/"src/github.com/tsenart/vegeta"
-    src.install buildpath.children
-    src.cd do
-      system "make", "vegeta"
-      bin.install "vegeta"
-      prefix.install_metafiles
-    end
+    commit = Utils.popen_read("git rev-parse --short HEAD").chomp
+    build_time = Utils.popen_read("date -u +'%Y-%m-%dT%H:%M:%SZ' 2> /dev/null").chomp
+
+    ldflags = %W[
+      -s -w
+      -X main.Version=#{version}
+      -X main.Commit=#{commit}
+      -X main.Date=#{build_time}
+    ]
+
+    system "go", "build", "-o", bin/"vegeta", "-ldflags", ldflags.join(" ")
   end
 
   test do

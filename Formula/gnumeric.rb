@@ -1,13 +1,13 @@
 class Gnumeric < Formula
   desc "GNOME Spreadsheet Application"
   homepage "https://projects.gnome.org/gnumeric/"
-  url "https://download.gnome.org/sources/gnumeric/1.12/gnumeric-1.12.44.tar.xz"
-  sha256 "60ea794bf3bffe54fe3d56305e487947d30c14b525fd7c8ad46d79c384498704"
+  url "https://download.gnome.org/sources/gnumeric/1.12/gnumeric-1.12.46.tar.xz"
+  sha256 "9fdc67377af52dfe69a7db4f533938024a75f454fc5d25ab43b8e6739be0b5e1"
 
   bottle do
-    sha256 "c4abaf0d2aefc0019c9904f07e78fb368df1c1f77c29f72d0aa2328f4644fe04" => :mojave
-    sha256 "898b856734071c0241019c21f586aceecc96ecdc902352921e87f869b8dd39b8" => :high_sierra
-    sha256 "55b1f0fdb7bf24d000ff6aa87dcf023a14bb8d2eff6452fd9a607eaf2edd81d2" => :sierra
+    sha256 "0f2c5361ccf199dca09ec37db79df9c9b9bd4b703afd9d5f947d6f70676c7325" => :catalina
+    sha256 "d8dcf90b5c5c8b53b9d9ef0c043e755baf102da1b7b0a5a4f72161ebb7e4a91c" => :mojave
+    sha256 "ac070ba1756593dc9781a771d674a866e7d03ba71987cc62d88de8e6dc0a0e2e" => :high_sierra
   end
 
   depends_on "intltool" => :build
@@ -24,11 +24,6 @@ class Gnumeric < Formula
     inreplace "component/Makefile.in",
               "GOFFICE_PLUGINS_DIR = @GOFFICE_PLUGINS_DIR@",
               "GOFFICE_PLUGINS_DIR = @libdir@/goffice/@GOFFICE_API_VER@/plugins/gnumeric"
-
-    # fixed in 1.12.45
-    inreplace "src/mathfunc.c",
-              "static const gnm_float sqrt_one_over_e = gnm_sqrt (1 / M_Egnum);",
-              "const gnm_float sqrt_one_over_e = gnm_sqrt (1 / M_Egnum);"
 
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",

@@ -1,18 +1,17 @@
 class Mupdf < Formula
   desc "Lightweight PDF and XPS viewer"
   homepage "https://mupdf.com/"
-  url "https://mupdf.com/downloads/archive/mupdf-1.15.0-source.tar.xz"
-  sha256 "565036cf7f140139c3033f0934b72e1885ac7e881994b7919e15d7bee3f8ac4e"
+  url "https://mupdf.com/downloads/archive/mupdf-1.16.1-source.tar.xz"
+  sha256 "6fe78184bd5208f9595e4d7f92bc8df50af30fbe8e2c1298b581c84945f2f5da"
   head "https://git.ghostscript.com/mupdf.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "6cb774dd8ded94ffd17aef311157a9cfcec3952eacd87bdbf8e3c3475fd7b6c8" => :mojave
-    sha256 "4b9193501ccd098036558168b3c587e1d82cb6b094817f783708938195793cbd" => :high_sierra
-    sha256 "2ba0dee72242bc80ef22288dc6fe3df890d262cb4b36c808ee9a529111f098e5" => :sierra
+    sha256 "5ed11ba3dedbb091f7527e29616ffc74f41e204b67adef559b1feea8e9a04f29" => :catalina
+    sha256 "166af075df8ac8374106cb5d5bc21ef02038c16b1d36bb13144f1361f7a77a0a" => :mojave
+    sha256 "fc9ac2f447ab5df1a42110f252c4f665d1be41fd820556e63e26fb19d41f3ca5" => :high_sierra
   end
 
-  depends_on "openssl"
   depends_on :x11
 
   conflicts_with "mupdf-tools",

@@ -1,14 +1,14 @@
 class MingwW64 < Formula
   desc "Minimalist GNU for Windows and GCC cross-compilers"
-  homepage "https://mingw-w64.org/"
-  url "https://downloads.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/mingw-w64-v6.0.0.tar.bz2"
-  sha256 "805e11101e26d7897fce7d49cbb140d7bac15f3e085a91e0001e80b2adaf48f0"
-  revision 1
+  homepage "http://mingw-w64.org/"
+  url "https://downloads.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/mingw-w64-v7.0.0.tar.bz2"
+  sha256 "aa20dfff3596f08a7f427aab74315a6cb80c2b086b4a107ed35af02f9496b628"
+  revision 2
 
   bottle do
-    sha256 "3dc78c01bccb499a4c2ecc1a80f25bd2a59267c394fc377443efd4c9204d31a8" => :mojave
-    sha256 "49039add961b0c0bd3b2efbfccd7cd5ba861c143fdf9d39a382f4c594caa3c1e" => :high_sierra
-    sha256 "c339faff3c3f83b1f640c50633127edbb3f67fdaff02b702c2408727c4190d9a" => :sierra
+    sha256 "092d1d30ae9f2de677a35f14ec2907d285b85f9b4ed465a506f72a970deea715" => :catalina
+    sha256 "cdefb18e91d0102ba193caa2c6994d83c30742fa03e03e12b3fc5864ca6b003c" => :mojave
+    sha256 "2658e687bbfee45cfa9d0d74c9c129f9ffc2ac1de017143d25b4017aa899404f" => :high_sierra
   end
 
   # Apple's makeinfo is old and has bugs
@@ -20,15 +20,15 @@ class MingwW64 < Formula
   depends_on "mpfr"
 
   resource "binutils" do
-    url "https://ftp.gnu.org/gnu/binutils/binutils-2.32.tar.xz"
-    mirror "https://ftpmirror.gnu.org/binutils/binutils-2.32.tar.xz"
-    sha256 "0ab6c55dd86a92ed561972ba15b9b70a8b9f75557f896446c82e8b36e473ee04"
+    url "https://ftp.gnu.org/gnu/binutils/binutils-2.34.tar.xz"
+    mirror "https://ftpmirror.gnu.org/binutils/binutils-2.34.tar.xz"
+    sha256 "f00b0e8803dc9bab1e2165bd568528135be734df3fabf8d0161828cd56028952"
   end
 
   resource "gcc" do
-    url "https://ftp.gnu.org/gnu/gcc/gcc-8.3.0/gcc-8.3.0.tar.xz"
-    mirror "https://ftpmirror.gnu.org/gcc/gcc-8.3.0/gcc-8.3.0.tar.xz"
-    sha256 "64baadfe6cc0f4947a84cb12d7f0dfaf45bb58b7e92461639596c21e02d97d2c"
+    url "https://ftp.gnu.org/gnu/gcc/gcc-9.3.0/gcc-9.3.0.tar.xz"
+    mirror "https://ftpmirror.gnu.org/gcc/gcc-9.3.0/gcc-9.3.0.tar.xz"
+    sha256 "71e197867611f6054aa1119b13a0c0abac12834765fe2d81f35ac57f84f742d1"
   end
 
   def target_archs

@@ -8,6 +8,7 @@ class Autoconf < Formula
   bottle do
     cellar :any_skip_relocation
     rebuild 4
+    sha256 "ca510b350e941fb9395522a03f9d2fb5df276085d806ceead763acb95889a368" => :catalina
     sha256 "9724736d34773b6e41e2434ffa28fe79feccccf7b7786e54671441ca75115cdb" => :mojave
     sha256 "63957a3952b7af5496012b3819c9956822fd7d895d63339c23fdc65c502e1a40" => :high_sierra
     sha256 "a76fca79a00f733c1c9f75600b906de4755dd3fbb595b1b55ded1347ac141607" => :sierra
@@ -15,6 +16,9 @@ class Autoconf < Formula
     sha256 "daf70656aa9ff8b2fb612324222aa6b5e900e2705c9f555198bcd8cd798d7dd0" => :yosemite
     sha256 "d153b3318754731ff5e91b45b2518c75880993fa9d1f312a03696e2c1de0c9d5" => :mavericks
   end
+
+  uses_from_macos "m4"
+  uses_from_macos "perl"
 
   def install
     ENV["PERL"] = "/usr/bin/perl"

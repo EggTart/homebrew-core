@@ -1,8 +1,8 @@
 class Elasticsearch < Formula
   desc "Distributed search & analytics engine"
   homepage "https://www.elastic.co/products/elasticsearch"
-  url "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-oss-6.8.0.tar.gz"
-  sha256 "bd6c6613cf245a8ef19b476b2199555c01f842be54dd4213e03e8c28dabd7444"
+  url "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-oss-6.8.7.tar.gz"
+  sha256 "40a5c303030615fafe04142e2d44195c5f158e5176bd1b06b33e9c91506aa9c1"
 
   head do
     url "https://github.com/elasticsearch/elasticsearch.git"
@@ -24,7 +24,8 @@ class Elasticsearch < Formula
       # Extract the package to the tar directory
       mkdir "tar"
       cd "tar"
-      system "tar", "--strip-components=1", "-xf", Dir["../distribution/tar/build/distributions/elasticsearch-*.tar.gz"].first
+      system "tar", "--strip-components=1", "-xf",
+        Dir["../distribution/tar/build/distributions/elasticsearch-*.tar.gz"].first
     end
 
     # Remove Windows files

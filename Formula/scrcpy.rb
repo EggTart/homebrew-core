@@ -1,13 +1,13 @@
 class Scrcpy < Formula
   desc "Display and control your Android device"
   homepage "https://github.com/Genymobile/scrcpy"
-  url "https://github.com/Genymobile/scrcpy/archive/v1.8.tar.gz"
-  sha256 "1d4b53573554a60fa46b6b40685dbe6c8474bc451ecbe803e2f2ec9724b48a01"
+  url "https://github.com/Genymobile/scrcpy/archive/v1.12.1.tar.gz"
+  sha256 "7692664e1bd703421eb9659cc9956d9f0ac64eb14abddab7b2ade37625f0243d"
 
   bottle do
-    sha256 "a231a2a6bad01684a2a2cc9564825c44f6ec240b88c6f51813387bf65885a7de" => :mojave
-    sha256 "c9bf05f3397b7f0b3306dd16b6fb3808293ff20b6f15cfa4afd4b8e55eea5185" => :high_sierra
-    sha256 "4ee897a33bdfa7b88522e6b3abeb27c8330de739cd64de869eda546045402c98" => :sierra
+    sha256 "ed647f7c957cd996b62c395c2106be3e40d3dd0f8c84eb1bd1d2a212a174a565" => :catalina
+    sha256 "2ab289c10d23c6fb47bc9bd2ae1f04d6f7c9d35f41b14ee1b0f3b4ce8f0d1f48" => :mojave
+    sha256 "3a3f12e0c66d5b9e79096f3bc89480929703742f981209f734632e9aeda12166" => :high_sierra
   end
 
   depends_on "meson" => :build
@@ -17,13 +17,13 @@ class Scrcpy < Formula
   depends_on "sdl2"
 
   resource "prebuilt-server" do
-    url "https://github.com/Genymobile/scrcpy/releases/download/v1.8/scrcpy-server-v1.8.jar"
-    sha256 "839055ef905903bf98ead1b9b8a127fe402b39ad657a81f9a914b2dbcb2ce5c0"
+    url "https://github.com/Genymobile/scrcpy/releases/download/v1.12.1/scrcpy-server-v1.12.1"
+    sha256 "63e569c8a1d0c1df31d48c4214871c479a601782945fed50c1e61167d78266ea"
   end
 
   def install
     r = resource("prebuilt-server")
-    r.verify_download_integrity(r.fetch)
+    r.fetch
     cp r.cached_download, buildpath/"prebuilt-server.jar"
 
     mkdir "build" do
@@ -36,12 +36,13 @@ class Scrcpy < Formula
     end
   end
 
-  def caveats; <<~EOS
-    At runtime, adb must be accessible from your PATH.
+  def caveats
+    <<~EOS
+      At runtime, adb must be accessible from your PATH.
 
-    You can install adb from Homebrew Cask:
-      brew cask install android-platform-tools
-  EOS
+      You can install adb from Homebrew Cask:
+        brew cask install android-platform-tools
+    EOS
   end
 
   test do

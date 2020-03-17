@@ -5,11 +5,12 @@ class Urbit < Formula
   url "https://github.com/urbit/urbit.git",
       :tag      => "v0.7.4",
       :revision => "e8416596fb7c47e343b49ea5ec12c2a095873c2f"
+  revision 1
 
   bottle do
-    sha256 "1cbb718456918a091972483794905eb36e6454ec695738420e1aea65ed294da9" => :mojave
-    sha256 "c40b7ee58aca46f70991a0dff2e3713896c5a618ff91f005915151fd43ad80fc" => :high_sierra
-    sha256 "8a8ca40b3158ab02edbbea34893a3e482ad8e2435b2ba20a92ea346ff70a0640" => :sierra
+    sha256 "8e790fe588afb0958e3bb42031700c1038162b7ee0014d9e01295d43b8fa6a69" => :catalina
+    sha256 "8fadd8b147391223943436af1be232d605c357229ab6fcf490774329a36301b2" => :mojave
+    sha256 "ce88690545c072ceeb4653faaa1527041029daac7101aeb8de55d44e55e88a39" => :high_sierra
   end
 
   depends_on "meson" => :build
@@ -18,7 +19,10 @@ class Urbit < Formula
   depends_on "gmp"
   depends_on "libsigsegv"
   depends_on "libuv"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
+
+  uses_from_macos "curl"
+  uses_from_macos "ncurses"
 
   def install
     system "./scripts/build"

@@ -6,13 +6,14 @@ class Llnode < Formula
 
   bottle do
     cellar :any
+    sha256 "9b46a438bd683a821468b2ebe7f579af4a318b131ca853516dba98a5e4d66d93" => :catalina
     sha256 "bd25f25283d4da121c4b64a34ffa060f46e20efbdd463b8af088ed1568cf64ca" => :mojave
     sha256 "5e3d8bfdcafce47c4f36da32a4820b0970020459e8a22d0d28eb3d38fd1c89f3" => :high_sierra
     sha256 "fc975b5e0cb5ee39039100a8da42db92e3359e3e5e3b6c2465e4e969dbee0e7d" => :sierra
   end
 
   depends_on "node" => :build
-  depends_on "python@2" => :build
+  depends_on "python" => :build
   depends_on :macos => :yosemite
 
   resource "lldb" do
@@ -59,18 +60,19 @@ class Llnode < Formula
     prefix.install "llnode.dylib"
   end
 
-  def caveats; <<~EOS
-    `brew install llnode` does not link the plugin to LLDB PlugIns dir.
+  def caveats
+    <<~EOS
+      `brew install llnode` does not link the plugin to LLDB PlugIns dir.
 
-    To load this plugin in LLDB, one will need to either
+      To load this plugin in LLDB, one will need to either
 
-    * Type `plugin load #{opt_prefix}/llnode.dylib` on each run of lldb
-    * Install plugin into PlugIns dir manually:
+      * Type `plugin load #{opt_prefix}/llnode.dylib` on each run of lldb
+      * Install plugin into PlugIns dir manually:
 
-        mkdir -p ~/Library/Application\\ Support/LLDB/PlugIns
-        ln -sf #{opt_prefix}/llnode.dylib \\
-            ~/Library/Application\\ Support/LLDB/PlugIns/
-  EOS
+          mkdir -p ~/Library/Application\\ Support/LLDB/PlugIns
+          ln -sf #{opt_prefix}/llnode.dylib \\
+              ~/Library/Application\\ Support/LLDB/PlugIns/
+    EOS
   end
 
   test do

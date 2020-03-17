@@ -1,22 +1,23 @@
 class Menhir < Formula
   desc "LR(1) parser generator for the OCaml programming language"
   homepage "http://cristal.inria.fr/~fpottier/menhir"
-  url "http://cristal.inria.fr/~fpottier/menhir/menhir-20180905.tar.gz"
-  sha256 "82f3767290e39bf1ce3e260cd3cf486295891d57351cdccaedc6919000746750"
-  revision 1
+  url "https://gitlab.inria.fr/fpottier/menhir/-/archive/20200211/menhir-20200211.tar.bz2"
+  sha256 "003df5e553660a8bdeb9a9f45185f8c5dfa63f85f361ad494dbfa81eed34acbd"
 
   bottle do
-    sha256 "7e434bb97950dd0019b43a01ecef5ce0737cb4247e070afb0157d8dffa68c8cf" => :mojave
-    sha256 "cecaaa9bed5bb461e3342b591d9e3c86805fa0a4706abdbf6b09c57d7d83e4a0" => :high_sierra
-    sha256 "26f11583b32317cf934fa8ae49ae93a467014f46feb705218ae7610dceb9567f" => :sierra
+    cellar :any
+    sha256 "7cea53cab9c67efe36ef26f903346b0f7ceac69865583580bef9de50583b1cfc" => :catalina
+    sha256 "bcd74e6ed3a0eaa8017f32aaaa310f40b14fbaaa4f26c42c6a1a6316115f2610" => :mojave
+    sha256 "266d39e5ffeffe92fd04d0e78c404dfdc71cea5ca433c4e62f9c6c79dfac5806" => :high_sierra
   end
 
+  depends_on "dune" => :build
   depends_on "ocamlbuild" => :build
   depends_on "ocaml"
 
   def install
-    system "make", "PREFIX=#{prefix}", "all"
-    system "make", "PREFIX=#{prefix}", "install"
+    system "dune", "build", "@install"
+    system "dune", "install", "--prefix=#{prefix}", "--mandir=#{man}"
   end
 
   test do

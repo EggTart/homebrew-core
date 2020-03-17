@@ -1,28 +1,21 @@
 class AwsOkta < Formula
   desc "Authenticate with AWS using your Okta credentials"
   homepage "https://github.com/segmentio/aws-okta"
-  url "https://github.com/segmentio/aws-okta/archive/v0.21.0.tar.gz"
-  sha256 "eaca47334f05ab7f7ff5e92baf8fae5afd1e08bd1be044e14aaaebb524ad5baa"
+  url "https://github.com/segmentio/aws-okta/archive/v1.0.1.tar.gz"
+  sha256 "a11f9f3dc08b9172b86244bdb19b6fd58fd919c7730f1c04cbb7ce3b09cedf55"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "da3d031a21db796229cefdbe19294adc22a9be5d6f2ee034305fc9c88d8aa7fc" => :mojave
-    sha256 "80e1736abf7d5481d91f0c2b3c3191cf6813988f5fa96f8828371451355507c4" => :high_sierra
-    sha256 "5050dcc42b71a1336f35fefdf1b49c81dcf4a02b39d9571f7c3b39928ebefe2a" => :sierra
+    sha256 "e8eea0dda119799d437c0b5bc7fb2fb0fb7bb4e88d0cc7cd034192c0290ccddd" => :catalina
+    sha256 "5095707ab4945c249c95a547f8cf8a91df76fbc2cdf36871e6f7b17936ed71b4" => :mojave
+    sha256 "98ad1e9f70361d22e24300bb1c2eb9fb8e85107d37c06a081cd6b1f7ccc66d8d" => :high_sierra
   end
 
   depends_on "go" => :build
-  depends_on "govendor" => :build
 
   def install
-    ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/segmentio/aws-okta").install buildpath.children
-    cd "src/github.com/segmentio/aws-okta" do
-      system "govendor", "sync"
-      system "go", "build", "-ldflags", "-X main.Version=#{version}"
-      bin.install "aws-okta"
-      prefix.install_metafiles
-    end
+    system "go", "build", "-ldflags", "-s -w -X main.Version=#{version}", "-trimpath", "-o", bin/"aws-okta"
+    prefix.install_metafiles
   end
 
   test do

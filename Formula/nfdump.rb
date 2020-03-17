@@ -1,15 +1,14 @@
 class Nfdump < Formula
   desc "Tools to collect and process netflow data on the command-line"
   homepage "https://nfdump.sourceforge.io"
-  url "https://github.com/phaag/nfdump/archive/v1.6.17.tar.gz"
-  sha256 "f71c2c57bdcd0731b2cfecf6d45f9bf57fc7c946858644caf829f738c67c393d"
+  url "https://github.com/phaag/nfdump/archive/v1.6.19.tar.gz"
+  sha256 "1221e3526b67be7d6f6b786d9873e29944b25e37059b6acadc7addf003140fe9"
 
   bottle do
     cellar :any
-    sha256 "dddf3a460d59b020d24243fa355a751625c1a79b45e69f90b68c6ca1a476ffa6" => :mojave
-    sha256 "4011e1aa739d163bf04d5df0bff1bb779e89c5a0253332325da99ccf65ea6965" => :high_sierra
-    sha256 "7f810fe9a5e90455e8e3e2bf80fc474dd56a752a1f87310a80399d819e8e4d4b" => :sierra
-    sha256 "9312372f4ecd45cb576cbe261b6caca79f6baf314421f4c3165e99e1368aa934" => :el_capitan
+    sha256 "5e714bd5193c9b9b2e0d0c76d3fea30c9df0e5e270651723a255227c98931dad" => :catalina
+    sha256 "02f8e2a4704fc8ea3e33b518fb13dff8d74abbd7b8cdc6500c18af56362dc599" => :mojave
+    sha256 "7e14275c4cc7aebc031a475eb9fbc745c9deb7d3dcc16c40f6c7315dd6fd4968" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -24,6 +23,6 @@ class Nfdump < Formula
   end
 
   test do
-    system bin/"nfdump", "-Z 'host 8.8.8.8'"
+    system bin/"nfdump", "-Z", "host 8.8.8.8"
   end
 end
