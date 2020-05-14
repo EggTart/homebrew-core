@@ -1,4 +1,4 @@
-class Groovysdk < Formula
+class Groovysdk24 < Formula
   desc "SDK for Groovy: a Java-based scripting language"
   homepage "https://www.groovy-lang.org/"
   url "https://dl.bintray.com/groovy/maven/apache-groovy-sdk-2.4.19.zip"
